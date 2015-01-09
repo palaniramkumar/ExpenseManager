@@ -1,4 +1,4 @@
-package com.reader.ramkumar.expensemanager;
+package com.reader.ramkumar.expensemanager.adapter;
 
 import android.content.Context;
 import android.view.MenuItem;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.reader.ramkumar.expensemanager.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +41,11 @@ public class ExpenseCard extends CardWithList {
                 switch (item.getItemId()) {
                     case R.id.action_add:
                         //Example: add an item
-                        WeatherObject w1 = new WeatherObject(ExpenseCard.this);
-                        w1.city = "Madrid";
-                        w1.temperature = 24;
-                        w1.weatherIcon = R.drawable.ic_action_sun;
-                        w1.setObjectId(w1.city);
+                        CostObject w1 = new CostObject(ExpenseCard.this);
+                        w1.type = "Food";
+                        w1.amount = 8400;
+                        w1.trendIcon = R.drawable.ic_action_sun;
+                        w1.setObjectId(w1.type);
                         mLinearListAdapter.add(w1);
                         break;
                     case R.id.action_remove:
@@ -54,7 +56,7 @@ public class ExpenseCard extends CardWithList {
 
             }
         });
-        header.setTitle("Weather"); //should use R.string.
+        header.setTitle("You have 8,432 Left for this month"); //should use R.string.
         return header;
     }
 
@@ -80,18 +82,18 @@ public class ExpenseCard extends CardWithList {
         List<ListObject> mObjects = new ArrayList<ListObject>();
 
         //Add an object to the list
-        WeatherObject w1 = new WeatherObject(this);
-        w1.city = "London";
-        w1.temperature = 16;
-        w1.weatherIcon = R.drawable.ic_action_cloud;
-        w1.setObjectId(w1.city); //It can be important to set ad id
+        CostObject w1 = new CostObject(this);
+        w1.type = "Car";
+        w1.amount = 2400;
+        w1.trendIcon = R.drawable.ic_action_expand;
+        w1.setObjectId(w1.type); //It can be important to set ad id
         mObjects.add(w1);
 
-        WeatherObject w2 = new WeatherObject(this);
-        w2.city = "Rome";
-        w2.temperature = 25;
-        w2.weatherIcon = R.drawable.ic_action_sun;
-        w2.setObjectId(w2.city);
+        CostObject w2 = new CostObject(this);
+        w2.type = "Home";
+        w2.amount = 21000;
+        w2.trendIcon = R.drawable.ic_action_collapse;
+        w2.setObjectId(w2.type);
         w2.setSwipeable(true);
 
         //Example onSwipe
@@ -103,25 +105,25 @@ public class ExpenseCard extends CardWithList {
         });*/
         mObjects.add(w2);
 
-        WeatherObject w3 = new WeatherObject(this);
-        w3.city = "Paris";
-        w3.temperature = 19;
-        w3.weatherIcon = R.drawable.ic_action_cloudy;
-        w3.setObjectId(w3.city);
+        CostObject w3 = new CostObject(this);
+        w3.type = "Food";
+        w3.amount = 1200;
+        w3.trendIcon = R.drawable.ic_action_expand;
+        w3.setObjectId(w3.type);
         mObjects.add(w3);
 
-        WeatherObject w4 = new WeatherObject(this);
-        w4.city = "Virudhunagar";
-        w4.temperature = 29;
-        w4.weatherIcon = R.drawable.ic_action_cloudy;
-        w4.setObjectId(w4.city);
+        CostObject w4 = new CostObject(this);
+        w4.type = "Misc";
+        w4.amount = 8000;
+        w4.trendIcon = R.drawable.ic_action_collapse;
+        w4.setObjectId(w4.type);
         mObjects.add(w4);
 
-        WeatherObject w5 = new WeatherObject(this);
-        w5.city = "Chennai";
-        w5.temperature = 21;
-        w5.weatherIcon = R.drawable.ic_action_cloudy;
-        w5.setObjectId(w5.city);
+        CostObject w5 = new CostObject(this);
+        w5.type = "Medical";
+        w5.amount = 800;
+        w5.trendIcon = R.drawable.ic_action_expand;
+        w5.setObjectId(w5.type);
         mObjects.add(w5);
 
         return mObjects;
@@ -136,10 +138,10 @@ public class ExpenseCard extends CardWithList {
         TextView temperature = (TextView) convertView.findViewById(R.id.carddemo_weather_temperature);
 
         //Retrieve the values from the object
-        WeatherObject weatherObject = (WeatherObject) object;
-        icon.setImageResource(weatherObject.weatherIcon);
-        city.setText(weatherObject.city);
-        temperature.setText(weatherObject.temperature + weatherObject.temperatureUnit);
+        CostObject costObject = (CostObject) object;
+        icon.setImageResource(costObject.trendIcon);
+        city.setText(costObject.type);
+        temperature.setText(costObject.currencyUnit + costObject.amount);
 
         return convertView;
     }
@@ -154,14 +156,14 @@ public class ExpenseCard extends CardWithList {
     // Weather Object
     // -------------------------------------------------------------
 
-    public class WeatherObject extends DefaultListObject {
+    public class CostObject extends DefaultListObject {
 
-        public String city;
-        public int weatherIcon;
-        public int temperature;
-        public String temperatureUnit = "°C";
+        public String type;
+        public int trendIcon;
+        public int amount;
+        public String currencyUnit = "₹";
 
-        public WeatherObject(Card parentCard) {
+        public CostObject(Card parentCard) {
             super(parentCard);
             init();
         }

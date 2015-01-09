@@ -4,7 +4,10 @@ import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
 
 import com.reader.ramkumar.expensemanager.adapter.ListAdapterForRadioButton;
 import com.reader.ramkumar.expensemanager.adapter.ListAdapterRadioModel;
@@ -60,5 +63,19 @@ public class Expense_add_window extends ListActivity {
 
     private ListAdapterRadioModel get(String s) {
         return new ListAdapterRadioModel(s);
+    }
+
+    private RadioButton listRadioButton = null;
+    int listIndex = -1;
+    public void onClickRadioButton(View v) {
+        View vMain = ((View) v.getParent());
+        int newIndex = ((ViewGroup) vMain.getParent()).indexOfChild(vMain);
+        if (listIndex == newIndex) return;
+
+        if (listRadioButton != null) {
+            listRadioButton.setChecked(false);
+        }
+        listRadioButton = (RadioButton) v;
+        listIndex = newIndex;
     }
 }

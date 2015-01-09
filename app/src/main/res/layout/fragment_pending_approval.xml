@@ -1,0 +1,17 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    tools:context="com.reader.ramkumar.expensemanager.PendingApproval">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <it.gmariotti.cardslib.library.view.CardViewNative
+        android:id="@+id/cardnotification"
+        style="@style/card_external"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/chart"
+        card:card_layout_resourceID="@layout/native_cardwithlist_layout" />
+</ScrollView>
+</FrameLayout>

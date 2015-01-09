@@ -2,11 +2,20 @@ package com.reader.ramkumar.expensemanager;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
+import android.widget.Toast;
+
+import com.melnykov.fab.FloatingActionButton;
+import com.reader.ramkumar.expensemanager.adapter.Group;
+import com.reader.ramkumar.expensemanager.adapter.MyExpandableListAdapter;
 
 
 /**
@@ -26,6 +35,8 @@ public class FragmentHistory extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    ViewGroup mContainer;
+    SparseArray<Group> groups = new SparseArray<Group>();
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,7 +75,26 @@ public class FragmentHistory extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_fragment_history, container, false);
+        mContainer = container;
+        LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = mInflater.inflate(R.layout.fragment_fragment_history, mContainer, false);
+
+        createData();
+        ExpandableListView listView = (ExpandableListView) view.findViewById(R.id.listView);
+        MyExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(),groups);
+        listView.setAdapter(adapter);
+
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Toast.makeText(mContainer.getContext(), "New Clicked", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(mContainer.getContext(), Expense_add_window.class);
+                startActivity(i);
+            }
+        });
+        Toast.makeText(mContainer.getContext(), "onActivityCreated", Toast.LENGTH_SHORT).show();
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -107,4 +137,13 @@ public class FragmentHistory extends Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
+    public void createData() {
+        for (int j = 0; j < 5; j++) {
+            Group group = new Group("Test " + j);
+            for (int i = 0; i < 5; i++) {
+                group.children.add("Sub Item" + i);
+            }
+            groups.append(j, group);
+        }
+    }
 }

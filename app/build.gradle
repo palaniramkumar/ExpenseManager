@@ -13,7 +13,7 @@ android {
     }
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -48,5 +48,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.2'
     compile 'com.android.support:recyclerview-v7:21.0.2'
     compile 'org.quanqi:mpandroidchart:1.7.4'
-    compile 'com.beardedhen:androidbootstrap:+'
+    compile 'com.github.traex.rippleeffect:library:1.2.3'
+   // compile 'com.beardedhen:androidbootstrap:+'
+
 }

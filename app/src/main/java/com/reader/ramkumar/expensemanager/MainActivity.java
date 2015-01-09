@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.melnykov.fab.FloatingActionButton;
+import com.reader.ramkumar.expensemanager.adapter.ExpenseCard;
+import com.reader.ramkumar.expensemanager.service.SMSListener;
 
 import java.util.ArrayList;
 
@@ -30,7 +33,9 @@ import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
 import it.gmariotti.cardslib.library.view.CardViewNative;
 
 
-public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks, OnChartValueSelectedListener, FragmentHistory.OnFragmentInteractionListener, main.OnFragmentInteractionListener {
+public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks, OnChartValueSelectedListener,
+        FragmentHistory.OnFragmentInteractionListener, main.OnFragmentInteractionListener,
+        PendingApproval.OnFragmentInteractionListener{
 
     private Toolbar mToolbar;
     private NavigationDrawerFragment mNavigationDrawerFragment;
@@ -38,6 +43,13 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
+
+        SMSListener smsReceiver = new SMSListener();
+
+        registerReceiver(smsReceiver, new IntentFilter(SMS_RECEIVED));
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_topdrawer);
         mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
@@ -237,16 +249,23 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 Toast.makeText(this, "After Fragment Manager", Toast.LENGTH_SHORT).show();
                 //setContentView(R.layout.fragment_main);
                 //setupHomePage();
-                setTitle("Tile#" + position);
+                setTitle("Expense Summary");
                 break;
-
+            case 1:
+                newFragment = new PendingApproval();
+                fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_container, newFragment)
+                        .commit();
+                setTitle("Pending Approval");
+                break;
             case 2:
                 newFragment = new FragmentHistory();
                 fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.frame_container, newFragment)
                         .commit();
-                setTitle("Tile#" + position);
+                setTitle("History");
                 break;
 
 

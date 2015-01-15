@@ -49,6 +49,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.2'
     compile 'org.quanqi:mpandroidchart:1.7.4'
     compile 'com.github.traex.rippleeffect:library:1.2.3'
+    compile 'com.roomorama:caldroid:1.1.7'
    // compile 'com.beardedhen:androidbootstrap:+'
 
 }

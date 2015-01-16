@@ -7,6 +7,8 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,12 +17,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.reader.ramkumar.expensemanager.adapter.ListAdapterForRadioButton;
 import com.reader.ramkumar.expensemanager.adapter.ListAdapterRadioModel;
+import com.reader.ramkumar.expensemanager.util.NumbPad;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +47,20 @@ public class Expense_add_window extends ListActivity {
         onAcceptButtonClick();
         onChooseDateClick(getApplicationContext());
 
+
+        Button btnChkIn = (Button) findViewById(R.id.btn_decline);
+
+        btnChkIn.setOnClickListener(new View.OnClickListener()
+        {
+
+            @Override
+            public void onClick(View v)
+            {
+                onSelectAmount();
+            }
+
+        });
+
         setListAdapter(adapter);
 
 
@@ -64,6 +82,70 @@ public class Expense_add_window extends ListActivity {
 
         });
 
+    }
+
+    public void onSelectAmount(){
+        /*final String TAG="Expense Manager";
+        AlertDialog.Builder sayWindows = new AlertDialog.Builder(
+                Expense_add_window.this);
+
+        final EditText saySomething = new EditText(Expense_add_window.this);
+        saySomething.setInputType(InputType.TYPE_CLASS_PHONE);
+        sayWindows.setPositiveButton("ok",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.i(TAG, "OK");
+                        String mString = saySomething.getText().toString();
+                        Log.i(TAG, "mString = " + mString);
+                        // Your checkin() method
+                    }
+                });
+
+        sayWindows.setNegativeButton("cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.i(TAG, "Cancel");
+                    }
+                });
+
+        sayWindows.setView(saySomething);
+        sayWindows.create().show();*/
+
+        //newly added
+        // create an instance of NumbPad
+        NumbPad np = new NumbPad();
+// optionally set additional title
+        np.setAdditionalText("Need da pin");
+// show the NumbPad to capture input.
+        np.show(this, "Manager Pin is Required!", NumbPad.HIDE_INPUT,
+                new NumbPad.numbPadInterface() {
+                    // This is called when the user click the 'Ok' button on the dialog
+                    // value is the captured input from the dialog.
+                    public String numPadInputValue(String value) {
+                        if (value.equals("1234")) {
+                            // do something here
+                            Toast.makeText(getApplicationContext(),
+                                    "Pin is CORRECT! What do you want me to do?", Toast.LENGTH_LONG).show();
+                        } else {
+                            // generate a toast message to inform the user that
+                            // the captured input is not valid
+                            Toast.makeText(getApplicationContext(),
+                                    "Manager Pin is incorrect", Toast.LENGTH_LONG).show();
+                        }
+                        return null;
+                    }
+
+                    // This is called when the user clicks the 'Cancel' button on the dialog
+                    public String numPadCanceled() {
+                        // generate a toast message to inform the user that the pin
+                        // capture was canceled
+                        Toast.makeText(getApplicationContext(),
+                                "Pin capture canceled!", Toast.LENGTH_LONG).show();
+                        return null;
+                    }
+                });
+
+        //URL: http://www.tomswebdesign.net/Articles/Android/number-pad-input-class.html
     }
 
     CalendarView calendar;

@@ -1,9 +1,11 @@
 package com.reader.ramkumar.expensemanager;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -73,14 +76,29 @@ public class Expense_add_window extends ListActivity {
 
             @Override
             public void onClick(View arg0) {
-                // custom dialog
+
                 final Dialog dialog = new Dialog(Expense_add_window.this);
+
                 dialog.setContentView(R.layout.calender);
-                dialog.setTitle("Title...");
+                calendar = (CalendarView) dialog.findViewById(R.id.calendarView1);
 
-                // set the custom dialog components - text, image and button
 
-                LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+
+                    @Override
+                    public void onSelectedDayChange(CalendarView view, int year, int month,
+                                                    int dayOfMonth) {
+                        // TODO Auto-generated method stub
+
+                        Toast.makeText(getBaseContext(), "Selected Date is\n\n"
+                                        + dayOfMonth + " : " + month + " : " + year,
+                                Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+
+                /*LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View view = mInflater.inflate( R.layout.calender,null); //buggy code need to fix
 
                 
@@ -111,11 +129,11 @@ public class Expense_add_window extends ListActivity {
                     @Override
                     public void onSelectedDayChange(CalendarView view, int year, int month, int day) {
                         Toast.makeText(getApplicationContext(), day + "/" + month + "/" + year, Toast.LENGTH_LONG).show();
-                        dialog.dismiss();
+
                     }
                 });
 
-                dialog.show();
+                dialog.show();*/
             }
     });
     }

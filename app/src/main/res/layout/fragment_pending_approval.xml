@@ -3,15 +3,29 @@
     android:layout_height="match_parent"
     xmlns:card="http://schemas.android.com/apk/res-auto"
     tools:context="com.reader.ramkumar.expensemanager.PendingApproval">
+
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <ProgressBar
+        android:id="@+id/notification_progressBar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_alignParentTop="true"
+        android:layout_margin="10dp"
+        />
     <it.gmariotti.cardslib.library.view.CardViewNative
         android:id="@+id/cardnotification"
         style="@style/card_external"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/chart"
+        android:layout_below="@id/notification_progressBar"
         card:card_layout_resourceID="@layout/native_cardwithlist_layout" />
+    </RelativeLayout>
 </ScrollView>
 </FrameLayout>

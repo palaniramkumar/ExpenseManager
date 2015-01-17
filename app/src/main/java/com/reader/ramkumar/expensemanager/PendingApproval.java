@@ -8,14 +8,10 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import java.util.ArrayList;
-import android.database.Cursor;
-import android.widget.ArrayAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ListView;
 
-import com.reader.ramkumar.SMSparser.SMS;
-import com.reader.ramkumar.expensemanager.adapter.MyExpandableListAdapter;
+import android.widget.ProgressBar;
+
+import android.os.Handler;
 import com.reader.ramkumar.expensemanager.adapter.NotificationCard;
 
 import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
@@ -40,6 +36,9 @@ public class PendingApproval extends Fragment {
     private String mParam1;
     private String mParam2;
     ViewGroup mContainer;
+    private ProgressBar mProgress;
+    private int mProgressStatus = 0;
+    private Handler mHandler = new Handler();
 
     private OnFragmentInteractionListener mListener;
 
@@ -92,17 +91,31 @@ public class PendingApproval extends Fragment {
         CardViewNative cardView = (CardViewNative) view.findViewById(R.id.cardnotification); //if you want list, pls change the xml to "CardListView"
         cardView.setCard(card);
 
+        mProgress = (ProgressBar) view.findViewById(R.id.notification_progressBar);
 
-/*
-//load sms in default list
-        ListView lViewSMS = (ListView) view.findViewById(R.id.listViewSMS);
+        // Start lengthy operation in a background thread
+        new Thread(new Runnable() {
+            public void run() {
+                while (mProgressStatus < 100) {
+                    mProgressStatus ++;
+                    try {
+                        // Sleep for 200 milliseconds.
+                        //Just to display the progress slowly
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    // Update the progress bar
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            mProgress.setProgress(mProgressStatus);
+                        }
+                    });
+                }
+                //mProgress.setVisibility(View.INVISIBLE);
+            }
+        }).start();
 
-        if(fetchInbox()!=null)
-        {
-            ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, fetchInbox());
-            lViewSMS.setAdapter(adapter);
-        }
-        */
         return view;
     }
 
@@ -145,34 +158,4 @@ public class PendingApproval extends Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
-    public ArrayList fetchInbox()
-    {
-        ArrayList sms = new ArrayList();
-
-        Uri uriSms = Uri.parse("content://sms/inbox");
-        Cursor cursor =getActivity().getContentResolver().query(uriSms, new String[]{"_id", "address", "date", "body"},null,null,null);
-
-        cursor.moveToFirst();
-        while  (cursor.moveToNext())
-        {
-            String address = cursor.getString(1);
-            String body = cursor.getString(3);
-
-            //System.out.println("======&gt; Mobile number =&gt; "+address);
-            //System.out.println("=====&gt; SMS Text =&gt; "+body);
-            //comented copied code
-            //sms.add("Address=&gt; "+address+"n SMS =&gt; "+body);
-            /* custom code*/
-            SMS s= new SMS();
-            s.address=address;
-            s.text=body;
-            s.id=cursor.getString(0);
-            s.when=cursor.getString(2);
-             /* this may need to tune further for better accurecy */
-            if(s.findSMS() && s.amount!=null)
-                sms.add("{Amount: '"+s.amount+"', Tenent: '"+s.where+"', Account:'"+s.account+"', Time: '"+s.when+"', Place: '"+s.place+"'}");
-        }
-        return sms;
-
-    }
 }

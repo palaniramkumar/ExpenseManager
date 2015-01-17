@@ -1,15 +1,10 @@
 package com.reader.ramkumar.expensemanager;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -32,12 +26,20 @@ import java.util.List;
 
 public class Expense_add_window extends ListActivity {
 
-    Button btn_accept,btn_date;
+    Button btn_accept, btn_date;
     List<ListAdapterRadioModel> list;
+    CalendarView calendar;
+    int listIndex = -1;
+    private RadioButton listRadioButton = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Get the message from the intent
+        Intent intent = getIntent();
+        String mAmount = intent.getStringExtra("AMOUNT");
+
         setContentView(R.layout.activity_expense_add_window);
         ArrayAdapter<ListAdapterRadioModel> adapter = new ListAdapterForRadioButton(this, getModel());
 
@@ -47,15 +49,15 @@ public class Expense_add_window extends ListActivity {
         onAcceptButtonClick();
         onChooseDateClick(getApplicationContext());
 
+        EditText edit_amount = (EditText) findViewById(R.id.edit_amount);
+        edit_amount.setText(mAmount);
 
         Button btnChkIn = (Button) findViewById(R.id.btn_decline);
 
-        btnChkIn.setOnClickListener(new View.OnClickListener()
-        {
+        btnChkIn.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 onSelectAmount();
             }
 
@@ -74,9 +76,9 @@ public class Expense_add_window extends ListActivity {
 
             @Override
             public void onClick(View arg0) {
-                if(listIndex!=-1)
+                if (listIndex != -1)
                     Toast.makeText(getApplicationContext(), list.get(listIndex).getName(),
-                        Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_LONG).show();
                 else
                     Toast.makeText(getApplicationContext(), "Please Select From the List",
                             Toast.LENGTH_LONG).show();
@@ -88,39 +90,13 @@ public class Expense_add_window extends ListActivity {
 
     }
 
-    public void onSelectAmount(){
-        /*final String TAG="Expense Manager";
-        AlertDialog.Builder sayWindows = new AlertDialog.Builder(
-                Expense_add_window.this);
+    public void onSelectAmount() {
 
-        final EditText saySomething = new EditText(Expense_add_window.this);
-        saySomething.setInputType(InputType.TYPE_CLASS_PHONE);
-        sayWindows.setPositiveButton("ok",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.i(TAG, "OK");
-                        String mString = saySomething.getText().toString();
-                        Log.i(TAG, "mString = " + mString);
-                        // Your checkin() method
-                    }
-                });
-
-        sayWindows.setNegativeButton("cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.i(TAG, "Cancel");
-                    }
-                });
-
-        sayWindows.setView(saySomething);
-        sayWindows.create().show();*/
-
-        //newly added
         // create an instance of NumbPad
         NumbPad np = new NumbPad();
-// optionally set additional title
+        // optionally set additional title
         np.setAdditionalText("Need da pin");
-// show the NumbPad to capture input.
+        // show the NumbPad to capture input.
         np.show(this, "Manager Pin is Required!", NumbPad.HIDE_INPUT,
                 new NumbPad.numbPadInterface() {
                     // This is called when the user click the 'Ok' button on the dialog
@@ -152,9 +128,7 @@ public class Expense_add_window extends ListActivity {
         //URL: http://www.tomswebdesign.net/Articles/Android/number-pad-input-class.html
     }
 
-    CalendarView calendar;
-
-    public void onChooseDateClick( final Context context){
+    public void onChooseDateClick(final Context context) {
 
         btn_date = (Button) findViewById(R.id.btn_date);
 
@@ -187,7 +161,7 @@ public class Expense_add_window extends ListActivity {
                 /*LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View view = mInflater.inflate( R.layout.calender,null); //buggy code need to fix
 
-                
+
                 calendar = (CalendarView) view.findViewById(R.id.calendar);
 
                 // sets whether to show the week number.
@@ -221,8 +195,9 @@ public class Expense_add_window extends ListActivity {
 
                 dialog.show();*/
             }
-    });
+        });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -262,8 +237,6 @@ public class Expense_add_window extends ListActivity {
         return new ListAdapterRadioModel(s);
     }
 
-    private RadioButton listRadioButton = null;
-    int listIndex = -1;
     public void onClickRadioButton(View v) {
         View vMain = ((View) v.getParent());
         int newIndex = ((ViewGroup) vMain.getParent()).indexOfChild(vMain);

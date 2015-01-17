@@ -2,6 +2,7 @@ package com.reader.ramkumar.expensemanager.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Parcel;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.jensdriller.libs.undobar.UndoBar;
 import com.reader.ramkumar.SMSparser.SMS;
+import com.reader.ramkumar.expensemanager.Expense_add_window;
 import com.reader.ramkumar.expensemanager.R;
 
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ public class NotificationCard extends CardWithList {
                         //Example: add an item
                         CostObject w1 = new CostObject(NotificationCard.this);
                         w1.message = "Food";
-                        w1.info = "8400";
+                        w1.messagegId = "8400";
                         w1.setObjectId(w1.message);
                         mLinearListAdapter.add(w1);
                         break;
@@ -67,16 +69,9 @@ public class NotificationCard extends CardWithList {
 
     @Override
     protected void initCard() {
-
         //Set the whole card as swipeable
-        setSwipeable(true);
-        setOnSwipeListener(new OnSwipeListener() {
-            @Override
-            public void onSwipe(Card card) {
-                Toast.makeText(getContext(), "Swipe on " + card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        setSwipeable(false);
+        setUseProgressBar(true);
     }
 
 
@@ -86,7 +81,7 @@ public class NotificationCard extends CardWithList {
         ArrayList sms = new ArrayList();
 
         Uri uriSms = Uri.parse("content://sms/inbox");
-        Cursor cursor =getContext().getContentResolver().query(uriSms, new String[]{"_id", "address", "date", "body"},null,null,null);
+        final Cursor cursor =getContext().getContentResolver().query(uriSms, new String[]{"_id", "address", "date", "body"},null,null,null);
 
         cursor.moveToFirst();
         //Init the list
@@ -98,67 +93,68 @@ public class NotificationCard extends CardWithList {
             String body = cursor.getString(3);
 
             /* custom code*/
-            SMS s= new SMS();
+            final SMS s= new SMS();
             s.address=address;
             s.text=body;
             s.id=cursor.getString(0);
             s.when=cursor.getString(2);
 
-
-
-
              /* this may need to tune further for better accurecy */
             if(s.findSMS() && s.amount!=null) {
                 //Add an object to the list
-                CostObject w1 = new CostObject(this);
-                w1.message = "Rs."+s.amount +" spent on "+s.where;
-                w1.setObjectId(w1.info); //It can be important to set ad id
-                mObjects.add(w1);
+                CostObject c = new CostObject(this);
+                c.message = "Rs."+s.amount +" spent on "+s.where;
+                c.messagegId=s.id;
+                c.setObjectId(c.messagegId); //It can be important to set ad id
+                c.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(LinearListView parent, View view, int position, ListObject object) {
+                        //need to add code for arg parameter for add expense
+
+                        Toast.makeText(getContext(), "Click on " + position, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getContext(), Expense_add_window.class);
+                        intent.putExtra("AMOUNT", s.amount);
+                        getContext().startActivity(intent);
+                    }
+                });
+                mObjects.add(c);
 
 
             }
-
         }
-
-        //Example onSwipe
-        /*w2.setOnItemSwipeListener(new OnItemSwipeListener() {
-            @Override
-            public void onItemSwipe(ListObject object,boolean dismissRight) {
-                Toast.makeText(getContext(), "Swipe on " + object.getObjectId(), Toast.LENGTH_SHORT).show();
-            }
-        });*/
         return mObjects;
     }
 
+    /* XML field & values Mapping */
     @Override
     public View setupChildView(int childPosition, ListObject object, View convertView, ViewGroup parent) {
 
         //Setup the ui elements inside the item
-        TextView city = (TextView) convertView.findViewById(R.id.carddemo_weather_city);
-        TextView temperature = (TextView) convertView.findViewById(R.id.carddemo_weather_temperature);
+        TextView content = (TextView) convertView.findViewById(R.id.card_notification_content);
+        TextView timestamp = (TextView) convertView.findViewById(R.id.card_notification_time);
 
         //Retrieve the values from the object
         CostObject costObject = (CostObject) object;
-        city.setText(costObject.message);
-        temperature.setText(costObject.info);
+        content.setText(costObject.message);
+        timestamp.setText(costObject.messagegId);
 
         return convertView;
     }
 
     @Override
     public int getChildLayoutId() {
-        return R.layout.card_table_summary;
+        return R.layout.card_table_notification;
     }
 
 
     // -------------------------------------------------------------
-    // Weather Object
+    // Cost Object
     // -------------------------------------------------------------
 
     public class CostObject extends DefaultListObject implements UndoBar.Listener {
 
         public String message;
-        public String info;
+        public String messagegId;
 
         public CostObject(Card parentCard) {
             super(parentCard);
@@ -181,25 +177,24 @@ public class NotificationCard extends CardWithList {
 
         public void log(String text) {
             Toast.makeText(getContext(), "Swipe on " + text, Toast.LENGTH_SHORT).show();
-       /* mTxtLog.append("\n");
-        mTxtLog.append("#" + ++mLogCount + " ");
-        mTxtLog.append(text);*/
+
         }
 
         private void init() {
             //OnClick Listener
-            setOnItemClickListener(new OnItemClickListener() {
+           /* setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(LinearListView parent, View view, int position, ListObject object) {
                     Toast.makeText(getContext(), "Click on " + getObjectId(), Toast.LENGTH_SHORT).show();
                 }
             });
-
+            */
             //OnItemSwipeListener
             setOnItemSwipeListener(new OnItemSwipeListener() {
                 @Override
                 public void onItemSwipe(ListObject object, boolean dismissRight) {
                     Toast.makeText(getContext(), "Swipe on " + object.getObjectId(), Toast.LENGTH_SHORT).show();
+                    final String objId=object.getObjectId();
                     //new TestDialog(getContext()).show();
                     UndoBar undoBar = new UndoBar.Builder((Activity) getContext())//
                             .setMessage("Undo Me!")//
@@ -208,7 +203,7 @@ public class NotificationCard extends CardWithList {
                             .setUndoToken(new Parcelable() {
                                 @Override
                                 public int describeContents() {
-                                    return 12;
+                                    return Integer.parseInt(objId);
                                 }
 
                                 @Override

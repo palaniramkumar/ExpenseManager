@@ -1,15 +1,18 @@
 package com.reader.ramkumar.expensemanager.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jensdriller.libs.undobar.UndoBar;
 import com.reader.ramkumar.SMSparser.SMS;
 import com.reader.ramkumar.expensemanager.R;
 
@@ -88,6 +91,7 @@ public class NotificationCard extends CardWithList {
         cursor.moveToFirst();
         //Init the list
         List<ListObject> mObjects = new ArrayList<ListObject>();
+
         while  (cursor.moveToNext())
         {
             String address = cursor.getString(1);
@@ -102,13 +106,15 @@ public class NotificationCard extends CardWithList {
 
 
 
-            //Add an object to the list
-            CostObject w1 = new CostObject(this);
+
              /* this may need to tune further for better accurecy */
             if(s.findSMS() && s.amount!=null) {
+                //Add an object to the list
+                CostObject w1 = new CostObject(this);
                 w1.message = "Rs."+s.amount +" spent on "+s.where;
                 w1.setObjectId(w1.info); //It can be important to set ad id
                 mObjects.add(w1);
+
 
             }
 
@@ -149,7 +155,7 @@ public class NotificationCard extends CardWithList {
     // Weather Object
     // -------------------------------------------------------------
 
-    public class CostObject extends DefaultListObject {
+    public class CostObject extends DefaultListObject implements UndoBar.Listener {
 
         public String message;
         public String info;
@@ -157,6 +163,27 @@ public class NotificationCard extends CardWithList {
         public CostObject(Card parentCard) {
             super(parentCard);
             init();
+        }
+
+        public void bind(UndoBar undoBar) {
+            undoBar.setListener(this);
+        }
+
+        @Override
+        public void onHide() {
+            log("onHide()");
+        }
+
+        @Override
+        public void onUndo(Parcelable token) {
+            log("onUndo() " + token.describeContents());
+        }
+
+        public void log(String text) {
+            Toast.makeText(getContext(), "Swipe on " + text, Toast.LENGTH_SHORT).show();
+       /* mTxtLog.append("\n");
+        mTxtLog.append("#" + ++mLogCount + " ");
+        mTxtLog.append(text);*/
         }
 
         private void init() {
@@ -173,6 +200,26 @@ public class NotificationCard extends CardWithList {
                 @Override
                 public void onItemSwipe(ListObject object, boolean dismissRight) {
                     Toast.makeText(getContext(), "Swipe on " + object.getObjectId(), Toast.LENGTH_SHORT).show();
+                    //new TestDialog(getContext()).show();
+                    UndoBar undoBar = new UndoBar.Builder((Activity) getContext())//
+                            .setMessage("Undo Me!")//
+                            .setStyle(UndoBar.Style.LOLLIPOP)//
+                            .setUndoColor(getContext().getResources().getColor(R.color.accent))
+                            .setUndoToken(new Parcelable() {
+                                @Override
+                                public int describeContents() {
+                                    return 12;
+                                }
+
+                                @Override
+                                public void writeToParcel(Parcel dest, int flags) {
+
+                                }
+                            })
+                            .create();
+                    // final LogView logView=new LogView(getContext());
+                    bind(undoBar);
+                    undoBar.show();
                 }
             });
         }

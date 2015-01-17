@@ -5,3 +5,4 @@
     android:layout_height="wrap_content"
     android:background="?attr/colorPrimary"
     android:minHeight="75dp" />
+    <!--android:minHeight="75dp"-->

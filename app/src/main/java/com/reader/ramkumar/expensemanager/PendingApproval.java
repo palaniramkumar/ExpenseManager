@@ -82,7 +82,7 @@ public class PendingApproval extends Fragment {
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = mInflater.inflate(R.layout.fragment_pending_approval, mContainer, false);
 
-//card notification
+        //card notification
         NotificationCard card = new NotificationCard(getActivity());
 
         ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();

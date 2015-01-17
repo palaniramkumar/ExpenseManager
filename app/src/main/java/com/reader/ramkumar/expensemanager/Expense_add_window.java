@@ -74,8 +74,12 @@ public class Expense_add_window extends ListActivity {
 
             @Override
             public void onClick(View arg0) {
-                Toast.makeText(getApplicationContext(), list.get(listIndex).getName(),
+                if(listIndex!=-1)
+                    Toast.makeText(getApplicationContext(), list.get(listIndex).getName(),
                         Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(getApplicationContext(), "Please Select From the List",
+                            Toast.LENGTH_LONG).show();
 
 
             }

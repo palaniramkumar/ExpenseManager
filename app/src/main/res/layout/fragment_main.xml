@@ -47,6 +47,17 @@
 
         </RelativeLayout>
     </ScrollView>
+    <!--ImageView
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/animation_loading"/-->
+
+    <ProgressBar android:id="@+id/loading_spinner"
+        style="?android:progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"

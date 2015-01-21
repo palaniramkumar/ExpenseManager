@@ -6,10 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -19,6 +22,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.melnykov.fab.FloatingActionButton;
 import com.reader.ramkumar.expensemanager.adapter.ExpenseCard;
+import com.reader.ramkumar.expensemanager.db.DBHelper;
 
 import java.util.ArrayList;
 
@@ -47,6 +51,8 @@ public class main extends Fragment {
     private String mParam2;
     private PieChart mChart;
     private OnFragmentInteractionListener mListener;
+    private Handler mHandler = new Handler();
+    private ProgressBar mProgress;
 
     public main() {
         // Required empty public constructor
@@ -88,6 +94,83 @@ public class main extends Fragment {
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = mInflater.inflate(R.layout.fragment_main, mContainer, false);
 
+
+        //check for new SMS
+        mProgress= (ProgressBar)view.findViewById(R.id.loading_spinner) ;
+        // Start lengthy operation in a background thread
+
+        /*new Thread(new Runnable() {
+            public void run() {
+                int iProgress=0;
+                //mProgress.setVisibility(View.VISIBLE);
+                while (iProgress < 10) {
+                    iProgress ++;
+                    try {
+                        // Perform long-running task here
+                        // (like audio buffering).
+                        // you may want to update some progress
+                        // bar every second, so use handler:
+                        // Sleep for 200 milliseconds.
+                        //Just to display the progress slowly
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    // Update the progress bar
+                    mHandler.post(new Runnable() {
+                        // make operation on UI - on example
+                        // on progress bar.
+                        public void run() {
+
+
+                        }
+
+                    });
+
+                }
+
+
+            }
+        }).start();*/
+
+        class MyAsyncTask extends AsyncTask<Void, Void, Integer> {
+
+
+            @Override
+            protected void onPreExecute() {
+                mProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            protected void onPostExecute(Integer result) {
+                mProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            protected Integer doInBackground(Void... params) {
+                int iProgress=0;
+                DBHelper db=new DBHelper(getActivity().getApplicationContext());
+                db.deleteMaster(1);
+                while (iProgress < 2) {
+                    iProgress++;
+                    try {
+                        // Perform long-running task here
+                        // (like audio buffering).
+                        // you may want to update some progress
+                        // bar every second, so use handler:
+                        // Sleep for 200 milliseconds.
+                        //Just to display the progress slowly
+                        db.insertMaster("1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1");
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return 0;
+            }
+
+        }
+        new MyAsyncTask().execute();
 
         ExpenseCard card = new ExpenseCard(getActivity());
 

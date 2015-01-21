@@ -19,23 +19,24 @@ import android.database.sqlite.SQLiteDatabase;
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "MyExpense.db";
-    public static final String CONTACTS_TABLE_NAME = "expense";
-    public static final String CONTACTS_COLUMN_ID = "id";
-    public static final String CONTACTS_COLUMN_NAME = "desc";
-    public static final String CONTACTS_COLUMN_EMAIL = "bank_name";
-    public static final String CONTACTS_COLUMN_STREET = "trans_source";//credit,debit,cash,online or netbanking
-    public static final String CONTACTS_COLUMN_CITY = "trans_type";//credit,debit
-    public static final String CONTACTS_COLUMN_CITY1 = "expanse_type";//home,car,fuel,misc
-    public static final String CONTACTS_COLUMN_CITY2 = "notes";//credit,debit
-    public static final String CONTACTS_COLUMN_PHONE = "sms_id";
-    public static final String CONTACTS_COLUMN_PHONE1 = "where";
-    public static final String CONTACTS_COLUMN_PHONE2 = "when";
-    public static final String CONTACTS_COLUMN_PHONE3 = "sms_timestamp";
-    public static final String CONTACTS_COLUMN_PHONE4 = "timestamp";
-    public static final String CONTACTS_COLUMN_PHONE5 = "geo_tag";
-    public static final String CONTACTS_COLUMN_PHONE6 = "SharedExpense";
-    public static final String CONTACTS_COLUMN_PHONE8 = "SharedMembers";
-    public static final String CONTACTS_COLUMN_PHONE7 = "status"; //pending,deleted,accepted
+    public static final String MASTER_TABLE_NAME = "master";
+    public static final String MASTER_COLUMN_ID = "id";
+    public static final String MASTER_COLUMN_DESC = "desc";
+    public static final String MASTER_COLUMN_BANK_NAME = "bank_name";
+    public static final String MASTER_COLUMN_TRANS_SOURCE = "trans_source";//credit,debit,cash,online or netbanking
+    public static final String MASTER_COLUMN_TRANS_TYPE = "trans_type";//credit,debit
+    public static final String MASTER_COLUMN_EXPANSE_TYPE = "expanse_type";//home,car,fuel,misc
+    public static final String MASTER_COLUMN_NOTES = "notes";//credit,debit
+    public static final String MASTER_COLUMN_SMS_ID = "sms_id";
+    public static final String MASTER_COLUMN_LANDMARK = "landmark";
+    public static final String MASTER_COLUMN_LANDMARK_TIME = "landmark_time";
+    public static final String MASTER_COLUMN_PLACE = "place";
+    public static final String MASTER_COLUMN_SMS_TIMESTAMP = "sms_timestamp";
+    public static final String MASTER_COLUMN_TIMESTAMP = "timestamp";
+    public static final String MASTER_COLUMN_GEO_TAG = "geo_tag";
+    public static final String MASTER_COLUMN_SHAREDEXPENSE = "SharedExpense";
+    public static final String MASTER_COLUMN_SHAREDMEMBERS = "SharedMembers";
+    public static final String MASTER_COLUMN_STATUS = "status"; //pending,deleted,accepted
 
     private HashMap hp;
 
@@ -47,72 +48,108 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // TODO Auto-generated method stub
+        db.execSQL("DROP TABLE IF EXISTS MASTER");
         db.execSQL(
-                "create table contacts " +
-                        "(id integer primary key, name text,phone text,email text, street text,place text)"
+                "create table MASTER " +
+                        "(id integer primary key, desc text,bank_name text,trans_source text, trans_type text,expanse_type text," +
+                        " notes text,sms_id text,landmark text, place text,landmark_time text,sms_timestamp text,timestamp text," +
+                        "geo_tag text,SharedExpense text, SharedMembers text,status text)"
         );
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
-        db.execSQL("DROP TABLE IF EXISTS contacts");
+        db.execSQL("DROP TABLE IF EXISTS MASTER");
         onCreate(db);
     }
 
-    public boolean insertContact  (String name, String phone, String email, String street,String place)
+    public boolean insertMaster  (String desc, String bank_name, String trans_source,
+                                  String trans_type,String expanse_type,String notes,
+                                  String sms_id,String landmark,String landmark_time,
+                                  String sms_timestamp,String timestamp,String place,
+                                  String geo_tag,String SharedExpense,
+                                  String SharedMembers,String status)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put("name", name);
-        contentValues.put("phone", phone);
-        contentValues.put("email", email);
-        contentValues.put("street", street);
+        contentValues.put("desc", desc);
+        contentValues.put("bank_name", bank_name);
+        contentValues.put("trans_source", trans_source);
+        contentValues.put("trans_type", trans_type);
+        contentValues.put("expanse_type", expanse_type);
+        contentValues.put("notes", notes);
+        contentValues.put("sms_id", sms_id);
+        contentValues.put("landmark", landmark);
+        contentValues.put("landmark_time", landmark_time);
+        contentValues.put("sms_timestamp", sms_timestamp);
+        contentValues.put("timestamp", timestamp);
+        contentValues.put("geo_tag", geo_tag);
+        contentValues.put("SharedExpense", SharedExpense);
+        contentValues.put("SharedMembers", SharedMembers);
+        contentValues.put("status", status);
         contentValues.put("place", place);
 
-        db.insert("contacts", null, contentValues);
+        db.insert("MASTER", null, contentValues);
         return true;
     }
     public Cursor getData(int id){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from contacts where id="+id+"", null );
+        Cursor res =  db.rawQuery( "select * from MASTER where id="+id+"", null );
         return res;
     }
     public int numberOfRows(){
         SQLiteDatabase db = this.getReadableDatabase();
-        int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
+        int numRows = (int) DatabaseUtils.queryNumEntries(db, MASTER_TABLE_NAME);
         return numRows;
     }
-    public boolean updateContact (Integer id, String name, String phone, String email, String street,String place)
+    public boolean updateMaster(Integer id, String desc, String bank_name, String trans_source,
+                                String trans_type,String expanse_type,String notes,
+                                String sms_id,String landmark,String landmark_time,
+                                String sms_timestamp,String timestamp,String place,
+                                String geo_tag,String SharedExpense,
+                                String SharedMembers,String status)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("name", name);
-        contentValues.put("phone", phone);
-        contentValues.put("email", email);
-        contentValues.put("street", street);
+        contentValues.put("desc", desc);
+        contentValues.put("bank_name", bank_name);
+        contentValues.put("trans_source", trans_source);
+        contentValues.put("trans_type", trans_type);
+        contentValues.put("expanse_type", expanse_type);
+        contentValues.put("notes", notes);
+        contentValues.put("sms_id", sms_id);
+        contentValues.put("landmark", landmark);
+        contentValues.put("landmark_time", landmark_time);
+        contentValues.put("sms_timestamp", sms_timestamp);
+        contentValues.put("timestamp", timestamp);
+        contentValues.put("geo_tag", geo_tag);
+        contentValues.put("SharedExpense", SharedExpense);
+        contentValues.put("SharedMembers", SharedMembers);
+        contentValues.put("status", status);
         contentValues.put("place", place);
-        db.update("contacts", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
+        db.update("MASTER", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
         return true;
     }
 
-    public Integer deleteContact (Integer id)
+    public Integer deleteMaster (Integer id)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete("contacts",
+        return db.delete("MASTER",
                 "id = ? ",
                 new String[] { Integer.toString(id) });
     }
-    public ArrayList getAllCotacts()
+
+    public ArrayList getAllFromMaster()
     {
         ArrayList array_list = new ArrayList();
         //hp = new HashMap();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from contacts", null );
+        Cursor res =  db.rawQuery( "select * from MASTER", null );
         res.moveToFirst();
         while(res.isAfterLast() == false){
-            array_list.add(res.getString(res.getColumnIndex(CONTACTS_COLUMN_NAME)));
+            array_list.add(res.getString(res.getColumnIndex(MASTER_TABLE_NAME)));
             res.moveToNext();
         }
         return array_list;

@@ -138,6 +138,15 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updateMasterStatus(Integer sms_id, String status)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("status", status);
+        db.update("MASTER", contentValues, "sms_id = ? ", new String[] { Integer.toString(sms_id) } );
+        return true;
+    }
+
     public Integer deleteMaster (Integer id)
     {
         SQLiteDatabase db = this.getWritableDatabase();

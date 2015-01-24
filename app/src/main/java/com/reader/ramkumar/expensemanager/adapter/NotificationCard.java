@@ -32,6 +32,7 @@ import it.gmariotti.cardslib.library.prototypes.LinearListView;
  * Created by Ramkumar on 27/12/14.
  */
 public class NotificationCard extends CardWithList {
+    DBHelper db;
     public NotificationCard(Context context) {
         super(context);
     }
@@ -78,7 +79,7 @@ public class NotificationCard extends CardWithList {
 
     @Override
     protected List<ListObject> initChildren() {
-        DBHelper db=new DBHelper(getContext());
+        db=new DBHelper(getContext());
         final Cursor cursor= db.getAllFromMaster();
         cursor.moveToFirst();
         //Init the list
@@ -154,8 +155,11 @@ public class NotificationCard extends CardWithList {
             log("onHide()");
         }
 
+        ListObject deletedObject;
         @Override
         public void onUndo(Parcelable token) {
+            db.updateMasterStatus(token.describeContents(),"PENDING");
+            mLinearListAdapter.add(deletedObject);
             log("onUndo() " + token.describeContents());
         }
 
@@ -176,12 +180,16 @@ public class NotificationCard extends CardWithList {
             //OnItemSwipeListener
             setOnItemSwipeListener(new OnItemSwipeListener() {
                 @Override
-                public void onItemSwipe(ListObject object, boolean dismissRight) {
+                public void onItemSwipe(final ListObject object, boolean dismissRight) {
                     Toast.makeText(getContext(), "Swipe on " + object.getObjectId(), Toast.LENGTH_SHORT).show();
                     final String objId=object.getObjectId();
+                    deletedObject=object;
+                    db.updateMasterStatus(Integer.parseInt(objId),"DELETED");
+
                     //new TestDialog(getContext()).show();
+
                     UndoBar undoBar = new UndoBar.Builder((Activity) getContext())//
-                            .setMessage("Undo Me!")//
+                            .setMessage("Successfully Deleted ")//
                             .setStyle(UndoBar.Style.LOLLIPOP)//
                             .setUndoColor(getContext().getResources().getColor(R.color.accent))
                             .setUndoToken(new Parcelable() {
@@ -192,7 +200,7 @@ public class NotificationCard extends CardWithList {
 
                                 @Override
                                 public void writeToParcel(Parcel dest, int flags) {
-
+                                    dest.writeValue(object);
                                 }
                             })
                             .create();

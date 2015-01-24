@@ -42,13 +42,15 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(Context context)
     {
+
         super(context, DATABASE_NAME , null, 1);
+        context.deleteDatabase(DATABASE_NAME);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         // TODO Auto-generated method stub
-        db.execSQL("DROP TABLE IF EXISTS MASTER");
+
         db.execSQL(
                 "create table MASTER " +
                         "(id integer primary key, desc text,bank_name text,trans_source text, trans_type text,expanse_type text," +

@@ -19,12 +19,19 @@ import java.util.regex.Pattern;
  Your BANK a/c xxxx (.*?) will be debited for Rs (.*?) towards (.*?) on 08/JAN/2015 .
  */
 public class HDFC {
+    public SMSParserData parserValue;
+
+    public class  SMSParserData{
+        public String valueSet[];
+        public String trans_type;
+        public String card_type;
+    }
     final String [][] template ={
-            {"Rs.(.*?) was spent on ur HDFCBank CREDIT Card ending (.*?) on (.*?) at (.*?).Avl","EXPENSE"},
-            {"An amount of Rs.(.*?) has been debited from your account  number (.*?) for (.*?) done using HDFC Bank NetBanking","EXPENSE"},
-            {"INR (.*?) deposited to A/c No (.*?)","EXPENSE"},
-            {"Thank you for using your HDFC Bank DEBIT/ATM Card ending (.*?) for Rs. (.*?) towards ATM WDL in (.*?) at (.*?) on (.*?)","WDL"},
-            {"Your BANK a/c xxxx (.*?) will be debited for Rs (.*?) towards (.*?) on (.*?)","INCOME"}
+            {"Rs.(.*?) was spent on ur HDFCBank CREDIT Card ending (.*?) on (.*?) at (.*?).Avl","EXPENSE","CREDIT CARD"},
+            {"An amount of Rs.(.*?) has been debited from your account  number (.*?) for (.*?) done using HDFC Bank NetBanking","EXPENSE","DEBIT CARD"},
+            {"INR (.*?) deposited to A/c No (.*?)","INCOME","DEBIT CARD"},
+            {"Thank you for using your HDFC Bank DEBIT/ATM Card ending (.*?) for Rs. (.*?) towards ATM WDL in (.*?) at (.*?) on (.*?)","WDL","DEBIT CARD"},
+            {"Your BANK a/c xxxx (.*?) will be debited for Rs (.*?) towards (.*?) on (.*?)","EXPENSE","DEBIT CARD"}
     };
     /*Amount,Account,Time,Where,Place*/
     final int [][] templateMap={
@@ -34,24 +41,30 @@ public class HDFC {
             {1,0,4,3,2},
             {1,0,3,2}
     };
-    String [] valueSet;
+
     String sms;
     public HDFC(String text){
         this.sms=text;
     }
-    public String[] parseSMS(){
+    public SMSParserData parseSMS(){
+        parserValue = new SMSParserData();
         for(int i=0;i<template.length;i++) {
             Pattern pattern = Pattern.compile(template[i][0]);
             Matcher matcher = pattern.matcher(sms);
-            valueSet = new String[5];
+            parserValue.valueSet = new String[5];
             if (matcher.find()) {
                 for(int j=0;j<templateMap[i].length;j++) {
                     System.out.println(matcher.group(j+1));
-                    valueSet[templateMap[i][j]]=matcher.group(j+1);
+                    parserValue.valueSet[templateMap[i][j]]=matcher.group(j+1);
                 }
             }
-            if(valueSet[0]!=null)break;
+            if(parserValue.valueSet[0]!=null){
+                parserValue.card_type= template[i][2];
+                parserValue.trans_type= template[i][1];
+                break;
+            }
         }
-        return valueSet;
+        return parserValue;
     }
 }
+

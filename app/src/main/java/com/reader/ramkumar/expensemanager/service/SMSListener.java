@@ -11,12 +11,12 @@ import android.telephony.gsm.SmsMessage;
 import android.widget.Toast;
 import com.reader.ramkumar.expensemanager.*;
 import com.reader.ramkumar.SMSparser.HDFC;
-import com.reader.ramkumar.SMSparser.SMS;
 
 /**
  * Created by Ram on 08/01/2015.
  */
 public class SMSListener extends BroadcastReceiver{
+    HDFC.SMSParserData strParse;
 
     /**
      * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
@@ -34,11 +34,11 @@ public class SMSListener extends BroadcastReceiver{
         String text  = smsMessage[0].getMessageBody();
         if(text.contains("HDFC")){
             HDFC bank=new HDFC(text);
-            String [] strParse = bank.parseSMS();
-            String amount=strParse[0];
-            String where = strParse[3];
+            strParse = bank.parseSMS();
+            String amount=strParse.valueSet[0];
+            String where = strParse.valueSet[3];
             //when = strParse[2];
-            String place = strParse[4];
+            String place = strParse.valueSet[4];
             /*Intent intent1 = new Intent(context, Expense_add_window.class);
             PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent1, 0);
             Notification n  = new Notification.Builder(context)

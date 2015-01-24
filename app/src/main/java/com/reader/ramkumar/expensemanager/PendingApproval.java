@@ -3,6 +3,7 @@ package com.reader.ramkumar.expensemanager;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,6 +14,10 @@ import android.widget.ProgressBar;
 
 import android.os.Handler;
 import com.reader.ramkumar.expensemanager.adapter.NotificationCard;
+import com.reader.ramkumar.expensemanager.db.DBHelper;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
 import it.gmariotti.cardslib.library.view.CardViewNative;
@@ -37,8 +42,7 @@ public class PendingApproval extends Fragment {
     private String mParam2;
     ViewGroup mContainer;
     private ProgressBar mProgress;
-    private int mProgressStatus = 0;
-    private Handler mHandler = new Handler();
+    NotificationCard card;
 
     private OnFragmentInteractionListener mListener;
 
@@ -79,43 +83,45 @@ public class PendingApproval extends Fragment {
         // Inflate the layout for this fragment
         mContainer = container;
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = mInflater.inflate(R.layout.fragment_pending_approval, mContainer, false);
+        final View view = mInflater.inflate(R.layout.fragment_pending_approval, mContainer, false);
 
-        //card notification
-        NotificationCard card = new NotificationCard(getActivity());
 
-        ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
-        card.setViewToClickToExpand(viewToClickToExpand);
-        card.init();
-        //Set card in the cardView
-        CardViewNative cardView = (CardViewNative) view.findViewById(R.id.cardnotification); //if you want list, pls change the xml to "CardListView"
-        cardView.setCard(card);
 
-        mProgress = (ProgressBar) view.findViewById(R.id.notification_progressBar);
 
-        // Start lengthy operation in a background thread
-        new Thread(new Runnable() {
-            public void run() {
-                while (mProgressStatus < 100) {
-                    mProgressStatus ++;
-                    try {
-                        // Sleep for 200 milliseconds.
-                        //Just to display the progress slowly
-                        Thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    // Update the progress bar
-                    mHandler.post(new Runnable() {
-                        public void run() {
-                            mProgress.setProgress(mProgressStatus);
-                        }
-                    });
-                }
-                //mProgress.setVisibility(View.INVISIBLE);
+        mProgress = (ProgressBar) view.findViewById(R.id.loading_spinner);
+
+        class MyAsyncTask extends AsyncTask<Void, Void, NotificationCard> {
+
+
+            @Override
+            protected void onPreExecute() {
+                mProgress.setVisibility(View.VISIBLE);
             }
-        }).start();
 
+            @Override
+            protected void onPostExecute(NotificationCard result) {
+                mProgress.setVisibility(View.GONE);
+                card=result;
+                //Set card in the cardView
+                CardViewNative cardView = (CardViewNative) view.findViewById(R.id.cardnotification); //if you want list, pls change the xml to "CardListView"
+                cardView.setCard(card);
+            }
+
+            @Override
+            protected NotificationCard doInBackground(Void... params) {
+                //card notification
+                NotificationCard card = new NotificationCard(getActivity());
+
+                ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
+                card.setViewToClickToExpand(viewToClickToExpand);
+                card.init();
+                return card;
+            }
+
+        }
+
+
+        new MyAsyncTask().execute();
         return view;
     }
 

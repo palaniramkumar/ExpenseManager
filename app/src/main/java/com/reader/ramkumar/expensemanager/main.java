@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -21,12 +22,16 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.melnykov.fab.FloatingActionButton;
+import com.reader.ramkumar.SMSparser.SMS;
 import com.reader.ramkumar.expensemanager.adapter.ExpenseCard;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
+import it.gmariotti.cardslib.library.prototypes.CardWithList;
+import it.gmariotti.cardslib.library.prototypes.LinearListView;
 import it.gmariotti.cardslib.library.view.CardViewNative;
 
 
@@ -97,41 +102,7 @@ public class main extends Fragment {
 
         //check for new SMS
         mProgress= (ProgressBar)view.findViewById(R.id.loading_spinner) ;
-        // Start lengthy operation in a background thread
 
-        /*new Thread(new Runnable() {
-            public void run() {
-                int iProgress=0;
-                //mProgress.setVisibility(View.VISIBLE);
-                while (iProgress < 10) {
-                    iProgress ++;
-                    try {
-                        // Perform long-running task here
-                        // (like audio buffering).
-                        // you may want to update some progress
-                        // bar every second, so use handler:
-                        // Sleep for 200 milliseconds.
-                        //Just to display the progress slowly
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    // Update the progress bar
-                    mHandler.post(new Runnable() {
-                        // make operation on UI - on example
-                        // on progress bar.
-                        public void run() {
-
-
-                        }
-
-                    });
-
-                }
-
-
-            }
-        }).start();*/
 
         class MyAsyncTask extends AsyncTask<Void, Void, Integer> {
 
@@ -151,21 +122,7 @@ public class main extends Fragment {
                 int iProgress=0;
                 DBHelper db=new DBHelper(getActivity().getApplicationContext());
                 db.deleteMaster(1);
-                while (iProgress < 2) {
-                    iProgress++;
-                    try {
-                        // Perform long-running task here
-                        // (like audio buffering).
-                        // you may want to update some progress
-                        // bar every second, so use handler:
-                        // Sleep for 200 milliseconds.
-                        //Just to display the progress slowly
-                        db.insertMaster("1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1");
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+                syncSMS(getActivity());
                 return 0;
             }
 
@@ -345,5 +302,41 @@ public class main extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+
+    protected List<CardWithList.ListObject> syncSMS(Context context) {
+
+        ArrayList sms = new ArrayList();
+
+        Uri uriSms = Uri.parse("content://sms/inbox");
+        final Cursor cursor =context.getContentResolver().query(uriSms, new String[]{"_id", "address", "date", "body"},null,null,null);
+
+        cursor.moveToFirst();
+        //Init the list
+        List<CardWithList.ListObject> mObjects = new ArrayList<CardWithList.ListObject>();
+        DBHelper db=new DBHelper(getActivity().getApplicationContext());
+
+        while  (cursor.moveToNext())
+        {
+            String address = cursor.getString(1);
+            String body = cursor.getString(3);
+
+            /* custom code*/
+            final SMS s= new SMS();
+            s.address=address;
+            s.text=body;
+            s.id=cursor.getString(0);
+            s.when=cursor.getString(2);
+
+             /* this may need to tune further for better accurecy */
+            if(s.findSMS() && s.amount!=null) {
+                //Add an object to the list
+                db.insertMaster(s.where,s.bankName,s.card_type,s.trans_type,s.expanse_type,null,s.id,s.where,s.when,
+                        null,null,s.place,null,null,null,"PENDING");
+            }
+        }
+        db.close();
+        return mObjects;
     }
 }

@@ -17,6 +17,7 @@ import com.jensdriller.libs.undobar.UndoBar;
 import com.reader.ramkumar.SMSparser.SMS;
 import com.reader.ramkumar.expensemanager.Expense_add_window;
 import com.reader.ramkumar.expensemanager.R;
+import com.reader.ramkumar.expensemanager.db.DBHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,50 +78,33 @@ public class NotificationCard extends CardWithList {
 
     @Override
     protected List<ListObject> initChildren() {
-
-        ArrayList sms = new ArrayList();
-
-        Uri uriSms = Uri.parse("content://sms/inbox");
-        final Cursor cursor =getContext().getContentResolver().query(uriSms, new String[]{"_id", "address", "date", "body"},null,null,null);
-
+        DBHelper db=new DBHelper(getContext());
+        final Cursor cursor= db.getAllFromMaster();
         cursor.moveToFirst();
         //Init the list
         List<ListObject> mObjects = new ArrayList<ListObject>();
 
         while  (cursor.moveToNext())
         {
-            String address = cursor.getString(1);
-            String body = cursor.getString(3);
-
-            /* custom code*/
-            final SMS s= new SMS();
-            s.address=address;
-            s.text=body;
-            s.id=cursor.getString(0);
-            s.when=cursor.getString(2);
-
              /* this may need to tune further for better accurecy */
-            if(s.findSMS() && s.amount!=null) {
-                //Add an object to the list
-                CostObject c = new CostObject(this);
-                c.message = "Rs."+s.amount +" spent on "+s.where;
-                c.messagegId=s.id;
-                c.setObjectId(c.messagegId); //It can be important to set ad id
-                c.setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(LinearListView parent, View view, int position, ListObject object) {
-                        //need to add code for arg parameter for add expense
+            final String amount = cursor.getString(2);
+            //Add an object to the list
+            CostObject c = new CostObject(this);
+            c.message = "Rs."+ amount +" spent on "+cursor.getString(9);
+            c.messagegId=cursor.getString(8);
+            c.setObjectId(c.messagegId); //It can be important to set ad id
+            c.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(LinearListView parent, View view, int position, ListObject object) {
+                    //need to add code for arg parameter for add expense
 
-                        Toast.makeText(getContext(), "Click on " + position, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getContext(), Expense_add_window.class);
-                        intent.putExtra("AMOUNT", s.amount);
-                        getContext().startActivity(intent);
-                    }
-                });
-                mObjects.add(c);
-
-
-            }
+                    Toast.makeText(getContext(), "Click on " + position, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getContext(), Expense_add_window.class);
+                    intent.putExtra("AMOUNT", amount);
+                    getContext().startActivity(intent);
+                }
+            });
+            mObjects.add(c);
         }
         return mObjects;
     }

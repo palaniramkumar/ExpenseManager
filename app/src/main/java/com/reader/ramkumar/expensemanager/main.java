@@ -332,8 +332,9 @@ public class main extends Fragment {
              /* this may need to tune further for better accurecy */
             if(s.findSMS() && s.amount!=null) {
                 //Add an object to the list
-                db.insertMaster(s.where,s.bankName,s.card_type,s.trans_type,s.expanse_type,null,s.id,s.where,s.when,
+                db.insertMaster(s.where,s.amount,s.bankName,s.card_type,s.trans_type,s.expanse_type,null,s.id,s.where,s.when,
                         null,null,s.place,null,null,null,"PENDING");
+                System.out.println("woi->"+s.amount);
             }
         }
         db.close();

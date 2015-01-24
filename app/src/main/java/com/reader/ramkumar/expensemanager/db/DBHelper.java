@@ -22,6 +22,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String MASTER_TABLE_NAME = "master";
     public static final String MASTER_COLUMN_ID = "id";
     public static final String MASTER_COLUMN_DESC = "desc";
+    public static final String MASTER_COLUMN_AMOUNT = "amount";
     public static final String MASTER_COLUMN_BANK_NAME = "bank_name";
     public static final String MASTER_COLUMN_TRANS_SOURCE = "trans_source";//credit,debit,cash,online or netbanking
     public static final String MASTER_COLUMN_TRANS_TYPE = "trans_type";//credit,debit
@@ -44,7 +45,7 @@ public class DBHelper extends SQLiteOpenHelper {
     {
 
         super(context, DATABASE_NAME , null, 1);
-        context.deleteDatabase(DATABASE_NAME);
+        //context.deleteDatabase(DATABASE_NAME);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL(
                 "create table MASTER " +
-                        "(id integer primary key, desc text,bank_name text,trans_source text, trans_type text,expanse_type text," +
+                        "(id integer primary key, desc text,amount text,bank_name text,trans_source text, trans_type text,expanse_type text," +
                         " notes text,sms_id text,landmark text, place text,landmark_time text,sms_timestamp text,timestamp text," +
                         "geo_tag text,SharedExpense text, SharedMembers text,status text)"
         );
@@ -66,7 +67,7 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertMaster  (String desc, String bank_name, String trans_source,
+    public boolean insertMaster  (String desc,String amount, String bank_name, String trans_source,
                                   String trans_type,String expanse_type,String notes,
                                   String sms_id,String landmark,String landmark_time,
                                   String sms_timestamp,String timestamp,String place,
@@ -77,6 +78,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("desc", desc);
+        contentValues.put("amount", amount);
         contentValues.put("bank_name", bank_name);
         contentValues.put("trans_source", trans_source);
         contentValues.put("trans_type", trans_type);
@@ -106,7 +108,7 @@ public class DBHelper extends SQLiteOpenHelper {
         int numRows = (int) DatabaseUtils.queryNumEntries(db, MASTER_TABLE_NAME);
         return numRows;
     }
-    public boolean updateMaster(Integer id, String desc, String bank_name, String trans_source,
+    public boolean updateMaster(Integer id, String desc,String amount, String bank_name, String trans_source,
                                 String trans_type,String expanse_type,String notes,
                                 String sms_id,String landmark,String landmark_time,
                                 String sms_timestamp,String timestamp,String place,
@@ -116,6 +118,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("desc", desc);
+        contentValues.put("amount", amount);
         contentValues.put("bank_name", bank_name);
         contentValues.put("trans_source", trans_source);
         contentValues.put("trans_type", trans_type);
@@ -143,17 +146,16 @@ public class DBHelper extends SQLiteOpenHelper {
                 new String[] { Integer.toString(id) });
     }
 
-    public ArrayList getAllFromMaster()
+    public Cursor getAllFromMaster()
     {
-        ArrayList array_list = new ArrayList();
-        //hp = new HashMap();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from MASTER", null );
-        res.moveToFirst();
-        while(res.isAfterLast() == false){
-            array_list.add(res.getString(res.getColumnIndex(MASTER_TABLE_NAME)));
-            res.moveToNext();
-        }
-        return array_list;
+        return res;
+    }
+    public Cursor getAllFromMaster(int id)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from MASTER where sms_id="+id+"", null );
+        return res;
     }
 }

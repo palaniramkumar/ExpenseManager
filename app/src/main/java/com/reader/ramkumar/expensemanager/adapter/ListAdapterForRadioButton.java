@@ -1,6 +1,7 @@
 package com.reader.ramkumar.expensemanager.adapter;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.reader.ramkumar.expensemanager.R;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Ramkumar on 28/12/14.
@@ -35,6 +37,7 @@ public class ListAdapterForRadioButton extends ArrayAdapter<ListAdapterRadioMode
             view = inflator.inflate(R.layout.list_radio_items, null);
             final ViewHolder viewHolder = new ViewHolder();
             viewHolder.text = (TextView) view.findViewById(R.id.label);
+            viewHolder.color = (TextView) view.findViewById(R.id.item_color);
             viewHolder.radioButton = (RadioButton) view.findViewById(R.id.radio);
             viewHolder.radioButton
                     .setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -48,6 +51,10 @@ public class ListAdapterForRadioButton extends ArrayAdapter<ListAdapterRadioMode
 
                         }
                     });
+            Random rnd = new Random();
+            int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+            viewHolder.color.setBackgroundColor(color);
+            viewHolder.color.setText(list.get(position).getName().charAt(0)+"");
             view.setTag(viewHolder);
             viewHolder.radioButton.setTag(list.get(position));
         } else {
@@ -62,6 +69,7 @@ public class ListAdapterForRadioButton extends ArrayAdapter<ListAdapterRadioMode
 
     static class ViewHolder {
         protected TextView text;
+        protected TextView color;
         protected RadioButton radioButton;
     }
 }

@@ -49,12 +49,21 @@ public class Expense_add_window extends ListActivity {
         onAcceptButtonClick();
         onChooseDateClick(getApplicationContext());
 
-        EditText edit_amount = (EditText) findViewById(R.id.edit_amount);
+        Button edit_amount = (Button) findViewById(R.id.btn_amount);
         edit_amount.setText(mAmount);
+g
+        Button btnDecline = (Button) findViewById(R.id.btn_decline);
 
-        Button btnChkIn = (Button) findViewById(R.id.btn_decline);
+        btnDecline.setOnClickListener(new View.OnClickListener() {
 
-        btnChkIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+
+        });
+
+        edit_amount.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {

@@ -2,6 +2,7 @@ package com.reader.ramkumar.expensemanager.util;
 
 /**
  * Created by Ramkumar on 21/01/15.
+ * so far this code is not in use. It may used in  the future
  */
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

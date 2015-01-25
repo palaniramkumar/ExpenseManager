@@ -50,8 +50,11 @@ public class Expense_add_window extends ListActivity {
         onChooseDateClick(getApplicationContext());
 
         Button edit_amount = (Button) findViewById(R.id.btn_amount);
-        edit_amount.setText(mAmount);
-g
+        if(mAmount!=null)
+            edit_amount.setText(mAmount);
+        else
+            edit_amount.setText("0.00");
+
         Button btnDecline = (Button) findViewById(R.id.btn_decline);
 
         btnDecline.setOnClickListener(new View.OnClickListener() {
@@ -104,23 +107,15 @@ g
         // create an instance of NumbPad
         NumbPad np = new NumbPad();
         // optionally set additional title
-        np.setAdditionalText("Need da pin");
+        //np.setAdditionalText("Enter the Amount");
         // show the NumbPad to capture input.
-        np.show(this, "Manager Pin is Required!", NumbPad.HIDE_INPUT,
+        np.show(this, "Enter the Amount", NumbPad.HIDE_INPUT,
                 new NumbPad.numbPadInterface() {
                     // This is called when the user click the 'Ok' button on the dialog
                     // value is the captured input from the dialog.
                     public String numPadInputValue(String value) {
-                        if (value.equals("1234")) {
-                            // do something here
-                            Toast.makeText(getApplicationContext(),
-                                    "Pin is CORRECT! What do you want me to do?", Toast.LENGTH_LONG).show();
-                        } else {
-                            // generate a toast message to inform the user that
-                            // the captured input is not valid
-                            Toast.makeText(getApplicationContext(),
-                                    "Manager Pin is incorrect", Toast.LENGTH_LONG).show();
-                        }
+                        Button edit_amount = (Button) findViewById(R.id.btn_amount);
+                        edit_amount.setText(value);
                         return null;
                     }
 
@@ -129,7 +124,7 @@ g
                         // generate a toast message to inform the user that the pin
                         // capture was canceled
                         Toast.makeText(getApplicationContext(),
-                                "Pin capture canceled!", Toast.LENGTH_LONG).show();
+                                "Amount Cancelled", Toast.LENGTH_LONG).show();
                         return null;
                     }
                 });

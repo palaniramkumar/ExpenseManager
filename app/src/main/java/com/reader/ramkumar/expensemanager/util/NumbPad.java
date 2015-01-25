@@ -72,11 +72,11 @@ public class NumbPad {
         View iView = inflater.inflate(R.layout.numb_pad, null, false);
 
         // create code to handle the change tender
-        prompt = (TextView) iView.findViewById(R.id.promptText);
-        prompt.setText(addl_text);
+        //prompt = (TextView) iView.findViewById(R.id.promptText);
+        /*prompt.setText(addl_text);
         if (addl_text.equals("")) {
             prompt.setVisibility(View.GONE);
-        }
+        }*/
         promptValue = (TextView) iView.findViewById(R.id.promptValue);
 
         // Defaults
@@ -176,11 +176,12 @@ public class NumbPad {
 
     void appendNumber(String inNumb) {
         value = value + inNumb;
-        if (flag_hideInput == 1) {
+        promptValue.setText(value);
+        /*if (flag_hideInput == 1) {
             promptValue.setText(promptValue.getText() + "*");
         } else {
             promptValue.setText(promptValue.getText() + inNumb);
-        }
+        }*/
     }
 
 }

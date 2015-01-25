@@ -105,11 +105,13 @@ public class PendingApproval extends Fragment {
                 //Set card in the cardView
                 CardViewNative cardView = (CardViewNative) view.findViewById(R.id.cardnotification); //if you want list, pls change the xml to "CardListView"
                 cardView.setCard(card);
+                cardView.setVisibility(View.VISIBLE);
             }
 
             @Override
             protected NotificationCard doInBackground(Void... params) {
                 //card notification
+
                 NotificationCard card = new NotificationCard(getActivity());
 
                 ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
@@ -120,7 +122,7 @@ public class PendingApproval extends Fragment {
 
         }
 
-
+        ((CardViewNative) view.findViewById(R.id.cardnotification)).setVisibility(View.GONE);
         new MyAsyncTask().execute();
         return view;
     }

@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.reader.ramkumar.expensemanager.adapter.ListAdapterForRadioButton;
@@ -88,9 +89,19 @@ public class Expense_add_window extends ListActivity {
 
             @Override
             public void onClick(View arg0) {
-                if (listIndex != -1)
-                    Toast.makeText(getApplicationContext(), list.get(listIndex).getName(),
+                if (listIndex != -1) {
+                    String amount = ((Button) findViewById(R.id.btn_amount)).getText().toString();
+                    int selectedId = ((RadioGroup) findViewById(R.id.rdo_trans_src)).getCheckedRadioButtonId();
+                    String trans_src = ((RadioButton) findViewById(selectedId)).getText().toString();
+                    selectedId = ((RadioGroup) findViewById(R.id.rdo_trans_type)).getCheckedRadioButtonId();
+                    String trans_type = ((RadioButton) findViewById(selectedId)).getText().toString();
+                    String category = list.get(listIndex).getName();
+                    String notes = ((EditText) findViewById(R.id.edit_notes)).getText().toString();
+                    String date = ((Button) findViewById(R.id.btn_date)).getText().toString();
+
+                    Toast.makeText(getApplicationContext(), amount+","+trans_src+","+trans_type+","+category+","+notes+","+date,
                             Toast.LENGTH_LONG).show();
+                }
                 else
                     Toast.makeText(getApplicationContext(), "Please Select From the List",
                             Toast.LENGTH_LONG).show();
@@ -153,10 +164,9 @@ public class Expense_add_window extends ListActivity {
                     public void onSelectedDayChange(CalendarView view, int year, int month,
                                                     int dayOfMonth) {
                         // TODO Auto-generated method stub
-
-                        Toast.makeText(getBaseContext(), "Selected Date is\n\n"
-                                        + dayOfMonth + " : " + month + " : " + year,
-                                Toast.LENGTH_LONG).show();
+                        Button edit_amount = (Button) findViewById(R.id.btn_date);
+                        edit_amount.setText(dayOfMonth+"/"+(month+1)+"/"+year);
+                        //Toast.makeText(getBaseContext(), "Selected Date is\n\n" + dayOfMonth + " : " + month + " : " + year,Toast.LENGTH_LONG).show();
                         dialog.dismiss();
                     }
                 });

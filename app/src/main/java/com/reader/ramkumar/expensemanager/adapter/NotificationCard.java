@@ -106,6 +106,11 @@ public class NotificationCard extends CardWithList {
                 }
             });
             mObjects.add(c);
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return mObjects;
     }

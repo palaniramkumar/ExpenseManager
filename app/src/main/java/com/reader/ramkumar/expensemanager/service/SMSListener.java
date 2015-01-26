@@ -43,7 +43,7 @@ public class SMSListener extends BroadcastReceiver{
             if( amount !=null) {
                 final NotificationManager mgr =
                         (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                Notification note = new Notification(R.drawable.ic_action_cloud,
+                Notification note = new Notification(R.drawable.ic_launcher,
                         "MyWallet",
                         System.currentTimeMillis());
 

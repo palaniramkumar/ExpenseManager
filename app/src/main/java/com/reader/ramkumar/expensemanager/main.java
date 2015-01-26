@@ -25,6 +25,7 @@ import com.melnykov.fab.FloatingActionButton;
 import com.reader.ramkumar.SMSparser.SMS;
 import com.reader.ramkumar.expensemanager.adapter.ExpenseCard;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
+import com.reader.ramkumar.expensemanager.util.TYPES;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -332,8 +333,8 @@ public class main extends Fragment {
              /* this may need to tune further for better accurecy */
             if(s.findSMS() && s.amount!=null) {
                 //Add an object to the list
-                db.insertMaster(s.where,s.amount,s.bankName,s.card_type,s.trans_type,s.expanse_type,null,s.id,s.where,s.when,
-                        null,null,s.place,null,null,null,"PENDING");
+                db.insertMaster(s.amount,s.bankName,s.trans_src,s.trans_type,s.expanse_type,null,s.id,s.where,s.when,
+                        null,null,s.place,null,null,null, TYPES.TRANSACTION_STATUS.PENDING.toString());
                 System.out.println("woi->"+s.amount);
             }
         }

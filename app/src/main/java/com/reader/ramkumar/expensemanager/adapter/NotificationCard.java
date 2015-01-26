@@ -10,6 +10,7 @@ import android.os.Parcelable;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,7 +66,7 @@ public class NotificationCard extends CardWithList {
 
             }
         });
-        header.setTitle("You have 12 Pending Approvals"); //should use R.string.
+        header.setTitle("You have few Pending Approvals"); //should use R.string.
         return header;
     }
 
@@ -88,11 +89,12 @@ public class NotificationCard extends CardWithList {
         while  (cursor.moveToNext())
         {
              /* this may need to tune further for better accurecy */
-            final String amount = cursor.getString(2);
+            final String amount = cursor.getString(1);
+            final String RECID = cursor.getString(0);
             //Add an object to the list
             CostObject c = new CostObject(this);
-            c.message = "Rs."+ amount +" spent on "+cursor.getString(9);
-            c.messagegId=cursor.getString(8);
+            c.message = "Rs."+ amount +" spent at "+cursor.getString(8);
+            c.messagegId=RECID;
             c.setObjectId(c.messagegId); //It can be important to set ad id
             c.setOnItemClickListener(new OnItemClickListener() {
                 @Override
@@ -101,7 +103,7 @@ public class NotificationCard extends CardWithList {
 
                     Toast.makeText(getContext(), "Click on " + position, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getContext(), Expense_add_window.class);
-                    intent.putExtra("AMOUNT", amount);
+                    intent.putExtra("RECID", RECID);
                     getContext().startActivity(intent);
                 }
             });

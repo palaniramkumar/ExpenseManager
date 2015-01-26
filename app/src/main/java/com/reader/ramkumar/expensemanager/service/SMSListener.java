@@ -39,22 +39,12 @@ public class SMSListener extends BroadcastReceiver{
             String where = strParse.valueSet[3];
             //when = strParse[2];
             String place = strParse.valueSet[4];
-            /*Intent intent1 = new Intent(context, Expense_add_window.class);
-            PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent1, 0);
-            Notification n  = new Notification.Builder(context)
-                    .setContentTitle("New Expense Identified")
-                    .setContentText("Rs."+amount + "in "+where)
-                    .setSmallIcon(R.drawable.ic_action_cloud)
-                    .setContentIntent(pIntent)
-                    .setAutoCancel(true)
-                    .addAction(R.drawable.ic_action_edit, "View", pIntent)
-                    .addAction(R.drawable.ic_action_star, "Accept", pIntent)
-                    .addAction(R.drawable.ic_action_delete, "Delete", pIntent).build();*/
+
             if( amount !=null) {
                 final NotificationManager mgr =
                         (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 Notification note = new Notification(R.drawable.ic_action_cloud,
-                        "Android Example Status message!",
+                        "MyWallet",
                         System.currentTimeMillis());
 
                 // This pending intent will open after notification click
@@ -62,7 +52,7 @@ public class SMSListener extends BroadcastReceiver{
                         new Intent(context, Expense_add_window.class),
                         0);
 
-                note.setLatestEventInfo(context, "New Expense Identified",
+                note.setLatestEventInfo(context, "Expense Identified",
                         "Rs." + amount + " for " + where, i);
 
                 //After uncomment this line you will see number of notification arrived
@@ -72,7 +62,7 @@ public class SMSListener extends BroadcastReceiver{
 
         }
         // show first message
-        Toast toast = Toast.makeText(context, "Received SMS: " + smsMessage[0].getMessageBody(), Toast.LENGTH_LONG);
-        toast.show();
+       // Toast toast = Toast.makeText(context, "Received SMS: " + smsMessage[0].getMessageBody(), Toast.LENGTH_LONG);
+       // toast.show();
     }
 }

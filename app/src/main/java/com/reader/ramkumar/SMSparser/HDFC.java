@@ -1,5 +1,7 @@
 package com.reader.ramkumar.SMSparser;
 
+import com.reader.ramkumar.expensemanager.util.TYPES;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,14 +26,14 @@ public class HDFC {
     public class  SMSParserData{
         public String valueSet[];
         public String trans_type;
-        public String card_type;
+        public String trans_src;
     }
     final String [][] template ={
-            {"Rs.(.*?) was spent on ur HDFCBank CREDIT Card ending (.*?) on (.*?) at (.*?).Avl","EXPENSE","CREDIT CARD"},
-            {"An amount of Rs.(.*?) has been debited from your account  number (.*?) for (.*?) done using HDFC Bank NetBanking","EXPENSE","DEBIT CARD"},
-            {"INR (.*?) deposited to A/c No (.*?)","INCOME","DEBIT CARD"},
-            {"Thank you for using your HDFC Bank DEBIT/ATM Card ending (.*?) for Rs. (.*?) towards ATM WDL in (.*?) at (.*?) on (.*?)","WDL","DEBIT CARD"},
-            {"Your BANK a/c xxxx (.*?) will be debited for Rs (.*?) towards (.*?) on (.*?)","EXPENSE","DEBIT CARD"}
+            {"Rs.(.*?) was spent on ur HDFCBank CREDIT Card ending (.*?) on (.*?) at (.*?).Avl", TYPES.TRANSACTION_TYPE.EXPENSE.toString(),TYPES.TRANSACTION_SOURCE.CREDIT_CARD.toString()},
+            {"An amount of Rs.(.*?) has been debited from your account  number (.*?) for (.*?) done using HDFC Bank NetBanking",TYPES.TRANSACTION_TYPE.EXPENSE.toString(),TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString()},
+            {"INR (.*?) deposited to A/c No (.*?)",TYPES.TRANSACTION_TYPE.INCOME.toString(),TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString()},
+            {"Thank you for using your HDFC Bank DEBIT/ATM Card ending (.*?) for Rs. (.*?) towards ATM WDL in (.*?) at (.*?) on (.*?)",TYPES.TRANSACTION_TYPE.CASH_VAULT.toString(),TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString()},
+            {"Your BANK a/c xxxx (.*?) will be debited for Rs (.*?) towards (.*?) on (.*?)",TYPES.TRANSACTION_TYPE.EXPENSE.toString(),TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString()}
     };
     /*Amount,Account,Time,Where,Place*/
     final int [][] templateMap={
@@ -59,7 +61,7 @@ public class HDFC {
                 }
             }
             if(parserValue.valueSet[0]!=null){
-                parserValue.card_type= template[i][2];
+                parserValue.trans_src= template[i][2];
                 parserValue.trans_type= template[i][1];
                 break;
             }

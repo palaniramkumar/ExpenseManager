@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +20,9 @@ import android.widget.Toast;
 
 import com.reader.ramkumar.expensemanager.adapter.ListAdapterForRadioButton;
 import com.reader.ramkumar.expensemanager.adapter.ListAdapterRadioModel;
+import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.NumbPad;
+import com.reader.ramkumar.expensemanager.util.TYPES;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,32 +30,54 @@ import java.util.List;
 
 public class Expense_add_window extends ListActivity {
 
-    Button btn_accept, btn_date;
+    Button btn_accept;
     List<ListAdapterRadioModel> list;
     CalendarView calendar;
     int listIndex = -1;
     private RadioButton listRadioButton = null;
+    private String entryDesc = "OTHERS";
+    Button btn_amount;
+    RadioGroup trans_src;
+    RadioGroup trans_type;
+    EditText edit_notes;
+    Button btn_date;
 
+    String ENTRY_TYPE="ADD";
+    String mSMS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Get the message from the intent
         Intent intent = getIntent();
-        String mAmount = intent.getStringExtra("AMOUNT");
+        mSMS = intent.getStringExtra("RECID");
 
         setContentView(R.layout.activity_expense_add_window);
         ArrayAdapter<ListAdapterRadioModel> adapter = new ListAdapterForRadioButton(this, getModel());
 
+        //finding all fields
+        Button btn_amount = ((Button) findViewById(R.id.btn_amount));
+        RadioGroup trans_src = ((RadioGroup) findViewById(R.id.rdo_trans_src));
+        RadioGroup trans_type = ((RadioGroup) findViewById(R.id.rdo_trans_type));
+        EditText edit_notes = ((EditText) findViewById(R.id.edit_notes));
+        Button btn_date = ((Button) findViewById(R.id.btn_date));
+
         //business logic
-
-
         onAcceptButtonClick();
         onChooseDateClick(getApplicationContext());
 
         Button edit_amount = (Button) findViewById(R.id.btn_amount);
-        if(mAmount!=null)
-            edit_amount.setText(mAmount);
+        if(mSMS!=null) {
+            edit_amount.setText(mSMS);
+            DBHelper db=new DBHelper(this);
+            Cursor sms=db.getFromMasterByID(Integer.parseInt(mSMS));
+            if(sms!=null){
+                sms.moveToFirst();
+                ENTRY_TYPE="UPDATE";
+                btn_amount.setText(sms.getString(1));
+                btn_amount.setEnabled(false);
+            }
+        }
         else
             edit_amount.setText("0.00");
 
@@ -99,8 +124,15 @@ public class Expense_add_window extends ListActivity {
                     String notes = ((EditText) findViewById(R.id.edit_notes)).getText().toString();
                     String date = ((Button) findViewById(R.id.btn_date)).getText().toString();
 
-                    Toast.makeText(getApplicationContext(), amount+","+trans_src+","+trans_type+","+category+","+notes+","+date,
+                    DBHelper db =new DBHelper(getApplicationContext());
+                    if(ENTRY_TYPE.equalsIgnoreCase("ADD"))
+                        db.insertMaster(amount,null,trans_src,trans_type,category,notes,null,entryDesc,null,null,null,null,null,null,null,TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                    if(ENTRY_TYPE.equalsIgnoreCase("UPDATE"))
+                        db.updateMaster(Integer.parseInt(mSMS),amount,null/*bankname*/,trans_src,trans_type,category,notes,null,entryDesc,null,null,null,null,null,null,null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
+
+                    Toast.makeText(getApplicationContext(), "Successfully Added",
                             Toast.LENGTH_LONG).show();
+                    finish();
                 }
                 else
                     Toast.makeText(getApplicationContext(), "Please Select From the List",

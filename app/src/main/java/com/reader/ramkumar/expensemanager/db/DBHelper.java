@@ -21,16 +21,15 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "MyExpense.db";
     public static final String MASTER_TABLE_NAME = "master";
     public static final String MASTER_COLUMN_ID = "id";
-    public static final String MASTER_COLUMN_DESC = "desc";
     public static final String MASTER_COLUMN_AMOUNT = "amount";
     public static final String MASTER_COLUMN_BANK_NAME = "bank_name";
-    public static final String MASTER_COLUMN_TRANS_SOURCE = "trans_source";//credit,debit,cash,online or netbanking
-    public static final String MASTER_COLUMN_TRANS_TYPE = "trans_type";//credit,debit
-    public static final String MASTER_COLUMN_EXPANSE_TYPE = "expanse_type";//home,car,fuel,misc
+    public static final String MASTER_COLUMN_TRANS_SOURCE = "trans_source";//credit,debit,cash or netbanking
+    public static final String MASTER_COLUMN_TRANS_TYPE = "trans_type";//credit,debit,cash
+    public static final String MASTER_COLUMN_CATEGORY = "category";//home,car,fuel,misc
     public static final String MASTER_COLUMN_NOTES = "notes";//credit,debit
     public static final String MASTER_COLUMN_SMS_ID = "sms_id";
-    public static final String MASTER_COLUMN_LANDMARK = "landmark";
-    public static final String MASTER_COLUMN_LANDMARK_TIME = "landmark_time";
+    public static final String DESC = "desc";
+    public static final String MASTER_COLUMN_BANK_TRANSACTION_TIME = "bank_trans_time";
     public static final String MASTER_COLUMN_PLACE = "place";
     public static final String MASTER_COLUMN_SMS_TIMESTAMP = "sms_timestamp";
     public static final String MASTER_COLUMN_TIMESTAMP = "timestamp";
@@ -54,8 +53,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL(
                 "create table MASTER " +
-                        "(id integer primary key, desc text,amount text,bank_name text,trans_source text, trans_type text,expanse_type text," +
-                        " notes text,sms_id text,landmark text, place text,landmark_time text,sms_timestamp text,timestamp text," +
+                        "(id integer primary key, amount text,bank_name text,trans_source text, trans_type text,category text," +
+                        " notes text,sms_id text,desc text, place text,bank_trans_time text,sms_timestamp text,timestamp text," +
                         "geo_tag text,SharedExpense text, SharedMembers text,status text)"
         );
     }
@@ -67,9 +66,9 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertMaster  (String desc,String amount, String bank_name, String trans_source,
-                                  String trans_type,String expanse_type,String notes,
-                                  String sms_id,String landmark,String landmark_time,
+    public boolean insertMaster  (String amount, String bank_name, String trans_source,
+                                  String trans_type,String category,String notes,
+                                  String sms_id,String desc,String bank_trans_time,
                                   String sms_timestamp,String timestamp,String place,
                                   String geo_tag,String SharedExpense,
                                   String SharedMembers,String status)
@@ -77,16 +76,15 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put("desc", desc);
         contentValues.put("amount", amount);
         contentValues.put("bank_name", bank_name);
         contentValues.put("trans_source", trans_source);
         contentValues.put("trans_type", trans_type);
-        contentValues.put("expanse_type", expanse_type);
+        contentValues.put("category", category);
         contentValues.put("notes", notes);
         contentValues.put("sms_id", sms_id);
-        contentValues.put("landmark", landmark);
-        contentValues.put("landmark_time", landmark_time);
+        contentValues.put("desc", desc);
+        contentValues.put("bank_trans_time", bank_trans_time);
         contentValues.put("sms_timestamp", sms_timestamp);
         contentValues.put("timestamp", timestamp);
         contentValues.put("geo_tag", geo_tag);
@@ -108,25 +106,24 @@ public class DBHelper extends SQLiteOpenHelper {
         int numRows = (int) DatabaseUtils.queryNumEntries(db, MASTER_TABLE_NAME);
         return numRows;
     }
-    public boolean updateMaster(Integer id, String desc,String amount, String bank_name, String trans_source,
-                                String trans_type,String expanse_type,String notes,
-                                String sms_id,String landmark,String landmark_time,
+    public boolean updateMaster(Integer id, String amount, String bank_name, String trans_source,
+                                String trans_type,String category,String notes,
+                                String sms_id,String desc,String bank_trans_time,
                                 String sms_timestamp,String timestamp,String place,
                                 String geo_tag,String SharedExpense,
                                 String SharedMembers,String status)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("desc", desc);
         contentValues.put("amount", amount);
         contentValues.put("bank_name", bank_name);
         contentValues.put("trans_source", trans_source);
         contentValues.put("trans_type", trans_type);
-        contentValues.put("expanse_type", expanse_type);
+        contentValues.put("category", category);
         contentValues.put("notes", notes);
         contentValues.put("sms_id", sms_id);
-        contentValues.put("landmark", landmark);
-        contentValues.put("landmark_time", landmark_time);
+        contentValues.put("desc", desc);
+        contentValues.put("bank_trans_time", bank_trans_time);
         contentValues.put("sms_timestamp", sms_timestamp);
         contentValues.put("timestamp", timestamp);
         contentValues.put("geo_tag", geo_tag);
@@ -138,12 +135,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean updateMasterStatus(Integer sms_id, String status)
+    public boolean updateMasterStatus(Integer id, String status)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("status", status);
-        db.update("MASTER", contentValues, "sms_id = ? ", new String[] { Integer.toString(sms_id) } );
+        db.update("MASTER", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
         return true;
     }
 
@@ -161,10 +158,10 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor res =  db.rawQuery( "select * from MASTER", null );
         return res;
     }
-    public Cursor getAllFromMaster(int id)
+    public Cursor getFromMasterByID(int id)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from MASTER where sms_id="+id+"", null );
+        Cursor res =  db.rawQuery( "select * from MASTER where id="+id+"", null );
         return res;
     }
 }

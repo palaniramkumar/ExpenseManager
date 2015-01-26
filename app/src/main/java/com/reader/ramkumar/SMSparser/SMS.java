@@ -7,7 +7,7 @@ package com.reader.ramkumar.SMSparser;
 public class SMS {
     public String address;
     public String text;
-    public String card_type;
+    public String trans_src;
     public String id;
 
     public String trans_type;
@@ -29,7 +29,7 @@ public class SMS {
             place = smsparsedata.valueSet[4];
             account=smsparsedata.valueSet[1];
             trans_type = smsparsedata.trans_type;
-            card_type = smsparsedata.card_type;
+            trans_src = smsparsedata.trans_src;
             return true;
         }
         else

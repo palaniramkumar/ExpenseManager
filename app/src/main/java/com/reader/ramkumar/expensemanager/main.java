@@ -309,17 +309,20 @@ public class main extends Fragment {
     protected List<CardWithList.ListObject> syncSMS(Context context) {
 
         ArrayList sms = new ArrayList();
+        DBHelper db=new DBHelper(getActivity().getApplicationContext());
+        int last_sms_id = db.getLastSMSID();
 
         Uri uriSms = Uri.parse("content://sms/inbox");
-        final Cursor cursor =context.getContentResolver().query(uriSms, new String[]{"_id", "address", "date", "body"},null,null,null);
+        final Cursor cursor =context.getContentResolver().query(uriSms, new String[]{"_id", "address", "date", "body"},"_id > "+last_sms_id,null,null);
 
         cursor.moveToFirst();
         //Init the list
         List<CardWithList.ListObject> mObjects = new ArrayList<CardWithList.ListObject>();
-        DBHelper db=new DBHelper(getActivity().getApplicationContext());
+
 
         while  (cursor.moveToNext())
         {
+            System.out.println("last id: "+last_sms_id+"; smsid:"+cursor.getString(0));
             String address = cursor.getString(1);
             String body = cursor.getString(3);
 

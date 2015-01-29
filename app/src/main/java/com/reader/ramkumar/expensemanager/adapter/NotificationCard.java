@@ -19,6 +19,7 @@ import com.reader.ramkumar.SMSparser.SMS;
 import com.reader.ramkumar.expensemanager.Expense_add_window;
 import com.reader.ramkumar.expensemanager.R;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
+import com.reader.ramkumar.expensemanager.util.TYPES;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +82,7 @@ public class NotificationCard extends CardWithList {
     @Override
     protected List<ListObject> initChildren() {
         db=new DBHelper(getContext());
-        final Cursor cursor= db.getAllFromMaster();
+        final Cursor cursor= db.getmMasterByStatus(TYPES.TRANSACTION_STATUS.PENDING.toString());
         cursor.moveToFirst();
         //Init the list
         List<ListObject> mObjects = new ArrayList<ListObject>();

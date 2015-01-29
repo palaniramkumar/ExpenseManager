@@ -54,7 +54,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(
                 "create table MASTER " +
                         "(id integer primary key, amount text,bank_name text,trans_source text, trans_type text,category text," +
-                        " notes text,sms_id text,desc text, place text,bank_trans_time text,sms_timestamp text,timestamp text," +
+                        " notes text,sms_id integer,desc text, place text,bank_trans_time text,sms_timestamp text,timestamp text," +
                         "geo_tag text,SharedExpense text, SharedMembers text,status text)"
         );
     }
@@ -157,6 +157,23 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from MASTER", null );
         return res;
+    }
+    public Cursor getmMasterByStatus(String status)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from MASTER where status ='"+status+"'", null );
+        return res;
+    }
+    public int getLastSMSID(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select max(sms_id) from MASTER ", null );
+        if(res.moveToNext()){
+            if(res.getString(0) == null) return 0;
+            return Integer.parseInt(res.getString(0));
+        }
+        else{
+            return 0;
+        }
     }
     public Cursor getFromMasterByID(int id)
     {

@@ -123,6 +123,7 @@ public class main extends Fragment {
                 int iProgress=0;
                 DBHelper db=new DBHelper(getActivity().getApplicationContext());
                 db.deleteMaster(1);
+                if(getActivity()==null) return 0; //safe condition while rotating view. This throws null)
                 syncSMS(getActivity());
                 return 0;
             }
@@ -306,18 +307,17 @@ public class main extends Fragment {
     }
 
 
-    protected List<CardWithList.ListObject> syncSMS(Context context) {
+    protected boolean syncSMS(Context context) {
 
-        ArrayList sms = new ArrayList();
-        DBHelper db=new DBHelper(getActivity().getApplicationContext());
+
+
+        DBHelper db=new DBHelper(context);
         int last_sms_id = db.getLastSMSID();
 
         Uri uriSms = Uri.parse("content://sms/inbox");
         final Cursor cursor =context.getContentResolver().query(uriSms, new String[]{"_id", "address", "date", "body"},"_id > "+last_sms_id,null,null);
 
         cursor.moveToFirst();
-        //Init the list
-        List<CardWithList.ListObject> mObjects = new ArrayList<CardWithList.ListObject>();
 
 
         while  (cursor.moveToNext())
@@ -342,6 +342,7 @@ public class main extends Fragment {
             }
         }
         db.close();
-        return mObjects;
+        return true;
+
     }
 }

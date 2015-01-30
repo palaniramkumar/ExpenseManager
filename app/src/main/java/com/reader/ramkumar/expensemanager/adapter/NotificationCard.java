@@ -1,16 +1,22 @@
 package com.reader.ramkumar.expensemanager.adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,21 +97,62 @@ public class NotificationCard extends CardWithList {
         {
              /* this may need to tune further for better accurecy */
             final String amount = cursor.getString(1);
-            final String RECID = cursor.getString(0);
+            final int RECID = cursor.getInt(0);
             //Add an object to the list
             CostObject c = new CostObject(this);
             c.message = "Rs."+ amount +" spent at "+cursor.getString(8);
-            c.messagegId=RECID;
+            c.messagegId=RECID+"";
             c.setObjectId(c.messagegId); //It can be important to set ad id
             c.setOnItemClickListener(new OnItemClickListener() {
                 @Override
-                public void onItemClick(LinearListView parent, View view, int position, ListObject object) {
+                public void onItemClick(LinearListView parent, View view, final int position, ListObject object) {
                     //need to add code for arg parameter for add expense
 
                     Toast.makeText(getContext(), "Click on " + position, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getContext(), Expense_add_window.class);
+                    /*Intent intent = new Intent(getContext(), Expense_add_window.class);
                     intent.putExtra("RECID", RECID);
-                    getContext().startActivity(intent);
+                    getContext().startActivity(intent);*/
+                    final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+
+                    final CharSequence myList[] = db.getCategory();
+
+                    dialog.setSingleChoiceItems(myList, -1,  new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+
+
+                        }
+                    });
+                    dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ListView lw = ((AlertDialog) dialog).getListView();
+                            if(lw.getCheckedItemPosition()>=0) {
+                               Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
+                               db.updateMaster(RECID, db.MASTER_COLUMN_CATEGORY, checkedItem.toString());
+                               db.updateMasterStatus(RECID, TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                               mLinearListAdapter.remove(mLinearListAdapter.getItem(position));
+                            }
+                            // TODO Auto-generated method stub
+
+                        }
+
+                    });
+                    dialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO Auto-generated method stub
+
+                        }
+                    });
+
+
+                    // Set dialog title
+                    dialog.setTitle("Choose the Category");
+                    dialog.show();
                 }
             });
             mObjects.add(c);

@@ -235,8 +235,7 @@ public class Expense_add_window extends ListActivity {
         list.add(get("Groceries"));
         list.add(get("Travel"));
         list.add(get("Medicine"));
-        list.add(get("Online"));
-        list.add(get("Restorent"));
+        list.add(get("Restaurant"));
         list.add(get("Others"));
         // Initially select one of the items
         //list.get(1).setSelected(true);

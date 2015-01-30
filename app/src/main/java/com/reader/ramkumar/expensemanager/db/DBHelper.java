@@ -66,6 +66,10 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public CharSequence [] getCategory(){
+        final CharSequence myList[] = { "Food", "Home", "Fuel" ,"Groceries","Travel","Medicine","Restaurant","Others"};
+        return  myList;
+    }
     public boolean insertMaster  (String amount, String bank_name, String trans_source,
                                   String trans_type,String category,String notes,
                                   String sms_id,String desc,String bank_trans_time,
@@ -135,13 +139,21 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean updateMasterStatus(Integer id, String status)
+    public  int updateMaster(Integer id,String field,String value){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(field, value);
+        int count = db.update("MASTER", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
+        return count;
+
+    }
+    public int updateMasterStatus(Integer id, String status)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("status", status);
-        db.update("MASTER", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
-        return true;
+        int count = db.update("MASTER", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
+        return count;
     }
 
     public Integer deleteMaster (Integer id)

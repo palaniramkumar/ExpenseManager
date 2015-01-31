@@ -1,6 +1,7 @@
 package com.reader.ramkumar.expensemanager.adapter;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.reader.ramkumar.expensemanager.R;
+import com.reader.ramkumar.expensemanager.db.DBHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +24,19 @@ import it.gmariotti.cardslib.library.prototypes.LinearListView;
 /**
  * Created by Ramkumar on 27/12/14.
  */
+
 public class ExpenseCard extends CardWithList {
+    DBHelper db;
     public ExpenseCard(Context context) {
         super(context);
+        db=new DBHelper(context);
     }
 
     @Override
     protected CardHeader initCardHeader() {
 
         //Add Header
-        CardHeader header = new CardHeader(getContext(), R.layout.carddemo_googlenowweather_inner_header);
+        CardHeader header = new CardHeader(getContext(), R.layout.card_table_header);
 
         //Add a popup menu. This method set OverFlow button to visible
         header.setPopupMenu(R.menu.popup_item, new CardHeader.OnClickCardHeaderPopupMenuListener() {
@@ -56,7 +61,8 @@ public class ExpenseCard extends CardWithList {
 
             }
         });
-        header.setTitle("You have 8,432 Left for this month"); //should use R.string.
+        int remainingAmount = (int)(db.getBudget() - db.getMyTotalExpense());
+        header.setTitle("You have "+remainingAmount+" Left for this month"); //should use R.string.
         return header;
     }
 
@@ -81,50 +87,17 @@ public class ExpenseCard extends CardWithList {
         //Init the list
         List<ListObject> mObjects = new ArrayList<ListObject>();
 
+        Cursor cursor = db.getMyExpenseByCategory();
         //Add an object to the list
-        CostObject w1 = new CostObject(this);
-        w1.type = "Car";
-        w1.amount = 2400;
-        w1.trendIcon = R.drawable.ic_action_expand;
-        w1.setObjectId(w1.type); //It can be important to set ad id
-        mObjects.add(w1);
 
-        CostObject w2 = new CostObject(this);
-        w2.type = "Home";
-        w2.amount = 21000;
-        w2.trendIcon = R.drawable.ic_action_collapse;
-        w2.setObjectId(w2.type);
-        w2.setSwipeable(true);
-
-        //Example onSwipe
-        /*w2.setOnItemSwipeListener(new OnItemSwipeListener() {
-            @Override
-            public void onItemSwipe(ListObject object,boolean dismissRight) {
-                Toast.makeText(getContext(), "Swipe on " + object.getObjectId(), Toast.LENGTH_SHORT).show();
-            }
-        });*/
-        mObjects.add(w2);
-
-        CostObject w3 = new CostObject(this);
-        w3.type = "Food";
-        w3.amount = 1200;
-        w3.trendIcon = R.drawable.ic_action_expand;
-        w3.setObjectId(w3.type);
-        mObjects.add(w3);
-
-        CostObject w4 = new CostObject(this);
-        w4.type = "Misc";
-        w4.amount = 8000;
-        w4.trendIcon = R.drawable.ic_action_collapse;
-        w4.setObjectId(w4.type);
-        mObjects.add(w4);
-
-        CostObject w5 = new CostObject(this);
-        w5.type = "Medical";
-        w5.amount = 800;
-        w5.trendIcon = R.drawable.ic_action_expand;
-        w5.setObjectId(w5.type);
-        mObjects.add(w5);
+        while(cursor.moveToNext()){
+            CostObject c = new CostObject(this);
+            c.type = cursor.getString(0);
+            c.amount = cursor.getInt(1);
+            c.trendIcon = R.drawable.ic_action_expand;
+            c.setObjectId(c.type); //It can be important to set ad id
+            mObjects.add(c);
+        }
 
         return mObjects;
     }

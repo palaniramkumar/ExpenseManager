@@ -59,7 +59,7 @@ public class main extends Fragment {
     private OnFragmentInteractionListener mListener;
     private Handler mHandler = new Handler();
     private ProgressBar mProgress;
-
+    private DBHelper db;
     public main() {
         // Required empty public constructor
     }
@@ -89,6 +89,7 @@ public class main extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        db=new DBHelper(getActivity());
     }
 
     @Override
@@ -120,7 +121,6 @@ public class main extends Fragment {
 
             @Override
             protected Integer doInBackground(Void... params) {
-                int iProgress=0;
                 DBHelper db=new DBHelper(getActivity().getApplicationContext());
                 db.deleteMaster(1);
                 if(getActivity()==null) return 0; //safe condition while rotating view. This throws null)
@@ -238,22 +238,25 @@ public class main extends Fragment {
     private void setData(int count, float range) {
 
         float mult = range;
-
+        Cursor cursor = db.getMyExpenseByCategory();
         ArrayList<Entry> yVals1 = new ArrayList<Entry>();
+        ArrayList<String> xVals = new ArrayList<String>();
 
         // IMPORTANT: In a PieChart, no values (Entry) should have the same
         // xIndex (even if from different DataSets), since no values can be
         // drawn above each other.
-        for (int i = 0; i < count + 1; i++) {
-            yVals1.add(new Entry((float) (Math.random() * mult) + mult / 5, i));
+        int i=0;
+        while(cursor.moveToNext()){
+            yVals1.add(new Entry(cursor.getInt(1), i++));
+            xVals.add(cursor.getString(0));
         }
 
-        ArrayList<String> xVals = new ArrayList<String>();
 
-        String[] mType = {"Food", "Vehicles", "House", "Travel", "Gifts"};
+
+        /*String[] mType = {"Food", "Vehicles", "House", "Travel", "Gifts"};
         for (int i = 0; i < count + 1; i++)
             xVals.add(mType[i % mType.length]);
-
+        */
         PieDataSet set1 = new PieDataSet(yVals1, "Expense Distribution");
         set1.setSliceSpace(3f);
 

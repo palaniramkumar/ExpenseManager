@@ -14,6 +14,8 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.reader.ramkumar.expensemanager.util.TYPES;
 //http://www.tutorialspoint.com/android/android_sqlite_database.htm
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -66,10 +68,6 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public CharSequence [] getCategory(){
-        final CharSequence myList[] = { "Food", "Home", "Fuel" ,"Groceries","Travel","Medicine","Restaurant","Others"};
-        return  myList;
-    }
     public boolean insertMaster  (String amount, String bank_name, String trans_source,
                                   String trans_type,String category,String notes,
                                   String sms_id,String desc,String bank_trans_time,
@@ -193,4 +191,31 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor res =  db.rawQuery( "select * from MASTER where id="+id+"", null );
         return res;
     }
+
+    /* need to automate this below methods*/
+
+    public int getBudget(){
+        return 10000;
+    }
+
+    public CharSequence [] getCategory(){
+        final CharSequence myList[] = { "Food", "Home", "Fuel" ,"Groceries","Travel","Medicine","Restaurant","Others"};
+        return  myList;
+    }
+    public float [] getBudgetByCategory(){
+        final float myList[] = { 1000,2000,3000,4000,500,1500,500,500};
+        return  myList;
+    }
+    public float getMyTotalExpense(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select sum(amount) from MASTER where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"'", null );
+        if(res.moveToNext())return res.getFloat(0);
+        else return 0;
+    }
+    public Cursor getMyExpenseByCategory(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select category,sum(amount) from MASTER  where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' group by category", null );
+        return res;
+    }
+
 }

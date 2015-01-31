@@ -31,20 +31,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/chart"
                 card:card_layout_resourceID="@layout/native_cardwithlist_layout" />
-
-            <!--com.melnykov.fab.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/chart"
-                android:layout_marginLeft="300dp"
-                android:layout_marginTop="-50dp"
-
-                android:src="@drawable/ic_action_edit"
-                fab:fab_colorNormal="@color/accent"
-                fab:fab_colorPressed="@color/primary_pressed"
-                fab:fab_colorRipple="@color/ripple" /-->
-
         </RelativeLayout>
     </ScrollView>
     <!--ImageView

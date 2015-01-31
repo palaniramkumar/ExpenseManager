@@ -48,13 +48,22 @@
 
 
         <TextView
+            android:id="@+id/txt_currency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:textColor="@color/accent"
+            android:textSize="16sp"
+            tools:text="Rs" />
+        <TextView
             android:id="@+id/carddemo_weather_temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
             android:textColor="@color/accent"
-            android:textSize="28sp"
+            android:textSize="20sp"
             tools:text="16°C" />
 
         <ImageView

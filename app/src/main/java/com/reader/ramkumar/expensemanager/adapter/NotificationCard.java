@@ -49,7 +49,7 @@ public class NotificationCard extends CardWithList {
     protected CardHeader initCardHeader() {
 
         //Add Header
-        CardHeader header = new CardHeader(getContext(), R.layout.carddemo_googlenowweather_inner_header);
+        CardHeader header = new CardHeader(getContext(), R.layout.card_table_header);
 
         //Add a popup menu. This method set OverFlow button to visible
         header.setPopupMenu(R.menu.popup_item, new CardHeader.OnClickCardHeaderPopupMenuListener() {

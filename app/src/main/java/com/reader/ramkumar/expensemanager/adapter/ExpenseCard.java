@@ -38,46 +38,15 @@ public class ExpenseCard extends CardWithList {
         //Add Header
         CardHeader header = new CardHeader(getContext(), R.layout.card_table_header);
 
-        //Add a popup menu. This method set OverFlow button to visible
-        header.setPopupMenu(R.menu.popup_item, new CardHeader.OnClickCardHeaderPopupMenuListener() {
-            @Override
-            public void onMenuItemClick(BaseCard card, MenuItem item) {
-
-                switch (item.getItemId()) {
-                    case R.id.action_add:
-                        //Example: add an item
-                        CostObject w1 = new CostObject(ExpenseCard.this);
-                        w1.type = "Food";
-                        w1.amount = 8400;
-                        w1.trendIcon = R.drawable.ic_action_sun;
-                        w1.setObjectId(w1.type);
-                        mLinearListAdapter.add(w1);
-                        break;
-                    case R.id.action_remove:
-                        //Example: remove an item
-                        mLinearListAdapter.remove(mLinearListAdapter.getItem(0));
-                        break;
-                }
-
-            }
-        });
-        int remainingAmount = (int)(db.getBudget() - db.getMyTotalExpense());
+       int remainingAmount = (int)(db.getBudget() - db.getMyTotalExpense());
         header.setTitle("You have "+remainingAmount+" Left for this month"); //should use R.string.
         return header;
     }
 
     @Override
     protected void initCard() {
-
         //Set the whole card as swipeable
-        setSwipeable(true);
-        setOnSwipeListener(new OnSwipeListener() {
-            @Override
-            public void onSwipe(Card card) {
-                Toast.makeText(getContext(), "Swipe on " + card.getCardHeader().getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        setSwipeable(false);
     }
 
 
@@ -106,15 +75,17 @@ public class ExpenseCard extends CardWithList {
     public View setupChildView(int childPosition, ListObject object, View convertView, ViewGroup parent) {
 
         //Setup the ui elements inside the item
-        TextView city = (TextView) convertView.findViewById(R.id.carddemo_weather_city);
-        ImageView icon = (ImageView) convertView.findViewById(R.id.carddemo_weather_icon);
-        TextView temperature = (TextView) convertView.findViewById(R.id.carddemo_weather_temperature);
+        TextView category = (TextView) convertView.findViewById(R.id.txt_category);
+        ImageView icon = (ImageView) convertView.findViewById(R.id.status_icon);
+        TextView amount = (TextView) convertView.findViewById(R.id.table_txt_amount);
+        TextView currency = (TextView) convertView.findViewById(R.id.txt_currency);
 
         //Retrieve the values from the object
         CostObject costObject = (CostObject) object;
         icon.setImageResource(costObject.trendIcon);
-        city.setText(costObject.type);
-        temperature.setText(costObject.currencyUnit + costObject.amount);
+        category.setText(costObject.type);
+        amount.setText(costObject.amount+"");
+        currency.setText(costObject.currencyUnit);
 
         return convertView;
     }
@@ -124,9 +95,8 @@ public class ExpenseCard extends CardWithList {
         return R.layout.card_table_summary;
     }
 
-
     // -------------------------------------------------------------
-    // Weather Object
+    // Cost Object
     // -------------------------------------------------------------
 
     public class CostObject extends DefaultListObject {
@@ -150,13 +120,6 @@ public class ExpenseCard extends CardWithList {
                 }
             });
 
-            //OnItemSwipeListener
-            setOnItemSwipeListener(new OnItemSwipeListener() {
-                @Override
-                public void onItemSwipe(ListObject object, boolean dismissRight) {
-                    Toast.makeText(getContext(), "Swipe on " + object.getObjectId(), Toast.LENGTH_SHORT).show();
-                }
-            });
         }
 
     }

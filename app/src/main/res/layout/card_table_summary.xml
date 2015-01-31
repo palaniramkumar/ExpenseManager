@@ -28,54 +28,78 @@
     android:orientation="vertical">
 
 
-    <RelativeLayout
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:minHeight="55dp">
+        android:layout_height="match_parent"
+        android:minHeight="40dp">
 
-        <TextView
-            android:id="@+id/carddemo_weather_city"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerInParent="true"
-            android:textColor="@color/primary"
-            android:textSize="17sp"
-            tools:text="London" />
+        <TableRow
+            android:gravity="center"
+            android:minHeight="40dp">
 
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
 
-        <TextView
-            android:id="@+id/txt_currency"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:textColor="@color/accent"
-            android:textSize="16sp"
-            tools:text="Rs" />
-        <TextView
-            android:id="@+id/carddemo_weather_temperature"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:textColor="@color/accent"
-            android:textSize="20sp"
-            tools:text="16°C" />
+                android:layout_weight="0.50">
 
-        <ImageView
-            android:id="@+id/carddemo_weather_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="28dp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="2dp"
-            android:layout_toLeftOf="@id/carddemo_weather_temperature"
-            tools:background="@drawable/ic_action_done" />
+                <TextView
+                    android:id="@+id/txt_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    android:textSize="17sp"
+                    tools:text="London" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.05">
+                <ImageView
+                    android:id="@+id/status_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="12dp"
+                    android:gravity="left"
+                    android:layout_marginRight="2dp"
+                    tools:background="@drawable/ic_action_done" />
+                </FrameLayout>
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.05">
 
 
-    </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/txt_currency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:textColor="@color/accent"
+                    android:textSize="16sp"
+                    tools:text="Rs" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.40">
+
+                <TextView
+                    android:id="@+id/table_txt_amount"
+                    android:layout_width="wrap_content"
+                    android:gravity="left"
+                    android:layout_height="wrap_content"
+                     android:textColor="@color/accent"
+                    android:textSize="20sp"
+                    tools:text="0" />
+            </FrameLayout>
+
+        </TableRow>
+    </TableLayout>
 
 </LinearLayout>

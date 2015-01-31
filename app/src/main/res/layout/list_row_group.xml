@@ -9,6 +9,7 @@
     android:paddingLeft="32dp"
     android:paddingTop="8dp"
     android:text="Test"
+    android:background="@color/myAccentColor"
     android:textSize="14sp"
     android:textAlignment="textEnd"
-    android:textStyle="bold" /> 
+    android:textStyle="bold" />

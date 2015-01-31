@@ -22,6 +22,7 @@ import java.util.List;
 
 /**
  * Created by poliveira on 24/10/2014.
+ * user can change the nav menues
  */
 public class NavigationDrawerFragment extends Fragment implements NavigationDrawerCallbacks {
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
@@ -148,11 +149,11 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     public List<NavigationItem> getMenu() {
         List<NavigationItem> items = new ArrayList<NavigationItem>();
         items.add(new NavigationItem("Summary", getResources().getDrawable(R.drawable.ic_menu_check)));
-        items.add(new NavigationItem("History", getResources().getDrawable(R.drawable.ic_menu_check)));
         items.add(new NavigationItem("Pending Approval", getResources().getDrawable(R.drawable.ic_menu_check)));
-        items.add(new NavigationItem("Statistics", getResources().getDrawable(R.drawable.ic_menu_check)));
+        items.add(new NavigationItem("History", getResources().getDrawable(R.drawable.ic_menu_check)));
+        /*items.add(new NavigationItem("Statistics", getResources().getDrawable(R.drawable.ic_menu_check)));
         items.add(new NavigationItem("Budget", getResources().getDrawable(R.drawable.ic_menu_check)));
-        items.add(new NavigationItem("Settings", getResources().getDrawable(R.drawable.ic_menu_check)));
+        items.add(new NavigationItem("Settings", getResources().getDrawable(R.drawable.ic_menu_check)));*/
         return items;
     }
 

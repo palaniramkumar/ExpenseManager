@@ -5,8 +5,11 @@
     android:clickable="true"
     android:orientation="vertical"
     android:paddingLeft="40dp"
+    android:background="@color/card_background"
     tools:context=".MainActivity" >
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
@@ -15,13 +18,30 @@
         android:drawablePadding="5dp"
         android:gravity="center_vertical"
         android:text="@string/hello_world"
+        android:layout_alignParentLeft="true"
+        android:textColor="@color/black_overlay"
+        android:layout_centerInParent="true"
+        android:textSize="14sp"
+        android:textStyle="bold" >
+    </TextView>
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:drawablePadding="5dp"
+        android:gravity="center_vertical"
+        android:text="@string/hello_world"
+        android:textColor="@color/black_overlay"
         android:textSize="14sp"
         android:textStyle="bold" >
     </TextView>
 
-    <View
+    <!--View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/black" />
+        android:background="@android:color/black" /-->
+</RelativeLayout>
 
 </LinearLayout> 

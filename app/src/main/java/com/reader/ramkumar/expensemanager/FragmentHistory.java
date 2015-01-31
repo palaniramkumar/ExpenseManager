@@ -92,7 +92,6 @@ public class FragmentHistory extends Fragment {
                 startActivity(i);
             }
         });
-        Toast.makeText(mContainer.getContext(), "onActivityCreated", Toast.LENGTH_SHORT).show();
 
         return view;
     }

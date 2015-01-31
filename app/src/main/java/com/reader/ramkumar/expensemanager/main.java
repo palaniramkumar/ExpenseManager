@@ -28,7 +28,9 @@ import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.TYPES;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
 import it.gmariotti.cardslib.library.prototypes.CardWithList;
@@ -172,7 +174,7 @@ public class main extends Fragment {
         //mChart.setOnChartValueSelectedListener(this);//need to uncomment
         // mChart.setTouchEnabled(false);
 
-        mChart.setCenterText("December\n2014");
+        mChart.setCenterText(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())+"\n"+Calendar.getInstance().get(Calendar.YEAR));
 
         setData(3, 100);
 

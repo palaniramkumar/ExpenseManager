@@ -24,8 +24,11 @@ import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.NumbPad;
 import com.reader.ramkumar.expensemanager.util.TYPES;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class Expense_add_window extends ListActivity {
@@ -41,16 +44,18 @@ public class Expense_add_window extends ListActivity {
     RadioGroup trans_type;
     EditText edit_notes;
     Button btn_date;
+    DBHelper db;
 
     String ENTRY_TYPE="ADD";
-    String mSMS;
+    String recid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Get the message from the intent
         Intent intent = getIntent();
-        mSMS = intent.getStringExtra("RECID");
+        recid = intent.getStringExtra("RECID");
+        db=new DBHelper(this);
 
         setContentView(R.layout.activity_expense_add_window);
         ArrayAdapter<ListAdapterRadioModel> adapter = new ListAdapterForRadioButton(this, getModel());
@@ -67,10 +72,9 @@ public class Expense_add_window extends ListActivity {
         onChooseDateClick(getApplicationContext());
 
         Button edit_amount = (Button) findViewById(R.id.btn_amount);
-        if(mSMS!=null) {
-            edit_amount.setText(mSMS);
-            DBHelper db=new DBHelper(this);
-            Cursor sms=db.getFromMasterByID(Integer.parseInt(mSMS));
+        if(recid!=null) {
+            edit_amount.setText(recid);//code has bug
+            Cursor sms=db.getFromMasterByID(Integer.parseInt(recid));
             if(sms!=null){
                 sms.moveToFirst();
                 ENTRY_TYPE="UPDATE";
@@ -78,8 +82,10 @@ public class Expense_add_window extends ListActivity {
                 btn_amount.setEnabled(false);
             }
         }
-        else
+        else {
             edit_amount.setText("0.00");
+            ENTRY_TYPE="ADD";
+        }
 
         Button btnDecline = (Button) findViewById(R.id.btn_decline);
 
@@ -103,6 +109,10 @@ public class Expense_add_window extends ListActivity {
 
         setListAdapter(adapter);
 
+        Cursor cur = db.getAllFromMaster();
+        while(cur.moveToNext())
+            System.out.println(cur.getString(0)+":"+cur.getString(1)+":"+cur.getString(2)+":"+cur.getString(3)+":"+cur.getString(4)+":"+cur.getString(5)+":"+cur.getString(6)+":"+cur.getString(7)+":"+cur.getString(8)+":"+cur.getString(14)+":");
+
 
     }
 
@@ -123,12 +133,16 @@ public class Expense_add_window extends ListActivity {
                     String category = list.get(listIndex).getName();
                     String notes = ((EditText) findViewById(R.id.edit_notes)).getText().toString();
                     String date = ((Button) findViewById(R.id.btn_date)).getText().toString();
+                    if(date.equalsIgnoreCase("Today"))
+                        date = DBHelper.getDateTime(new Date());
+                    else
+                        date=DBHelper.getDateTime(date);
 
                     DBHelper db =new DBHelper(getApplicationContext());
                     if(ENTRY_TYPE.equalsIgnoreCase("ADD"))
-                        db.insertMaster(amount,null,trans_src,trans_type,category,notes,null,entryDesc,null,null,null,null,null,null,null,TYPES.TRANSACTION_STATUS.APPROVED.toString());
-                    if(ENTRY_TYPE.equalsIgnoreCase("UPDATE"))
-                        db.updateMaster(Integer.parseInt(mSMS),amount,null/*bankname*/,trans_src,trans_type,category,notes,null,entryDesc,null,null,null,null,null,null,null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                        db.insertMaster(amount,null,trans_src,trans_type,category,notes,null,entryDesc,date,"datetime()",null,null,null,null,TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                    if(ENTRY_TYPE.equalsIgnoreCase("UPDATE"))//this code is for future enhancement
+                        db.updateMaster(Integer.parseInt(recid),amount,null/*bankname*/,trans_src,trans_type,category,notes,null,entryDesc,null,null,null,null,null,null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
 
                     Toast.makeText(getApplicationContext(), "Successfully Added",
                             Toast.LENGTH_LONG).show();
@@ -257,4 +271,5 @@ public class Expense_add_window extends ListActivity {
         listRadioButton = (RadioButton) v;
         listIndex = newIndex;
     }
+
 }

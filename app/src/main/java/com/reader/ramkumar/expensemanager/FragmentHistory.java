@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
-import com.melnykov.fab.FloatingActionButton;
+//import com.melnykov.fab.FloatingActionButton;
 import com.reader.ramkumar.expensemanager.adapter.Group;
 import com.reader.ramkumar.expensemanager.adapter.MyExpandableListAdapter;
 
@@ -84,14 +84,14 @@ public class FragmentHistory extends Fragment {
         MyExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(),groups);
         listView.setAdapter(adapter);
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Toast.makeText(mContainer.getContext(), "New Clicked", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(mContainer.getContext(), Expense_add_window.class);
                 startActivity(i);
             }
-        });
+        });*/
 
         return view;
     }

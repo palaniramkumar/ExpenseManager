@@ -77,37 +77,49 @@
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1.5">
-
+            android:layout_weight="1.6">
             <RadioGroup
-                android:id="@+id/rdo_trans_type"
+                android:id="@+id/rdo_trans_src"
                 android:layout_width="wrap_content"
-
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
                 <RadioButton
-                    android:id="@+id/rdo_expense"
+                    android:id="@+id/rdo_cash"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="Expense"
+                    android:text="CASH "
                     android:textColor="#000000" />
 
                 <RadioButton
-                    android:id="@+id/rdo_income"
+                    android:id="@+id/rdo_credit_card"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Income"
+                    android:text="CREDIT CARD"
                     android:textColor="#000000" />
 
+                <RadioButton
+                    android:id="@+id/rdo_debit_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DEBIT CARD"
+                    android:textColor="#000000" />
+
+                <!--RadioButton
+                    android:id="@+id/rdo_ATM_WRL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ATM "
+                    android:textColor="#000000" /-->
+
             </RadioGroup>
+
         </FrameLayout>
 
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5">
+            android:layout_weight="0.4">
 
 
             <Button
@@ -162,31 +174,25 @@
             android:layout_weight="0.75">
 
             <RadioGroup
-                android:id="@+id/rdo_trans_src"
+                android:id="@+id/rdo_trans_type"
                 android:layout_width="wrap_content"
+
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <RadioButton
-                    android:id="@+id/rdo_credit_card"
+                    android:id="@+id/rdo_expense"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="Credit Card"
+                    android:text="EXPENSE"
                     android:textColor="#000000" />
 
                 <RadioButton
-                    android:id="@+id/rdo_debit_card"
+                    android:id="@+id/rdo_income"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Debit Card"
-                    android:textColor="#000000" />
-
-                <RadioButton
-                    android:id="@+id/rdo_online_mode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Online Payment"
+                    android:text="INCOME"
                     android:textColor="#000000" />
 
             </RadioGroup>

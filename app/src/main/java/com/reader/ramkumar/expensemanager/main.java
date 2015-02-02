@@ -29,12 +29,9 @@ import com.reader.ramkumar.expensemanager.util.TYPES;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 
 import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
-import it.gmariotti.cardslib.library.prototypes.CardWithList;
-import it.gmariotti.cardslib.library.prototypes.LinearListView;
 import it.gmariotti.cardslib.library.view.CardViewNative;
 
 
@@ -196,8 +193,43 @@ public class main extends Fragment {
                 startActivity(i);
             }
         });
-        Toast.makeText(mContainer.getContext(), "onActivityCreated", Toast.LENGTH_SHORT).show();
 
+        //code for adding floating menu dynamically
+/*
+        ImageView icon = new ImageView(getActivity());
+        Drawable drawable = getResources().getDrawable(R.drawable.ic_action_star);
+        icon.setImageDrawable(drawable);
+
+        FloatingActionButton actionButton = new FloatingActionButton.Builder(getActivity())
+                .setTheme(FloatingActionButton.THEME_DARK)
+                .setContentView(icon)
+                .build();
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
+        // repeat many times:
+        ImageView itemIcon1 = new ImageView(getActivity());
+        itemIcon1.setImageDrawable( getResources().getDrawable(R.drawable.ic_action_edit) );
+        SubActionButton btn_flexi_expense = itemBuilder.setContentView(itemIcon1)
+                .setTheme(FloatingActionButton.THEME_DARK)
+                .build();
+        ImageView itemIcon2 = new ImageView(getActivity());
+        itemIcon2.setImageDrawable( getResources().getDrawable(R.drawable.ic_action_attach) );
+        SubActionButton btn_bank_expense = itemBuilder.setContentView(itemIcon2)
+                .setTheme(FloatingActionButton.THEME_DARK)
+                .build();
+        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
+                .addSubActionView(btn_flexi_expense)
+                .addSubActionView(btn_bank_expense)
+                .attachTo(actionButton)
+                .build();
+
+        btn_flexi_expense.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Toast.makeText(mContainer.getContext(), "New Clicked", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(mContainer.getContext(), Expense_add_window.class);
+                startActivity(i);
+            }
+        });
+*/
         return view;
     }
 
@@ -342,8 +374,7 @@ public class main extends Fragment {
             if(s.findSMS() && s.amount!=null) {
                 //Add an object to the list
                 db.insertMaster(s.amount,s.bankName,s.trans_src,s.trans_type,s.expanse_type,null,s.id,s.where,s.when,
-                        null,null,s.place,null,null,null, TYPES.TRANSACTION_STATUS.PENDING.toString());
-                System.out.println("woi->"+s.amount);
+                        "datetime()",s.place,null,null,null, TYPES.TRANSACTION_STATUS.PENDING.toString());
             }
         }
         db.close();

@@ -9,7 +9,7 @@ import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.view.CardViewNative;
 
-
+/**this code no longer used **/
 public class Home extends Activity {
 
     @Override

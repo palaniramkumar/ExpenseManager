@@ -19,5 +19,7 @@
     <string name="title_activity_expense_add_window">Expense_add_window</string>
     <string name="title_activity_drawer_history">drawer_history</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_activity_expense_add_cash">activity_expense_add_cash</string>
+    <string name="title_activity_expense_from__wallet">Expense_from_Wallet</string>
 
 </resources>

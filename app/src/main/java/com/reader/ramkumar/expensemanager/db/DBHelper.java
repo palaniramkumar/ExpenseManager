@@ -4,9 +4,14 @@ package com.reader.ramkumar.expensemanager.db;
  * Created by Ramkumar on 19/01/15.
  */
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Locale;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -31,16 +36,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String MASTER_COLUMN_NOTES = "notes";//credit,debit
     public static final String MASTER_COLUMN_SMS_ID = "sms_id";
     public static final String DESC = "desc";
-    public static final String MASTER_COLUMN_BANK_TRANSACTION_TIME = "bank_trans_time";
+    public static final String MASTER_COLUMN_TRANSACTION_TIME = "trans_time";
     public static final String MASTER_COLUMN_PLACE = "place";
-    public static final String MASTER_COLUMN_SMS_TIMESTAMP = "sms_timestamp";
     public static final String MASTER_COLUMN_TIMESTAMP = "timestamp";
     public static final String MASTER_COLUMN_GEO_TAG = "geo_tag";
     public static final String MASTER_COLUMN_SHAREDEXPENSE = "SharedExpense";
     public static final String MASTER_COLUMN_SHAREDMEMBERS = "SharedMembers";
     public static final String MASTER_COLUMN_STATUS = "status"; //pending,deleted,accepted
 
-    private HashMap hp;
 
     public DBHelper(Context context)
     {
@@ -56,7 +59,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(
                 "create table MASTER " +
                         "(id integer primary key, amount text,bank_name text,trans_source text, trans_type text,category text," +
-                        " notes text,sms_id integer,desc text, place text,bank_trans_time text,sms_timestamp text,timestamp text," +
+                        " notes text,sms_id integer,desc text, place text,trans_time DATETIME DEFAULT CURRENT_TIMESTAMP," +
+                        "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP," +
                         "geo_tag text,SharedExpense text, SharedMembers text,status text)"
         );
     }
@@ -70,8 +74,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean insertMaster  (String amount, String bank_name, String trans_source,
                                   String trans_type,String category,String notes,
-                                  String sms_id,String desc,String bank_trans_time,
-                                  String sms_timestamp,String timestamp,String place,
+                                  String sms_id,String desc,String trans_time,
+                                  String timestamp,String place,
                                   String geo_tag,String SharedExpense,
                                   String SharedMembers,String status)
     {
@@ -86,8 +90,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("notes", notes);
         contentValues.put("sms_id", sms_id);
         contentValues.put("desc", desc);
-        contentValues.put("bank_trans_time", bank_trans_time);
-        contentValues.put("sms_timestamp", sms_timestamp);
+        contentValues.put("trans_time", trans_time);
         contentValues.put("timestamp", timestamp);
         contentValues.put("geo_tag", geo_tag);
         contentValues.put("SharedExpense", SharedExpense);
@@ -110,8 +113,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public boolean updateMaster(Integer id, String amount, String bank_name, String trans_source,
                                 String trans_type,String category,String notes,
-                                String sms_id,String desc,String bank_trans_time,
-                                String sms_timestamp,String timestamp,String place,
+                                String sms_id,String desc,String trans_time,
+                                String timestamp,String place,
                                 String geo_tag,String SharedExpense,
                                 String SharedMembers,String status)
     {
@@ -125,8 +128,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("notes", notes);
         contentValues.put("sms_id", sms_id);
         contentValues.put("desc", desc);
-        contentValues.put("bank_trans_time", bank_trans_time);
-        contentValues.put("sms_timestamp", sms_timestamp);
+        contentValues.put("bank_trans_time", trans_time);
         contentValues.put("timestamp", timestamp);
         contentValues.put("geo_tag", geo_tag);
         contentValues.put("SharedExpense", SharedExpense);
@@ -216,6 +218,22 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select category,sum(amount) from MASTER  where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' group by category", null );
         return res;
+    }
+
+    public static String getDateTime(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        //Date date = new Date();
+        return dateFormat.format(date);
+    }
+    public static String getDateTime(String dateinactivity) {
+        int day=Integer.parseInt(dateinactivity.split("/")[0]);
+        int month=Integer.parseInt(dateinactivity.split("/")[1])-1;
+        int year=Integer.parseInt(dateinactivity.split("/")[2]);
+        Calendar calendar = new GregorianCalendar(year,month,day,0,0,0);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        return dateFormat.format(calendar);
     }
 
 }

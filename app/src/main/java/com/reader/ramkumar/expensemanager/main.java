@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -30,6 +31,7 @@ import com.reader.ramkumar.expensemanager.util.TYPES;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.UUID;
 
 import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
 import it.gmariotti.cardslib.library.view.CardViewNative;
@@ -230,6 +232,16 @@ public class main extends Fragment {
             }
         });
 */
+        /* first user check */
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String endpoint = sharedPref.getString("Endpoint2", "0");
+        if(endpoint.equalsIgnoreCase("0")) {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("Endpoint2", UUID.randomUUID().toString());
+            editor.commit();
+            System.out.println("Created New Endpoint");
+            db.firstUser();
+        }
         return view;
     }
 

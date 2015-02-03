@@ -56,13 +56,15 @@ public class ExpenseCard extends CardWithList {
         //Init the list
         List<ListObject> mObjects = new ArrayList<ListObject>();
 
-        Cursor cursor = db.getMyExpenseByCategory();
+        Cursor cursor = db.getBudgetSummary();
         //Add an object to the list
 
         while(cursor.moveToNext()){
+            int pending_amt= cursor.getInt(1)-cursor.getInt(2);
+            if(pending_amt==0 &&  cursor.getInt(1) ==0) continue; //code for skiping content disp where budget is 0 and no expense is tracked so far in that department
             CostObject c = new CostObject(this);
             c.type = cursor.getString(0);
-            c.amount = cursor.getInt(1);
+            c.amount = cursor.getInt(1)-cursor.getInt(2);
             c.trendIcon = R.drawable.ic_action_expand;
             c.setObjectId(c.type); //It can be important to set ad id
             mObjects.add(c);

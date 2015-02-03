@@ -2,27 +2,19 @@ package com.reader.ramkumar.expensemanager.adapter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.URLUtil;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jensdriller.libs.undobar.UndoBar;
-import com.reader.ramkumar.SMSparser.SMS;
-import com.reader.ramkumar.expensemanager.Expense_add_window;
 import com.reader.ramkumar.expensemanager.R;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.TYPES;
@@ -114,7 +106,7 @@ public class NotificationCard extends CardWithList {
                     getContext().startActivity(intent);*/
                     final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
 
-                    final CharSequence myList[] = db.getCategory();
+                    final CharSequence myList[] = db.getDefaultCategory();
 
                     dialog.setSingleChoiceItems(myList, -1,  new DialogInterface.OnClickListener() {
 

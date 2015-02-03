@@ -18,7 +18,8 @@ import com.reader.ramkumar.expensemanager.service.SMSListener;
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks,
         FragmentHistory.OnFragmentInteractionListener, main.OnFragmentInteractionListener,
-        PendingApproval.OnFragmentInteractionListener{
+        PendingApproval.OnFragmentInteractionListener,Categories.OnFragmentInteractionListener
+        {
 
     private Toolbar mToolbar;
     private NavigationDrawerFragment mNavigationDrawerFragment;
@@ -54,7 +55,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
         selectItem(position);
     }
 
@@ -101,6 +102,15 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                         .commit();
                 setTitle("History");
                 break;
+            case 3:
+                newFragment = new Categories();
+                fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_container, newFragment)
+                        .commit();
+                setTitle("Category List");
+                break;
+
 
 
         }

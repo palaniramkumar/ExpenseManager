@@ -85,9 +85,6 @@ public class PendingApproval extends Fragment {
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View view = mInflater.inflate(R.layout.fragment_pending_approval, mContainer, false);
 
-
-
-
         mProgress = (ProgressBar) view.findViewById(R.id.loading_spinner);
 
         class MyAsyncTask extends AsyncTask<Void, Void, NotificationCard> {

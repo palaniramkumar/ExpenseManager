@@ -139,8 +139,17 @@ public class Expense_add_window extends ListActivity {
                         date=DBHelper.getDateTime(date);
 
                     DBHelper db =new DBHelper(getApplicationContext());
-                    if(ENTRY_TYPE.equalsIgnoreCase("ADD"))
-                        db.insertMaster(amount,null,trans_src,trans_type,category,notes,null,entryDesc,date,"datetime()",null,null,null,null,TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                    if(ENTRY_TYPE.equalsIgnoreCase("ADD")) {
+                        if(trans_src.equalsIgnoreCase("credit"))trans_src=TYPES.TRANSACTION_SOURCE.CREDIT_CARD.toString();
+                        if(trans_src.equalsIgnoreCase("debit"))trans_src=TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString();
+                        if(trans_src.equalsIgnoreCase("cash"))trans_src=TYPES.TRANSACTION_SOURCE.CASH.toString();
+
+                        if(trans_type.equalsIgnoreCase("expense"))trans_type=TYPES.TRANSACTION_TYPE.EXPENSE.toString();
+                        if(trans_type.equalsIgnoreCase("income"))trans_type=TYPES.TRANSACTION_TYPE.INCOME.toString();
+                        if(trans_type.equalsIgnoreCase("atm"))trans_type=TYPES.TRANSACTION_TYPE.CASH_VAULT.toString(); //Bug: need some better rephrase and have to change business logic
+
+                        db.insertMaster(amount, null, trans_src, trans_type, category, notes, null, entryDesc, date, "datetime()", null, null, null, null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                    }
                     if(ENTRY_TYPE.equalsIgnoreCase("UPDATE"))//this code is for future enhancement
                         db.updateMaster(Integer.parseInt(recid),amount,null/*bankname*/,trans_src,trans_type,category,notes,null,entryDesc,null,null,null,null,null,null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
 
@@ -243,14 +252,10 @@ public class Expense_add_window extends ListActivity {
 
     private List<ListAdapterRadioModel> getModel() {
         list = new ArrayList<ListAdapterRadioModel>();
-        list.add(get("Food"));
-        list.add(get("Home"));
-        list.add(get("Fuel"));
-        list.add(get("Groceries"));
-        list.add(get("Travel"));
-        list.add(get("Medicine"));
-        list.add(get("Restaurant"));
-        list.add(get("Others"));
+        Cursor cur =db.getMyBudgetByCategory();
+        while (cur.moveToNext())
+        list.add(get(cur.getString(1)));
+
         // Initially select one of the items
         //list.get(1).setSelected(true);
         return list;

@@ -88,29 +88,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="CASH "
+                    android:text="Cash "
                     android:textColor="#000000" />
 
                 <RadioButton
                     android:id="@+id/rdo_credit_card"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="CREDIT CARD"
+                    android:text="Credit Card"
                     android:textColor="#000000" />
 
                 <RadioButton
                     android:id="@+id/rdo_debit_card"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="DEBIT CARD"
+                    android:text="Debit Card"
                     android:textColor="#000000" />
 
-                <!--RadioButton
-                    android:id="@+id/rdo_ATM_WRL"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ATM "
-                    android:textColor="#000000" /-->
+
 
             </RadioGroup>
 
@@ -194,7 +189,12 @@
                     android:layout_height="wrap_content"
                     android:text="INCOME"
                     android:textColor="#000000" />
-
+                <RadioButton
+                    android:id="@+id/rdo_ATM_WRL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ATM "
+                    android:textColor="#000000"/>
             </RadioGroup>
         </FrameLayout>
 

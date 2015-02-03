@@ -44,11 +44,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String MASTER_COLUMN_SHAREDMEMBERS = "SharedMembers";
     public static final String MASTER_COLUMN_STATUS = "status"; //pending,deleted,accepted
 
+    public static final String CATEGORY_TABLE_NAME = "category";
 
     public DBHelper(Context context)
     {
 
         super(context, DATABASE_NAME , null, 1);
+
         //context.deleteDatabase(DATABASE_NAME);
     }
 
@@ -63,6 +65,11 @@ public class DBHelper extends SQLiteOpenHelper {
                         "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP," +
                         "geo_tag text,SharedExpense text, SharedMembers text,status text)"
         );
+        db.execSQL(
+                "create table CATEGORY " +
+                        "(id integer primary key, category text,amount text, "+
+                        "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,status text)"
+        );
     }
 
     @Override
@@ -72,6 +79,11 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public void firstUser(){
+        CharSequence[] categoryName = getDefaultCategory();
+        for(int i=0;i<categoryName.length;i++)
+        insertCategory(categoryName[i].toString(),"0",TYPES.TRANSACTION_STATUS.APPROVED.toString());
+    }
     public boolean insertMaster  (String amount, String bank_name, String trans_source,
                                   String trans_type,String category,String notes,
                                   String sms_id,String desc,String trans_time,
@@ -100,6 +112,35 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.insert("MASTER", null, contentValues);
         return true;
+    }
+
+    public boolean insertCategory (String name, String amount,String status)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("amount", amount);
+        contentValues.put("category", name);
+        contentValues.put("status", status);
+
+        db.insert("category", null, contentValues);
+        return true;
+    }
+    public Integer deleteCategory (int id)
+    {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete("CATEGORY",
+                "id = ? ",
+                new String[] { Integer.toString(id) });
+    }
+    public  int updateCategory(Integer id,String field,String value){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(field, value);
+        int count = db.update("Category", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
+        return count;
+
     }
     public Cursor getData(int id){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -196,18 +237,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
     /* need to automate this below methods*/
 
-    public int getBudget(){
-        return 10000;
-    }
 
-    public CharSequence [] getCategory(){
+
+    public CharSequence [] getDefaultCategory(){
         final CharSequence myList[] = { "Food", "Home", "Fuel" ,"Groceries","Travel","Medicine","Restaurant","Others"};
         return  myList;
     }
-    public float [] getBudgetByCategory(){
-        final float myList[] = { 1000,2000,3000,4000,500,1500,500,500};
-        return  myList;
-    }
+
     public float getMyTotalExpense(){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select sum(amount) from MASTER where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"'", null );
@@ -219,6 +255,30 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor res =  db.rawQuery( "select category,sum(amount) from MASTER  where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' group by category", null );
         return res;
     }
+
+    public Cursor getMyBudgetByCategory(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select id,category,amount from CATEGORY where status='"+TYPES.TRANSACTION_STATUS.APPROVED+"'", null );
+        return res;
+    }
+
+    public int getBudget(){
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select sum(amount) from CATEGORY where status='"+TYPES.TRANSACTION_STATUS.APPROVED+"'", null );
+        if(res.moveToNext())return res.getInt(0);
+        return 0;
+    }
+    //select  c.category,c.amount,m.amount from category c left join master m on c.category=m.category where c.amount <> "0"
+    public Cursor getBudgetSummary(){
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select  c.category,c.amount,sum(m.amount) from category c left join master m " +
+                "on c.category=m.category where  c.status='"+TYPES.TRANSACTION_STATUS.APPROVED+"' " + //bug: Use case: user removed category this month, but the trans entry was there for previous month
+                "group by m.category", null );
+        return res;
+    }
+
 
     public static String getDateTime(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(

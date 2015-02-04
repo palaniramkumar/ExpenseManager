@@ -37,20 +37,25 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         return 0;
     }
 
+
+    /*code for displaying content in grouplist*/
     @Override
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
-        final String children = (String) getChild(groupPosition, childPosition);
+        final String[] children = (String[]) getChild(groupPosition, childPosition);
         TextView text = null;
+        TextView amount = null;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_row_details, null);
         }
         text = (TextView) convertView.findViewById(R.id.textView1);
-        text.setText(children);
+        amount = (TextView) convertView.findViewById(R.id.textView2);
+        text.setText(children[0]);
+        amount.setText(children[1]);
         convertView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(activity, children,
+                Toast.makeText(activity, children[0],
                         Toast.LENGTH_SHORT).show();
             }
         });

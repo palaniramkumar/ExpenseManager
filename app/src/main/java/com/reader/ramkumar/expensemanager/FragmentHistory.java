@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.SparseArray;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 //import com.melnykov.fab.FloatingActionButton;
 import com.reader.ramkumar.expensemanager.adapter.Group;
 import com.reader.ramkumar.expensemanager.adapter.MyExpandableListAdapter;
+import com.reader.ramkumar.expensemanager.db.DBHelper;
 
 
 /**
@@ -36,6 +38,7 @@ public class FragmentHistory extends Fragment {
     private String mParam1;
     private String mParam2;
     ViewGroup mContainer;
+    DBHelper db;
     SparseArray<Group> groups = new SparseArray<Group>();
 
     private OnFragmentInteractionListener mListener;
@@ -78,7 +81,7 @@ public class FragmentHistory extends Fragment {
         mContainer = container;
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = mInflater.inflate(R.layout.fragment_fragment_history, mContainer, false);
-
+        db=new DBHelper(getActivity());
         createData();
         ExpandableListView listView = (ExpandableListView) view.findViewById(R.id.listView);
         MyExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(),groups);
@@ -137,12 +140,26 @@ public class FragmentHistory extends Fragment {
     }
 
     public void createData() {
-        for (int j = 0; j < 5; j++) {
-            Group group = new Group("Test " + j);
-            for (int i = 0; i < 5; i++) {
-                group.children.add("Sub Item" + i);
+        Cursor cur = db.getTransactionHistory();
+        int j=0;
+        while (cur.moveToNext()) {
+
+            Group group = new Group(cur.getString(0)+", "+cur.getString(1));
+            System.out.println(cur.getString(0)+":"+cur.getString(1)+":"+cur.getString(2));
+
+            String [] category = cur.getString(2).split(",");
+            String [] amount = cur.getString(3).split(",");
+            for (int i = 0; i < amount.length; i++) {
+                String [] param =new String[2];
+                param[0]=category[i];
+                param[1]=amount[i];
+
+                group.children.add(param);
             }
+           // group.children.add(cur.getString(1) +":"+ cur.getString(2));
             groups.append(j, group);
+            j++;
         }
+
     }
 }

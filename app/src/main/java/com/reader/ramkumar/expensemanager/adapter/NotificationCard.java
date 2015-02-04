@@ -43,28 +43,6 @@ public class NotificationCard extends CardWithList {
         //Add Header
         CardHeader header = new CardHeader(getContext(), R.layout.card_table_header);
 
-        //Add a popup menu. This method set OverFlow button to visible
-        header.setPopupMenu(R.menu.popup_item, new CardHeader.OnClickCardHeaderPopupMenuListener() {
-            @Override
-            public void onMenuItemClick(BaseCard card, MenuItem item) {
-
-                switch (item.getItemId()) {
-                    case R.id.action_add:
-                        //Example: add an item
-                        CostObject w1 = new CostObject(NotificationCard.this);
-                        w1.message = "Food";
-                        w1.messagegId = "8400";
-                        w1.setObjectId(w1.message);
-                        mLinearListAdapter.add(w1);
-                        break;
-                    case R.id.action_remove:
-                        //Example: remove an item
-                        mLinearListAdapter.remove(mLinearListAdapter.getItem(0));
-                        break;
-                }
-
-            }
-        });
         header.setTitle("You have few Pending Approvals"); //should use R.string.
         return header;
     }
@@ -106,13 +84,15 @@ public class NotificationCard extends CardWithList {
                     getContext().startActivity(intent);*/
                     final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
 
-                    final CharSequence myList[] = db.getDefaultCategory();
+                    //final CharSequence myList[] = db.getDefaultCategory();
+                    Cursor myList =db.getMyBudgetByCategory();
 
-                    dialog.setSingleChoiceItems(myList, -1,  new DialogInterface.OnClickListener() {
+
+
+                    dialog.setSingleChoiceItems(myList, -1,"category",  new DialogInterface.OnClickListener() {
 
                         @Override
                         public void onClick(DialogInterface arg0, int arg1) {
-
 
                         }
                     });
@@ -122,8 +102,8 @@ public class NotificationCard extends CardWithList {
                         public void onClick(DialogInterface dialog, int which) {
                             ListView lw = ((AlertDialog) dialog).getListView();
                             if(lw.getCheckedItemPosition()>=0) {
-                               Object checkedItem = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-                               db.updateMaster(RECID, db.MASTER_COLUMN_CATEGORY, checkedItem.toString());
+                               Cursor checkedItem =(Cursor) lw.getAdapter().getItem(lw.getCheckedItemPosition());
+                               db.updateMaster(RECID, db.MASTER_COLUMN_CATEGORY, checkedItem.getString(checkedItem.getColumnIndex("category")));
                                db.updateMasterStatus(RECID, TYPES.TRANSACTION_STATUS.APPROVED.toString());
                                mLinearListAdapter.remove(mLinearListAdapter.getItem(position));
                             }

@@ -28,9 +28,12 @@ import com.reader.ramkumar.expensemanager.adapter.ExpenseCard;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.TYPES;
 
+import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
@@ -234,10 +237,10 @@ public class main extends Fragment {
 */
         /* first user check */
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        String endpoint = sharedPref.getString("Endpoint2", "0");
+        String endpoint = sharedPref.getString("Endpoint3", "0");
         if(endpoint.equalsIgnoreCase("0")) {
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("Endpoint2", UUID.randomUUID().toString());
+            editor.putString("Endpoint3", UUID.randomUUID().toString());
             editor.commit();
             System.out.println("Created New Endpoint");
             db.firstUser();
@@ -380,11 +383,12 @@ public class main extends Fragment {
             s.address=address;
             s.text=body;
             s.id=cursor.getString(0);
-            s.when=cursor.getString(2);
+            s.when=db.getDroidDate(cursor.getLong(2) /1000);
 
              /* this may need to tune further for better accurecy */
             if(s.findSMS() && s.amount!=null) {
                 //Add an object to the list
+                System.out.println("when = "+s.when);
                 db.insertMaster(s.amount,s.bankName,s.trans_src,s.trans_type,s.expanse_type,null,s.id,s.where,s.when,
                         "datetime()",s.place,null,null,null, TYPES.TRANSACTION_STATUS.PENDING.toString());
             }

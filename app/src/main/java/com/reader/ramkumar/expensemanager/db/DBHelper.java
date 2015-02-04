@@ -4,6 +4,7 @@ package com.reader.ramkumar.expensemanager.db;
  * Created by Ramkumar on 19/01/15.
  */
 
+import java.security.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,6 +13,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -51,7 +53,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         super(context, DATABASE_NAME , null, 1);
 
-        //context.deleteDatabase(DATABASE_NAME);
+        //context.deleteDatabase(DATABASE_NAME); //force close if the db is not created
     }
 
     @Override
@@ -258,7 +260,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Cursor getMyBudgetByCategory(){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select id,category,amount from CATEGORY where status='"+TYPES.TRANSACTION_STATUS.APPROVED+"'", null );
+        Cursor res =  db.rawQuery( "select id _id,category,amount from CATEGORY where status='"+TYPES.TRANSACTION_STATUS.APPROVED+"'", null );
         return res;
     }
 
@@ -286,14 +288,37 @@ public class DBHelper extends SQLiteOpenHelper {
         //Date date = new Date();
         return dateFormat.format(date);
     }
+
+    public  static String getDroidDate(long timestamp) {
+        try{
+            Calendar calendar = Calendar.getInstance();
+            TimeZone tz = TimeZone.getDefault();
+            calendar.setTimeInMillis(timestamp * 1000);
+            calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            Date date = (Date) calendar.getTime();
+            return sdf.format(date);
+        }catch (Exception e) {
+        }
+        return "";
+    }
+    public Cursor getTransactionHistory(){
+        String sql = "select case strftime('%m', trans_time) when '01' then 'January' when '02' then 'Febuary' when '03' then 'March' when '04' then 'April' when '05' then 'May' when '06' then 'June' when '07' then 'July' when '08' then 'August' when '09' then 'September' when '10' then 'October' when '11' then 'November' when '12' then 'December' else '' end\n" +
+                "as month,strftime('%d',trans_time) day, GROUP_CONCAT(category), GROUP_CONCAT(amount) from MASTER where status ='"+TYPES.TRANSACTION_STATUS.APPROVED+"' group by strftime('%m', trans_time) order by day asc";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( sql, null );
+        return res;
+    }
+
     public static String getDateTime(String dateinactivity) {
         int day=Integer.parseInt(dateinactivity.split("/")[0]);
         int month=Integer.parseInt(dateinactivity.split("/")[1])-1;
         int year=Integer.parseInt(dateinactivity.split("/")[2]);
-        Calendar calendar = new GregorianCalendar(year,month,day,0,0,0);
+        Calendar calendar = new GregorianCalendar(year,month,day);
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        return dateFormat.format(calendar);
+        dateFormat.setCalendar(calendar);
+        return dateFormat.format(calendar.getTime());
     }
 
 }

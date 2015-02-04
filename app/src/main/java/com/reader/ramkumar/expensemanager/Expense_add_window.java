@@ -109,10 +109,10 @@ public class Expense_add_window extends ListActivity {
 
         setListAdapter(adapter);
 
-        Cursor cur = db.getAllFromMaster();
+      /*  Cursor cur = db.getAllFromMaster();
         while(cur.moveToNext())
             System.out.println(cur.getString(0)+":"+cur.getString(1)+":"+cur.getString(2)+":"+cur.getString(3)+":"+cur.getString(4)+":"+cur.getString(5)+":"+cur.getString(6)+":"+cur.getString(7)+":"+cur.getString(8)+":"+cur.getString(14)+":");
-
+    */
 
     }
 
@@ -139,7 +139,7 @@ public class Expense_add_window extends ListActivity {
                         date=DBHelper.getDateTime(date);
 
                     DBHelper db =new DBHelper(getApplicationContext());
-                    if(ENTRY_TYPE.equalsIgnoreCase("ADD")) {
+                    if(ENTRY_TYPE.equalsIgnoreCase("ADD") ) {
                         if(trans_src.equalsIgnoreCase("credit"))trans_src=TYPES.TRANSACTION_SOURCE.CREDIT_CARD.toString();
                         if(trans_src.equalsIgnoreCase("debit"))trans_src=TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString();
                         if(trans_src.equalsIgnoreCase("cash"))trans_src=TYPES.TRANSACTION_SOURCE.CASH.toString();

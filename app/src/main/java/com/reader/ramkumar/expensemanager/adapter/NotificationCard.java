@@ -54,6 +54,67 @@ public class NotificationCard extends CardWithList {
         setUseProgressBar(true);
     }
 
+    void showDialogCatogories(final int RECID,final int position){
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+
+        //final CharSequence myList[] = db.getDefaultCategory();
+        Cursor myList =db.getMyBudgetByCategory();
+        dialog.setSingleChoiceItems(myList, -1,"category",  new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+
+            }
+        });
+        dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ListView lw = ((AlertDialog) dialog).getListView();
+                if(lw.getCheckedItemPosition()>=0) {
+                    Cursor checkedItem =(Cursor) lw.getAdapter().getItem(lw.getCheckedItemPosition());
+                    db.updateMaster(RECID, db.MASTER_COLUMN_CATEGORY, checkedItem.getString(checkedItem.getColumnIndex("category")));
+                    db.updateMasterStatus(RECID, TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                    mLinearListAdapter.remove(mLinearListAdapter.getItem(position));
+                }
+                // TODO Auto-generated method stub
+
+            }
+
+        });
+        dialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+
+        // Set dialog title
+        dialog.setTitle("Choose the Category");
+        dialog.show();
+    }
+    void showDialogConfirm(final int RECID,final int position){
+        new AlertDialog.Builder(getContext())
+                .setTitle("Delete entry")
+                .setMessage("Can I add this is Cash Vault ?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        db.updateMasterStatus(RECID, TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                        mLinearListAdapter.remove(mLinearListAdapter.getItem(position));
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
 
     @Override
     protected List<ListObject> initChildren() {
@@ -68,6 +129,7 @@ public class NotificationCard extends CardWithList {
              /* this may need to tune further for better accurecy */
             final String amount = cursor.getString(1);
             final int RECID = cursor.getInt(0);
+            final String trans_type=cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_TRANS_TYPE));
             //Add an object to the list
             CostObject c = new CostObject(this);
             c.message = "Rs."+ amount +" spent at "+cursor.getString(8);
@@ -76,55 +138,13 @@ public class NotificationCard extends CardWithList {
             c.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(LinearListView parent, View view, final int position, ListObject object) {
-                    //need to add code for arg parameter for add expense
-
-                    Toast.makeText(getContext(), "Click on " + position, Toast.LENGTH_SHORT).show();
-                    /*Intent intent = new Intent(getContext(), Expense_add_window.class);
-                    intent.putExtra("RECID", RECID);
-                    getContext().startActivity(intent);*/
-                    final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-
-                    //final CharSequence myList[] = db.getDefaultCategory();
-                    Cursor myList =db.getMyBudgetByCategory();
+                    if(trans_type.equalsIgnoreCase(TYPES.TRANSACTION_TYPE.CASH_VAULT.toString())){
+                        showDialogConfirm(RECID,position);
+                    }
+                    else
+                        showDialogCatogories(RECID,position);
 
 
-
-                    dialog.setSingleChoiceItems(myList, -1,"category",  new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-
-                        }
-                    });
-                    dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ListView lw = ((AlertDialog) dialog).getListView();
-                            if(lw.getCheckedItemPosition()>=0) {
-                               Cursor checkedItem =(Cursor) lw.getAdapter().getItem(lw.getCheckedItemPosition());
-                               db.updateMaster(RECID, db.MASTER_COLUMN_CATEGORY, checkedItem.getString(checkedItem.getColumnIndex("category")));
-                               db.updateMasterStatus(RECID, TYPES.TRANSACTION_STATUS.APPROVED.toString());
-                               mLinearListAdapter.remove(mLinearListAdapter.getItem(position));
-                            }
-                            // TODO Auto-generated method stub
-
-                        }
-
-                    });
-                    dialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // TODO Auto-generated method stub
-
-                        }
-                    });
-
-
-                    // Set dialog title
-                    dialog.setTitle("Choose the Category");
-                    dialog.show();
                 }
             });
             mObjects.add(c);

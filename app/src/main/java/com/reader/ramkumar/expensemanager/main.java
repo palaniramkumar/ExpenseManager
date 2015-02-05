@@ -15,8 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
@@ -28,12 +30,9 @@ import com.reader.ramkumar.expensemanager.adapter.ExpenseCard;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.TYPES;
 
-import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.UUID;
 
 import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
@@ -245,6 +244,21 @@ public class main extends Fragment {
             System.out.println("Created New Endpoint");
             db.firstUser();
         }
+
+        //setting up remaining amount in cash vault
+        //https://github.com/akexorcist/Android-RoundCornerProgressBar
+        int cash_vault = db.getCashVault();
+        int cash_expense = 12000;//db.getCashExpense();
+        if(cash_vault==0)cash_vault=1; //save code for null pointer exception need to modify the code
+        System.out.println(cash_expense);
+        RoundCornerProgressBar progress1 = (RoundCornerProgressBar) view.findViewById(R.id.progress_1);
+        progress1.setProgressColor(Color.WHITE);
+        progress1.setBackgroundColor(Color.parseColor("#303f9f"));
+        progress1.setMax(cash_vault);
+        progress1.setProgress(10000);
+        TextView progress_caption =  (TextView)view.findViewById(R.id.txt_progress);
+        progress_caption.setText("You have Rs "+(cash_vault-cash_expense)+" left in your Cash Vault");
+
         return view;
     }
 

@@ -33,8 +33,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String MASTER_COLUMN_ID = "id";
     public static final String MASTER_COLUMN_AMOUNT = "amount";
     public static final String MASTER_COLUMN_BANK_NAME = "bank_name";
-    public static final String MASTER_COLUMN_TRANS_SOURCE = "trans_source";//credit,debit,cash or netbanking
-    public static final String MASTER_COLUMN_TRANS_TYPE = "trans_type";//credit,debit,cash
+    public static final String MASTER_COLUMN_TRANS_SOURCE = "trans_source";//credit,debit card,Cash or netbanking
+    public static final String MASTER_COLUMN_TRANS_TYPE = "trans_type";//credit,debit,ATM
     public static final String MASTER_COLUMN_CATEGORY = "category";//home,car,fuel,misc
     public static final String MASTER_COLUMN_NOTES = "notes";//credit,debit
     public static final String MASTER_COLUMN_SMS_ID = "sms_id";
@@ -178,11 +178,31 @@ public class DBHelper extends SQLiteOpenHelper {
         return count;
 
     }
-    public Cursor getData(int id){
+
+    public int getCashExpense(){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from MASTER where id="+id+"", null );
-        return res;
+        Cursor res =  db.rawQuery( "select sum(amount) from MASTER where trans_source='"+TYPES.TRANSACTION_SOURCE.CASH+"' and trans_type = '"+TYPES.TRANSACTION_TYPE.EXPENSE+"'", null );
+        if(res.moveToNext()){
+            if(res.getString(0) == null) return 0;
+            System.out.println("Inside Cash Expense: "+res.getString(0));
+            return Integer.parseInt(res.getString(0));
+        }
+        else{
+            return 0;
+        }
     }
+    public int getCashVault(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select sum(amount) from MASTER where trans_type = '"+TYPES.TRANSACTION_TYPE.CASH_VAULT+"' ", null );
+        if(res.moveToNext()){
+            if(res.getString(0) == null) return 0;
+            return Integer.parseInt(res.getString(0));
+        }
+        else{
+            return 0;
+        }
+    }
+
     public int numberOfRows(){
         SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, MASTER_TABLE_NAME);
@@ -245,7 +265,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    /* need to automate this below methods*/
+    /* Category Related Methods*/
 
 
 
@@ -265,6 +285,8 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor res =  db.rawQuery( "select category,sum(amount) from MASTER  where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' group by category", null );
         return res;
     }
+
+    /*Budget Related Methods */
 
     public Cursor getMyBudgetByCategory(){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -288,6 +310,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 "group by m.category", null );
         return res;
     }
+
+
+    /*Date Conversion Methods */
 
 
     public static String getDateTime(Date date) {

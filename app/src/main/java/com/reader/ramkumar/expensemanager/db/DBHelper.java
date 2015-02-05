@@ -19,6 +19,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -63,7 +64,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(
                 "create table MASTER " +
                         "(id integer primary key, amount text,bank_name text,trans_source text, trans_type text,category text," +
-                        " notes text,sms_id integer,desc text, place text,trans_time DATETIME DEFAULT CURRENT_TIMESTAMP," +
+                        " notes text,sms_id integer UNIQUE,desc text, place text,trans_time DATETIME DEFAULT CURRENT_TIMESTAMP," +
                         "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP," +
                         "geo_tag text,SharedExpense text, SharedMembers text,status text)"
         );
@@ -112,7 +113,13 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("status", status);
         contentValues.put("place", place);
 
-        db.insert("MASTER", null, contentValues);
+        try {
+            db.insert("MASTER", null, contentValues);
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+            return false;
+        }
         return true;
     }
 

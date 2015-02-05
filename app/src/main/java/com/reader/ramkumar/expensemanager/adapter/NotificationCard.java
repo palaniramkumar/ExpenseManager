@@ -71,7 +71,7 @@ public class NotificationCard extends CardWithList {
             //Add an object to the list
             CostObject c = new CostObject(this);
             c.message = "Rs."+ amount +" spent at "+cursor.getString(8);
-            c.messagegId=RECID+"";
+            c.messagegId=cursor.getInt(7)+"";//RECID+"";
             c.setObjectId(c.messagegId); //It can be important to set ad id
             c.setOnItemClickListener(new OnItemClickListener() {
                 @Override

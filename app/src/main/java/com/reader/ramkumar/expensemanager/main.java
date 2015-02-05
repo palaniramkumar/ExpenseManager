@@ -369,7 +369,7 @@ public class main extends Fragment {
         Uri uriSms = Uri.parse("content://sms/inbox");
         final Cursor cursor =context.getContentResolver().query(uriSms, new String[]{"_id", "address", "date", "body"},"_id > "+last_sms_id,null,null);
 
-        cursor.moveToFirst();
+        //cursor.moveToFirst();
 
 
         while  (cursor.moveToNext())

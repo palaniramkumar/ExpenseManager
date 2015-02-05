@@ -7,7 +7,7 @@ public class TYPES {
     public enum TRANSACTION_TYPE {
         EXPENSE  ("EXPENSE"),  //calls constructor with value 3
         INCOME ("INCOME"),  //calls constructor with value 2
-        CASH_VAULT("CASH VAULT")
+        CASH_VAULT("CASH VAULT") //ATM WRL
         ; // semicolon needed when fields / methods follow
 
         private final String tranType;
@@ -25,8 +25,7 @@ public class TYPES {
         CREDIT_CARD ("CREDIT CARD"),
         DEBIT_CARD ("DEBIT CARD"),
         NET_BANKING ("NET BANKING"),
-        ATM_WITHDRAW ("ATM WITHDRAWAL"),
-        CASH ("CASH")
+        CASH("CASH")
         ; // semicolon needed when fields / methods follow
 
         private final String tranSrc;

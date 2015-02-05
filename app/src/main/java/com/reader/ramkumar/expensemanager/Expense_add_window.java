@@ -45,9 +45,12 @@ public class Expense_add_window extends ListActivity {
     EditText edit_notes;
     Button btn_date;
     DBHelper db;
-
+    String bank_name=null;
+    String sms_id=null;
     String ENTRY_TYPE="ADD";
     String recid;
+    String place;
+    String geo_tag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,11 +64,11 @@ public class Expense_add_window extends ListActivity {
         ArrayAdapter<ListAdapterRadioModel> adapter = new ListAdapterForRadioButton(this, getModel());
 
         //finding all fields
-        Button btn_amount = ((Button) findViewById(R.id.btn_amount));
-        RadioGroup trans_src = ((RadioGroup) findViewById(R.id.rdo_trans_src));
-        RadioGroup trans_type = ((RadioGroup) findViewById(R.id.rdo_trans_type));
-        EditText edit_notes = ((EditText) findViewById(R.id.edit_notes));
-        Button btn_date = ((Button) findViewById(R.id.btn_date));
+        btn_amount = ((Button) findViewById(R.id.btn_amount));
+        trans_src = ((RadioGroup) findViewById(R.id.rdo_trans_src));
+        trans_type = ((RadioGroup) findViewById(R.id.rdo_trans_type));
+        edit_notes = ((EditText) findViewById(R.id.edit_notes));
+        btn_date = ((Button) findViewById(R.id.btn_date));
 
         //business logic
         onAcceptButtonClick();
@@ -79,6 +82,35 @@ public class Expense_add_window extends ListActivity {
                 sms.moveToFirst();
                 ENTRY_TYPE="UPDATE";
                 btn_amount.setText(sms.getString(1));
+                edit_notes.setText(sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_NOTES) ));
+
+
+                btn_date.setText(sms.getString( sms.getColumnIndex("local_time") ));
+                /* selection for TRANSACTION SOURCE */
+                if(sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_TRANS_SOURCE)).equalsIgnoreCase(TYPES.TRANSACTION_SOURCE.CREDIT_CARD.toString()))
+                    trans_src.check(R.id.rdo_credit_card);
+                else if(sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_TRANS_SOURCE)).equalsIgnoreCase(TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString()))
+                    trans_src.check(R.id.rdo_debit_card);
+                else if(sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_TRANS_SOURCE)).equalsIgnoreCase(TYPES.TRANSACTION_SOURCE.CASH.toString()))
+                    trans_src.check(R.id.rdo_cash);
+
+                /* selection for TRANSACTION TRPE */
+                if(sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_TRANS_TYPE)).equalsIgnoreCase(TYPES.TRANSACTION_TYPE.CASH_VAULT.toString()))
+                    trans_type.check(R.id.rdo_ATM_WRL);
+                else if(sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_TRANS_TYPE)).equalsIgnoreCase(TYPES.TRANSACTION_TYPE.EXPENSE.toString()))
+                    trans_type.check(R.id.rdo_expense);
+                else if(sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_TRANS_TYPE)).equalsIgnoreCase(TYPES.TRANSACTION_TYPE.INCOME.toString()))
+                    trans_type.check(R.id.rdo_income);
+                String category= sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_CATEGORY));
+                System.out.println(category);
+                list.get(getListIndex(category)).setSelected(true); //bug: getListIndex(category) is retuning -1 which led to fc. need to check theList adapter.
+
+                /*storing it in global variable*/
+                bank_name = sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_BANK_NAME) );
+                sms_id = sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_SMS_ID) );
+                place =sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_PLACE) );
+                geo_tag =sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_GEO_TAG) );
+
                 btn_amount.setEnabled(false);
             }
         }
@@ -125,14 +157,14 @@ public class Expense_add_window extends ListActivity {
             @Override
             public void onClick(View arg0) {
                 if (listIndex != -1) {
-                    String amount = ((Button) findViewById(R.id.btn_amount)).getText().toString();
-                    int selectedId = ((RadioGroup) findViewById(R.id.rdo_trans_src)).getCheckedRadioButtonId();
+                    String amount = btn_amount.getText().toString();
+                    int selectedId = trans_src.getCheckedRadioButtonId();
                     String trans_src = ((RadioButton) findViewById(selectedId)).getText().toString();
-                    selectedId = ((RadioGroup) findViewById(R.id.rdo_trans_type)).getCheckedRadioButtonId();
+                    selectedId = trans_type.getCheckedRadioButtonId();
                     String trans_type = ((RadioButton) findViewById(selectedId)).getText().toString();
                     String category = list.get(listIndex).getName();
-                    String notes = ((EditText) findViewById(R.id.edit_notes)).getText().toString();
-                    String date = ((Button) findViewById(R.id.btn_date)).getText().toString();
+                    String notes = edit_notes.getText().toString();
+                    String date = btn_date.getText().toString();
                     if(date.equalsIgnoreCase("Today"))
                         date = DBHelper.getDateTime(new Date());
                     else
@@ -140,18 +172,18 @@ public class Expense_add_window extends ListActivity {
 
                     DBHelper db =new DBHelper(getApplicationContext());
                     if(ENTRY_TYPE.equalsIgnoreCase("ADD") ) {
-                        if(trans_src.equalsIgnoreCase("credit"))trans_src=TYPES.TRANSACTION_SOURCE.CREDIT_CARD.toString();
-                        if(trans_src.equalsIgnoreCase("debit"))trans_src=TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString();
-                        if(trans_src.equalsIgnoreCase("cash"))trans_src=TYPES.TRANSACTION_SOURCE.CASH.toString();
+                        if(trans_src.equalsIgnoreCase("credit")) trans_src=TYPES.TRANSACTION_SOURCE.CREDIT_CARD.toString();
+                        if(trans_src.equalsIgnoreCase("debit")) trans_src=TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString();
+                        if(trans_src.equalsIgnoreCase("cash")) trans_src=TYPES.TRANSACTION_SOURCE.CASH.toString();
 
-                        if(trans_type.equalsIgnoreCase("expense"))trans_type=TYPES.TRANSACTION_TYPE.EXPENSE.toString();
-                        if(trans_type.equalsIgnoreCase("income"))trans_type=TYPES.TRANSACTION_TYPE.INCOME.toString();
-                        if(trans_type.equalsIgnoreCase("atm"))trans_type=TYPES.TRANSACTION_TYPE.CASH_VAULT.toString(); //Bug: need some better rephrase and have to change business logic
+                        if(trans_type.equalsIgnoreCase("expense")) trans_type=TYPES.TRANSACTION_TYPE.EXPENSE.toString();
+                        if(trans_type.equalsIgnoreCase("income")) trans_type=TYPES.TRANSACTION_TYPE.INCOME.toString();
+                        if(trans_type.equalsIgnoreCase("atm")) trans_type=TYPES.TRANSACTION_TYPE.CASH_VAULT.toString(); //ATM transactions considered as cash vault
 
                         db.insertMaster(amount, null, trans_src, trans_type, category, notes, null, entryDesc, date, "datetime()", null, null, null, null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
                     }
                     if(ENTRY_TYPE.equalsIgnoreCase("UPDATE"))//this code is for future enhancement
-                        db.updateMaster(Integer.parseInt(recid),amount,null/*bankname*/,trans_src,trans_type,category,notes,null,entryDesc,null,null,null,null,null,null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                        db.updateMaster(Integer.parseInt(recid),amount,bank_name,trans_src,trans_type,category,notes,sms_id,entryDesc,date,"datetime()",place,geo_tag,null,null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
 
                     Toast.makeText(getApplicationContext(), "Successfully Added",
                             Toast.LENGTH_LONG).show();
@@ -275,6 +307,15 @@ public class Expense_add_window extends ListActivity {
         }
         listRadioButton = (RadioButton) v;
         listIndex = newIndex;
+    }
+
+    public int getListIndex(Object object){
+        for(int i=0;i<list.size();i++){
+            if(list.get(0).getName().equalsIgnoreCase(object.toString())){
+                return i;
+            }
+        }
+        return -1;
     }
 
 }

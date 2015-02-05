@@ -122,6 +122,33 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return true;
     }
+    public boolean updateMaster(Integer id, String amount, String bank_name, String trans_source,
+                                String trans_type,String category,String notes,
+                                String sms_id,String desc,String trans_time,
+                                String timestamp,String place,
+                                String geo_tag,String SharedExpense,
+                                String SharedMembers,String status)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("amount", amount);
+        contentValues.put("bank_name", bank_name);
+        contentValues.put("trans_source", trans_source);
+        contentValues.put("trans_type", trans_type);
+        contentValues.put("category", category);
+        contentValues.put("notes", notes);
+        contentValues.put("sms_id", sms_id);
+        contentValues.put("desc", desc);
+        contentValues.put("trans_time", trans_time);
+        contentValues.put("timestamp", timestamp);
+        contentValues.put("geo_tag", geo_tag);
+        contentValues.put("SharedExpense", SharedExpense);
+        contentValues.put("SharedMembers", SharedMembers);
+        contentValues.put("status", status);
+        contentValues.put("place", place);
+        db.update("MASTER", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
+        return true;
+    }
 
     public boolean insertCategory (String name, String amount,String status)
     {
@@ -161,33 +188,7 @@ public class DBHelper extends SQLiteOpenHelper {
         int numRows = (int) DatabaseUtils.queryNumEntries(db, MASTER_TABLE_NAME);
         return numRows;
     }
-    public boolean updateMaster(Integer id, String amount, String bank_name, String trans_source,
-                                String trans_type,String category,String notes,
-                                String sms_id,String desc,String trans_time,
-                                String timestamp,String place,
-                                String geo_tag,String SharedExpense,
-                                String SharedMembers,String status)
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("amount", amount);
-        contentValues.put("bank_name", bank_name);
-        contentValues.put("trans_source", trans_source);
-        contentValues.put("trans_type", trans_type);
-        contentValues.put("category", category);
-        contentValues.put("notes", notes);
-        contentValues.put("sms_id", sms_id);
-        contentValues.put("desc", desc);
-        contentValues.put("bank_trans_time", trans_time);
-        contentValues.put("timestamp", timestamp);
-        contentValues.put("geo_tag", geo_tag);
-        contentValues.put("SharedExpense", SharedExpense);
-        contentValues.put("SharedMembers", SharedMembers);
-        contentValues.put("status", status);
-        contentValues.put("place", place);
-        db.update("MASTER", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
-        return true;
-    }
+
 
     public  int updateMaster(Integer id,String field,String value){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -240,7 +241,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public Cursor getFromMasterByID(int id)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from MASTER where id="+id+"", null );
+        Cursor res =  db.rawQuery( "select *,strftime('%d/%m/%Y',trans_time) local_time from MASTER where id="+id+"", null );
         return res;
     }
 
@@ -311,7 +312,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public Cursor getTransactionHistory(){
         String sql = "select case strftime('%m', trans_time) when '01' then 'January' when '02' then 'Febuary' when '03' then 'March' when '04' then 'April' when '05' then 'May' when '06' then 'June' when '07' then 'July' when '08' then 'August' when '09' then 'September' when '10' then 'October' when '11' then 'November' when '12' then 'December' else '' end\n" +
-                "as month,strftime('%d',trans_time) day, GROUP_CONCAT(category), GROUP_CONCAT(amount) from MASTER where status ='"+TYPES.TRANSACTION_STATUS.APPROVED+"' group by strftime('%m', trans_time) order by day asc";
+                "as month,strftime('%d',trans_time) day, GROUP_CONCAT(category), GROUP_CONCAT(amount),GROUP_CONCAT(id) from MASTER where status ='"+TYPES.TRANSACTION_STATUS.APPROVED+"' group by strftime('%m', trans_time) order by day asc";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( sql, null );
         return res;

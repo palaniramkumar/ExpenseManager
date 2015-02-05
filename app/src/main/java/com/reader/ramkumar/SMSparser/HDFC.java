@@ -10,11 +10,11 @@ import java.util.regex.Pattern;
  * template
  ========
 
- Rs.(.*?) was spent on ur HDFCBank CREDIT Card ending (.*?) on 2015-01-01:12:39:35 at (.*?).Avl bal - Rs.55163.00, curr o/s - Rs.14837.00
+ Rs.(.*?) was spent on ur HDFCBank CREDIT Card ending (.*?) on 2015-01-01:12:39:35 at (.*?).Avl bal - Rs.1234.00, curr o/s - Rs.123.00
 
  An amount of Rs.(.*?) has been debited from your account  number (.*?) for (.*?) done using HDFC Bank NetBanking.
 
- INR (.*?) deposited to A/c No (.*?) towards NEFT Cr-CITI0000004-AON SERVICES I PL-GROSS MODEL A/C-RAMKUMAR K PALANI-CITIN14502045258 Val 31-DEC-14. Clr Bal is INR 1,04,879.86 subject to clearing.
+ INR (.*?) deposited to A/c No (.*?) towards NEFT Cr-CITI0000004-AON SERVICES I PL-GROSS MODEL A/C-RAMKUMAR K PALANI-CITIN14502045258 Val 31-DEC-14. Clr Bal is INR (.*?) subject to clearing.
 
  Thank you for using your HDFC Bank DEBIT/ATM Card ending (.*?) for Rs. (.*?) towards ATM WDL in (.*?) at (.*?) on 2015-01-02:16:04:16.
 

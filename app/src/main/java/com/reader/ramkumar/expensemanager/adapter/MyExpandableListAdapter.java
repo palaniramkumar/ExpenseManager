@@ -5,6 +5,7 @@ package com.reader.ramkumar.expensemanager.adapter;
  * http://www.vogella.com/tutorials/AndroidListView/article.html
  */
 import android.app.Activity;
+import android.content.Intent;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckedTextView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.reader.ramkumar.expensemanager.Expense_add_window;
 import com.reader.ramkumar.expensemanager.R;
 public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
@@ -52,11 +55,15 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         amount = (TextView) convertView.findViewById(R.id.textView2);
         text.setText(children[0]);
         amount.setText(children[1]);
+        final View view = convertView;
         convertView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(activity, children[0],
-                        Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(view.getContext(), Expense_add_window.class);
+                i.putExtra("RECID", children[2]);
+                view.getContext().startActivity(i);
+                /*Toast.makeText(activity, children[0],
+                        Toast.LENGTH_SHORT).show();*/
             }
         });
         return convertView;

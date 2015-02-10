@@ -3,6 +3,7 @@ package com.reader.ramkumar.expensemanager.adapter;
 /**
  * Created by Ram on 31/12/2014.
  * http://www.vogella.com/tutorials/AndroidListView/article.html
+ * Customised expandable adapter from the above URL
  */
 import android.app.Activity;
 import android.content.Intent;
@@ -45,12 +46,13 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
-        final String[] children = (String[]) getChild(groupPosition, childPosition);
+        final String[] children = (String[]) getChild(groupPosition, childPosition); //this array of data added in the group from the fragment
         TextView text = null;
         TextView amount = null;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_row_details, null);
         }
+        /*setting up values into the list*/
         text = (TextView) convertView.findViewById(R.id.textView1);
         amount = (TextView) convertView.findViewById(R.id.textView2);
         text.setText(children[0]);

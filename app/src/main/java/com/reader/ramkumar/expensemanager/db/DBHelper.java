@@ -49,6 +49,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String CATEGORY_TABLE_NAME = "category";
 
+    public String month = "02"; //where strftime('%m', `date column`) = '04'
+
     public DBHelper(Context context)
     {
 
@@ -181,7 +183,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int getCashExpense(){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select sum(amount) from MASTER where trans_source='"+TYPES.TRANSACTION_SOURCE.CASH+"' and trans_type = '"+TYPES.TRANSACTION_TYPE.EXPENSE+"'", null );
+        Cursor res =  db.rawQuery( "select sum(amount) from MASTER where trans_source='"+TYPES.TRANSACTION_SOURCE.CASH+"' and trans_type = '"+TYPES.TRANSACTION_TYPE.EXPENSE+"'" +
+                " and strftime('%m', `trans_time`) = '"+month+"'", null );
         if(res.moveToNext()){
             if(res.getString(0) == null) return 0;
             System.out.println("Inside Cash Expense: "+res.getString(0));
@@ -193,7 +196,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public int getCashVault(){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select sum(amount) from MASTER where trans_type = '"+TYPES.TRANSACTION_TYPE.CASH_VAULT+"' ", null );
+        Cursor res =  db.rawQuery( "select sum(amount) from MASTER where trans_type = '"+TYPES.TRANSACTION_TYPE.CASH_VAULT+"' and status = '"+TYPES.TRANSACTION_STATUS.APPROVED+"'" +
+                "  and strftime('%m', `trans_time`) = '"+month+"'", null );
         if(res.moveToNext()){
             if(res.getString(0) == null) return 0;
             return Integer.parseInt(res.getString(0));
@@ -276,25 +280,27 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public float getMyTotalExpense(){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select sum(amount) from MASTER where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"'", null );
+        Cursor res =  db.rawQuery( "select sum(amount) from MASTER where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"'" +
+                " and  strftime('%m', `trans_time`) = '"+month+"'", null );
         if(res.moveToNext())return res.getFloat(0);
         else return 0;
     }
     public Cursor getMyExpenseByCategory(){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select category,sum(amount) from MASTER  where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' group by category", null );
+        Cursor res =  db.rawQuery( "select category,sum(amount) from MASTER  where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' " +
+                " and strftime('%m', `trans_time`) = '"+month+"' group by category", null );
         return res;
     }
 
     /*Budget Related Methods */
 
-    public Cursor getMyBudgetByCategory(){
+    public Cursor getMyBudgetByCategory(){ //need to have history in order to maintain the prev month budget
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select id _id,category,amount from CATEGORY where status='"+TYPES.TRANSACTION_STATUS.APPROVED+"'", null );
         return res;
     }
 
-    public int getBudget(){
+    public int getBudget(){ //need to have history in order to maintain the prev month budget
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select sum(amount) from CATEGORY where status='"+TYPES.TRANSACTION_STATUS.APPROVED+"'", null );
@@ -306,8 +312,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select  c.category,c.amount,sum(m.amount) from category c left join master m " +
-                "on c.category=m.category where  c.status='"+TYPES.TRANSACTION_STATUS.APPROVED+"' " + //bug: Use case: user removed category this month, but the trans entry was there for previous month
-                "group by m.category", null );
+                "on c.category=m.category where  c.status='"+TYPES.TRANSACTION_STATUS.APPROVED+"'  and strftime('%m', `trans_time`) = '"+month+"'" + //bug: Use case: user removed category this month, but the trans entry was there for previous month
+                " group by m.category", null );
         return res;
     }
 

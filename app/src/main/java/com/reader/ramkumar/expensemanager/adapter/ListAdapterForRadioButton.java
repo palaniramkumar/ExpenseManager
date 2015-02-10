@@ -31,6 +31,7 @@ public class ListAdapterForRadioButton extends ArrayAdapter<ListAdapterRadioMode
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        //on second page the position values got changed to some previuous numeber: bug
         View view = null;
         if (convertView == null) {
             LayoutInflater inflator = context.getLayoutInflater();

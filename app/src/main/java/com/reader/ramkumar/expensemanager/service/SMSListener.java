@@ -40,6 +40,7 @@ public class SMSListener extends BroadcastReceiver{
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
 
+        /** getting latest SMS **/
         Object messages[] = (Object[]) bundle.get("pdus");
         SmsMessage smsMessage[] = new SmsMessage[messages.length];
         for (int n = 0; n < messages.length; n++) {
@@ -49,11 +50,12 @@ public class SMSListener extends BroadcastReceiver{
         DBHelper db = new DBHelper(context);
 
         SMS s= new SMS();
+        //parse details from the latest sms
         s.address=smsMessage[0].getOriginatingAddress();
         s.text=smsMessage[0].getMessageBody();
         long ts = smsMessage[0].getTimestampMillis();
         s.id=getLstSMSIndex(context)+"";
-        s.when = db.getDroidDate(ts/1000) ;
+        s.when = db.getDroidDate(ts/1000) ; //convert android timestamp to SQL ts
 
 
             if(s.findSMS() &&  s.amount !=null) {
@@ -69,13 +71,13 @@ public class SMSListener extends BroadcastReceiver{
                         new Intent(context, Expense_add_window.class),
                         0);
 
-                note.setLatestEventInfo(context, "New Expense ("+s.id+")",
+                note.setLatestEventInfo(context, "New Expense",
                         "Rs." + s.amount + " - " + s.where, i);
                 db.insertMaster(s.amount,s.bankName,s.trans_src,s.trans_type,s.expanse_type,null,s.id,s.where,s.when,
                         "datetime()",s.place,null,null,null, TYPES.TRANSACTION_STATUS.PENDING.toString());
                 //After uncomment this line you will see number of notification arrived
                 //note.number=2;
-                mgr.notify(678, note);
+                mgr.notify(678, note);//need to cleanup this hard coded value
             }
 
 

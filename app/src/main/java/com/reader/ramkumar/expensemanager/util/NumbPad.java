@@ -2,6 +2,7 @@ package com.reader.ramkumar.expensemanager.util;
 
 /**
  * Created by Ramkumar on 16/01/15.
+ * number pad for add expense (manual)
  */
 import android.app.Activity;
 import android.app.AlertDialog;

@@ -8,22 +8,56 @@
 
     tools:context="com.reader.ramkumar.expensemanager.main">
 
+
+
     <!-- TODO: Update blank fragment layout -->
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
+
         android:layout_height="match_parent">
+
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
 
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/monthnav"
+
+                android:orientation="horizontal">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:textColor="@android:color/holo_blue_light"
+                    android:text="&lt;"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/holo_orange_dark"
+                    android:background="@android:color/transparent"
+                    android:text="January"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:textColor="@android:color/holo_blue_light"
+                    android:layout_height="wrap_content"
+                    android:text="&gt;"/>
+
+            </LinearLayout>
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/chart"
+                android:layout_below="@id/monthnav"
                 android:layout_width="match_parent"
                 android:layout_height="240dp"
                 android:layout_gravity="bottom"
-                android:layout_margin="15dp" />
+                android:layout_margin="10dp" />
         <RelativeLayout
             android:id="@+id/progress_content"
             android:layout_width="match_parent"
@@ -61,6 +95,7 @@
                 card:card_layout_resourceID="@layout/native_cardwithlist_layout" />
         </RelativeLayout>
     </ScrollView>
+
     <!--ImageView
         android:id="@+id/loading"
         android:layout_width="match_parent"

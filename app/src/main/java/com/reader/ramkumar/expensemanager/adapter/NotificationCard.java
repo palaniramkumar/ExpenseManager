@@ -30,6 +30,7 @@ import it.gmariotti.cardslib.library.prototypes.LinearListView;
 
 /**
  * Created by Ramkumar on 27/12/14.
+ * Bank card transaction in notification panel
  */
 public class NotificationCard extends CardWithList {
     DBHelper db;
@@ -216,14 +217,6 @@ public class NotificationCard extends CardWithList {
         }
 
         private void init() {
-            //OnClick Listener
-           /* setOnItemClickListener(new OnItemClickListener() {
-                @Override
-                public void onItemClick(LinearListView parent, View view, int position, ListObject object) {
-                    Toast.makeText(getContext(), "Click on " + getObjectId(), Toast.LENGTH_SHORT).show();
-                }
-            });
-            */
             //OnItemSwipeListener
             setOnItemSwipeListener(new OnItemSwipeListener() {
                 @Override
@@ -242,16 +235,15 @@ public class NotificationCard extends CardWithList {
                             .setUndoToken(new Parcelable() {
                                 @Override
                                 public int describeContents() {
-                                    return Integer.parseInt(objId);
+                                    return Integer.parseInt(objId);//this value will be used in onundo() call
                                 }
 
                                 @Override
                                 public void writeToParcel(Parcel dest, int flags) {
-                                    dest.writeValue(object);
+                                    dest.writeValue(object); //code has no imact
                                 }
                             })
                             .create();
-                    // final LogView logView=new LogView(getContext());
                     bind(undoBar);
                     undoBar.show();
                 }

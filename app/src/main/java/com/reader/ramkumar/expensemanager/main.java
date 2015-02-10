@@ -248,14 +248,13 @@ public class main extends Fragment {
         //setting up remaining amount in cash vault
         //https://github.com/akexorcist/Android-RoundCornerProgressBar
         int cash_vault = db.getCashVault();
-        int cash_expense = 12000;//db.getCashExpense();
-        if(cash_vault==0)cash_vault=1; //save code for null pointer exception need to modify the code
-        System.out.println(cash_expense);
+        int cash_expense = db.getCashExpense();//db.getCashExpense();
+        System.out.println("Cash Expense ="+cash_expense+", Cash Vault = "+cash_vault);
         RoundCornerProgressBar progress1 = (RoundCornerProgressBar) view.findViewById(R.id.progress_1);
         progress1.setProgressColor(Color.WHITE);
         progress1.setBackgroundColor(Color.parseColor("#303f9f"));
         progress1.setMax(cash_vault);
-        progress1.setProgress(10000);
+        progress1.setProgress(cash_vault-cash_expense);
         TextView progress_caption =  (TextView)view.findViewById(R.id.txt_progress);
         progress_caption.setText("You have Rs "+(cash_vault-cash_expense)+" left in your Cash Vault");
 
@@ -326,8 +325,10 @@ public class main extends Fragment {
         // add a lot of colors
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
+        for (int c : ColorTemplate.COLORFUL_COLORS)
+            colors.add(c);
 
-        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+       /* for (int c : ColorTemplate.VORDIPLOM_COLORS)
             colors.add(c);
 
         for (int c : ColorTemplate.JOYFUL_COLORS)
@@ -341,6 +342,10 @@ public class main extends Fragment {
 
         for (int c : ColorTemplate.PASTEL_COLORS)
             colors.add(c);
+*/
+
+
+
 
         colors.add(ColorTemplate.getHoloBlue());
 

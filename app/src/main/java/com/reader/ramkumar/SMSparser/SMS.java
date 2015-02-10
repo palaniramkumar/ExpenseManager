@@ -3,6 +3,7 @@ package com.reader.ramkumar.SMSparser;
 
 /**
  * Created by Ram on 04/01/2015.
+ * SMS value setter from the bank object
  */
 public class SMS {
     public String address;
@@ -23,6 +24,7 @@ public class SMS {
             bankName="HDFC";
             HDFC bank=new HDFC(text);
             HDFC.SMSParserData smsparsedata = bank.parseSMS();
+            /*0-Amount,1-Account,2-Time,3-Where,4-Place*/
             amount=smsparsedata.valueSet[0];
             where = smsparsedata.valueSet[3];
             //when = smsparsedata.valueSet[2];

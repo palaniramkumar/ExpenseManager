@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,7 +14,17 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 //import com.melnykov.fab.FloatingActionButton;
+import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.service.SMSListener;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks,
@@ -30,8 +41,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
 
         SMSListener smsReceiver = new SMSListener();
-
-        registerReceiver(smsReceiver, new IntentFilter(SMS_RECEIVED));
+        try {
+            registerReceiver(smsReceiver, new IntentFilter(SMS_RECEIVED));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_topdrawer);
@@ -72,6 +87,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
     }
 
+
+
     private void selectItem(int position) {
 
         Fragment newFragment = null;
@@ -109,6 +126,16 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                         .replace(R.id.frame_container, newFragment)
                         .commit();
                 setTitle("Category List");
+            case 4:
+                try {
+
+                    Toast.makeText(this, "Backup Completed" + copyfile(), Toast.LENGTH_SHORT).show();
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Backup failed" , Toast.LENGTH_SHORT).show();
+                }
                 break;
 
 
@@ -116,10 +143,56 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         }
 
 
+
+
         //DrawerList.setItemChecked(position, true);
 
         //DrawerLayout.closeDrawer(DrawerList);
     }
 
+            private static String DB_NAME = "MyExpense.db";
+            private static String DB_PATH = "/data/local/tmp/com.reader.ramkumar.expensemanager/databases/";
 
+            public boolean checkDataBase() {
+                File dbFile = new File(getApplicationContext().getDatabasePath("MyExpense.db").getPath());
+                return dbFile.exists();
+            }
+
+            public String copyfile() throws IOException{
+
+                if(checkDataBase()){
+                    InputStream myInput = new FileInputStream(getApplicationContext().getDatabasePath("MyExpense.db").getPath());
+
+                    // Path to the just created empty db
+                    String outFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + DB_NAME;
+
+                    //Open the empty db as the output stream
+                    OutputStream myOutput;
+                    try {
+                        myOutput = new FileOutputStream(outFileName);
+                        //transfer bytes from the inputfile to the outputfile
+                        byte[] buffer = new byte[1024];
+                        int length;
+                        while ((length = myInput.read(buffer))>0){
+                            myOutput.write(buffer, 0, length);
+                        }
+                        //Close the streams
+                        myOutput.flush();
+                        myOutput.close();
+                        myInput.close();
+                        return outFileName;
+                    } catch (FileNotFoundException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+
+                }
+                else{
+                    System.out.print("Failed to identify db");
+                }
+                return "No files Created";
+            }
 }

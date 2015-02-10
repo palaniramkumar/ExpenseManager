@@ -81,6 +81,7 @@ public class Expense_add_window extends ListActivity {
             if(sms!=null){
                 sms.moveToFirst();
                 ENTRY_TYPE="UPDATE";
+                System.out.println("Rec id: "+recid);
                 btn_amount.setText(sms.getString(1));
                 edit_notes.setText(sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_NOTES) ));
 
@@ -103,7 +104,9 @@ public class Expense_add_window extends ListActivity {
                     trans_type.check(R.id.rdo_income);
                 String category= sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_CATEGORY));
                 System.out.println(category);
-                list.get(getListIndex(category)).setSelected(true); //bug: getListIndex(category) is retuning -1 which led to fc. need to check theList adapter.
+                int selectedIndex = getListIndex(category);
+                if(selectedIndex !=-1)
+                list.get(selectedIndex).setSelected(true); //bug: getListIndex(category) is retuning -1 which led to fc. need to check theList adapter.
 
                 /*storing it in global variable*/
                 bank_name = sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_BANK_NAME) );
@@ -172,15 +175,15 @@ public class Expense_add_window extends ListActivity {
 
                     DBHelper db =new DBHelper(getApplicationContext());
                     if(ENTRY_TYPE.equalsIgnoreCase("ADD") ) {
-                        if(trans_src.equalsIgnoreCase("credit")) trans_src=TYPES.TRANSACTION_SOURCE.CREDIT_CARD.toString();
-                        if(trans_src.equalsIgnoreCase("debit")) trans_src=TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString();
-                        if(trans_src.equalsIgnoreCase("cash")) trans_src=TYPES.TRANSACTION_SOURCE.CASH.toString();
+                        if(trans_src.contains("Credit")) trans_src=TYPES.TRANSACTION_SOURCE.CREDIT_CARD.toString();
+                        if(trans_src.contains("Debit")) trans_src=TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString();
+                        if(trans_src.contains("Cash")) trans_src=TYPES.TRANSACTION_SOURCE.CASH.toString();
 
                         if(trans_type.equalsIgnoreCase("expense")) trans_type=TYPES.TRANSACTION_TYPE.EXPENSE.toString();
                         if(trans_type.equalsIgnoreCase("income")) trans_type=TYPES.TRANSACTION_TYPE.INCOME.toString();
                         if(trans_type.equalsIgnoreCase("atm")) trans_type=TYPES.TRANSACTION_TYPE.CASH_VAULT.toString(); //ATM transactions considered as cash vault
-
-                        db.insertMaster(amount, null, trans_src, trans_type, category, notes, null, entryDesc, date, "datetime()", null, null, null, null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                        System.out.println("Expense Source: "+trans_src);
+                        db.insertMaster(amount, null, trans_src, trans_type, category, notes, null, entryDesc, date, "datetime()", null, null, null, null, TYPES.TRANSACTION_STATUS.APPROVED.toString()); //date:datetime() is returning just a text not a value
                     }
                     if(ENTRY_TYPE.equalsIgnoreCase("UPDATE"))//this code is for future enhancement
                         db.updateMaster(Integer.parseInt(recid),amount,bank_name,trans_src,trans_type,category,notes,sms_id,entryDesc,date,"datetime()",place,geo_tag,null,null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
@@ -310,8 +313,13 @@ public class Expense_add_window extends ListActivity {
     }
 
     public int getListIndex(Object object){
+
+        System.out.println("Object value:"+object);
+
+        if(object == null) return -1;
+
         for(int i=0;i<list.size();i++){
-            if(list.get(0).getName().equalsIgnoreCase(object.toString())){
+            if(list.get(i).getName().equalsIgnoreCase(object.toString())){
                 return i;
             }
         }

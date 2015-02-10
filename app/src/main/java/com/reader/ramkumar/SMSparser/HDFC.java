@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
  Your BANK a/c xxxx (.*?) will be debited for Rs (.*?) towards (.*?) on 08/JAN/2015 .
  */
 public class HDFC {
+    /*this class variables and name needs to be same for all other banks*/
     public SMSParserData parserValue;
 
     public class  SMSParserData{
@@ -28,6 +29,7 @@ public class HDFC {
         public String trans_type;
         public String trans_src;
     }
+    /*sms template needs to be parsed */
     final String [][] template ={
             {"Rs.(.*?) was spent on ur HDFCBank CREDIT Card ending (.*?) on (.*?) at (.*?).Avl", TYPES.TRANSACTION_TYPE.EXPENSE.toString(),TYPES.TRANSACTION_SOURCE.CREDIT_CARD.toString()},
             {"An amount of Rs.(.*?) has been debited from your account  number (.*?) for (.*?) done using HDFC Bank NetBanking",TYPES.TRANSACTION_TYPE.EXPENSE.toString(),TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString()},
@@ -35,8 +37,8 @@ public class HDFC {
             {"Thank you for using your HDFC Bank DEBIT/ATM Card ending (.*?) for Rs. (.*?) towards ATM WDL in (.*?) at (.*?) on (.*?)",TYPES.TRANSACTION_TYPE.CASH_VAULT.toString(),TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString()},
             {"Your BANK a/c xxxx (.*?) will be debited for Rs (.*?) towards (.*?) on (.*?)",TYPES.TRANSACTION_TYPE.EXPENSE.toString(),TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString()}
     };
-    /*Amount,Account,Time,Where,Place*/
-    final int [][] templateMap={
+    /*0-Amount,1-Account,2-Time,3-Where,4-Place*/
+    final int [][] templateMap={ //the numbers are the curresponding values in the template*/
             {0,1,2,3},
             {0,1,3},
             {0,1},
@@ -48,19 +50,21 @@ public class HDFC {
     public HDFC(String text){
         this.sms=text;
     }
+
+    /*code for parsing sms. this is generic can be moved to the common class*/
     public SMSParserData parseSMS(){
         parserValue = new SMSParserData();
         for(int i=0;i<template.length;i++) {
-            Pattern pattern = Pattern.compile(template[i][0]);
+            Pattern pattern = Pattern.compile(template[i][0]); //fetch the only sms
             Matcher matcher = pattern.matcher(sms);
             parserValue.valueSet = new String[5];
             if (matcher.find()) {
                 for(int j=0;j<templateMap[i].length;j++) {
                     System.out.println(matcher.group(j+1));
-                    parserValue.valueSet[templateMap[i][j]]=matcher.group(j+1);
+                    parserValue.valueSet[templateMap[i][j]]=matcher.group(j+1); //iterate through templateMap.matcher group values always starts with 1.
                 }
             }
-            if(parserValue.valueSet[0]!=null){
+            if(parserValue.valueSet[0]!=null){ //if values parsed, set the trans source and type from the curresponing template
                 parserValue.trans_src= template[i][2];
                 parserValue.trans_type= template[i][1];
                 break;

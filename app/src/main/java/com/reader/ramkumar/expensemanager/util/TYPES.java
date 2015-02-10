@@ -2,6 +2,7 @@ package com.reader.ramkumar.expensemanager.util;
 
 /**
  * Created by Ramkumar on 25/01/15.
+ * custom staus codes in the project
  */
 public class TYPES {
     public enum TRANSACTION_TYPE {

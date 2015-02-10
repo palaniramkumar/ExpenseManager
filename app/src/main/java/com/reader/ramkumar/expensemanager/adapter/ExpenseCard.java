@@ -23,6 +23,7 @@ import it.gmariotti.cardslib.library.prototypes.LinearListView;
 
 /**
  * Created by Ramkumar on 27/12/14.
+ * Expense against budget in at home screen
  */
 
 public class ExpenseCard extends CardWithList {
@@ -39,7 +40,7 @@ public class ExpenseCard extends CardWithList {
         CardHeader header = new CardHeader(getContext(), R.layout.card_table_header);
 
        int remainingAmount = (int)(db.getBudget() - db.getMyTotalExpense());
-        header.setTitle("You have "+remainingAmount+" Left for this month"); //should use R.string.
+        header.setTitle("You have remaining "+remainingAmount+" Left"); //should use R.string.
         return header;
     }
 
@@ -61,12 +62,12 @@ public class ExpenseCard extends CardWithList {
 
         while(cursor.moveToNext()){
             int pending_amt= cursor.getInt(1)-cursor.getInt(2);
-            if(pending_amt==0 &&  cursor.getInt(1) ==0) continue; //code for skiping content disp where budget is 0 and no expense is tracked so far in that department
+            if(pending_amt==0 &&  cursor.getInt(1) ==0) continue; //code for skiping content disp when the budget is 0 and no expense is tracked so far in that department
             CostObject c = new CostObject(this);
             c.type = cursor.getString(0);
             c.amount = cursor.getInt(1)-cursor.getInt(2);
             c.trendIcon = R.drawable.ic_action_expand;
-            c.setObjectId(c.type); //It can be important to set ad id
+            c.setObjectId(c.type); //It can be important to set tyoe id, In future we shall show all the curresponding ID expense in history fragment
             mObjects.add(c);
         }
 

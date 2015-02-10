@@ -32,6 +32,8 @@ import it.gmariotti.cardslib.library.prototypes.LinearListView;
 
 /**
  * Created by Ramkumar on 03/02/15.
+ * Card display for user categories
+ * Getting and Setting up budget and user Categories
  */
 public class CategoryCard extends CardWithList {
     DBHelper db;
@@ -63,17 +65,17 @@ public class CategoryCard extends CardWithList {
 
         //Init the list
         final List<ListObject> mObjects = new ArrayList<ListObject>();
-
+        //Get User categories and budget
         final Cursor cursor = db.getMyBudgetByCategory();
         //Add an object to the list
 
         while(cursor.moveToNext()){
             CategoryObject c = new CategoryObject(this);
-            final int tmp_amount =cursor.getInt(2);
+            final int tmp_amount =cursor.getInt(2); //Decl as final since it required for inner functions
             final String tmp_type = cursor.getString(1);
-            c.type = tmp_type;
+            c.type = tmp_type; //setter for categoryObject
             c.amount = tmp_amount;
-            c.trendIcon = R.drawable.ic_action_expand;
+            c.trendIcon = R.drawable.ic_action_expand; //need to implement with Dynamic icons by comparing with last month expense
             c.setObjectId(cursor.getInt(0)+"");
             c.setOnItemClickListener(new OnItemClickListener() {
                  @Override
@@ -89,10 +91,10 @@ public class CategoryCard extends CardWithList {
                      txt_amount.setHint("Amount");//optional
                      txt_amount.setText(tmp_amount+"");
 
-                     //in my example i use TYPE_CLASS_NUMBER for input only numbers
+                     // use TYPE_CLASS_NUMBER for input only numbers
                      txt_category.setInputType(InputType.TYPE_CLASS_TEXT);
                      txt_amount.setInputType(InputType.TYPE_CLASS_NUMBER);
-
+                     //Setting up dynamic dialog
                      LinearLayout lay = new LinearLayout(getContext());
                      lay.setOrientation(LinearLayout.VERTICAL);
                      lay.addView(txt_category);
@@ -186,15 +188,6 @@ public class CategoryCard extends CardWithList {
 
         }
         private void init() {
-            //OnClick Listener
-            /*setOnItemClickListener(new OnItemClickListener() {
-                @Override
-                public void onItemClick(LinearListView parent, View view, int position, ListObject object) {
-                    Toast.makeText(getContext(), "Click on " + getObjectId(), Toast.LENGTH_SHORT).show();
-                }
-
-            });*/
-
             //OnItemSwipeListener
             setOnItemSwipeListener(new OnItemSwipeListener() {
                 @Override
@@ -204,25 +197,23 @@ public class CategoryCard extends CardWithList {
                     deletedObject=object;
                     db.updateCategory(Integer.parseInt(objId), "status", TYPES.TRANSACTION_STATUS.DELETED.toString());
 
-                    //new TestDialog(getContext()).show();
-
+                    //invoke undobar if user swipe the record (delete call)
                     UndoBar undoBar = new UndoBar.Builder((Activity) getContext())//
-                            .setMessage("Successfully Deleted ")//
-                            .setStyle(UndoBar.Style.LOLLIPOP)//
+                            .setMessage("Successfully Deleted ")
+                            .setStyle(UndoBar.Style.LOLLIPOP)//Undo bar style
                             .setUndoColor(getContext().getResources().getColor(R.color.accent))
                             .setUndoToken(new Parcelable() {
                                 @Override
                                 public int describeContents() {
-                                    return Integer.parseInt(objId);
+                                    return Integer.parseInt(objId);//this value will be used in onundo() call
                                 }
 
                                 @Override
                                 public void writeToParcel(Parcel dest, int flags) {
-                                    dest.writeValue(object);
+                                    dest.writeValue(object); //currently no impact with this code
                                 }
                             })
                             .create();
-                    // final LogView logView=new LogView(getContext());
                     bind(undoBar);
                     undoBar.show();
                 }

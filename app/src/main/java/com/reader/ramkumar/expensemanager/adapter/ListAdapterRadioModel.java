@@ -2,6 +2,7 @@ package com.reader.ramkumar.expensemanager.adapter;
 
 /**
  * Created by Ramkumar on 28/12/14.
+ * getter and setter class for radio list like Gmail
  */
 public class ListAdapterRadioModel {
     private String name;

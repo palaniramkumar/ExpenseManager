@@ -53,6 +53,8 @@ public class NotificationCard extends CardWithList {
         setUseProgressBar(true);
     }
 
+    //this code is duplicated in myexpandablelist adapter
+
     void showDialogCatogories(final int RECID,final int position){
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
 

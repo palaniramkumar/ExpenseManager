@@ -6,7 +6,11 @@ package com.reader.ramkumar.expensemanager.adapter;
  * Customised expandable adapter from the above URL
  */
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,21 +18,27 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckedTextView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.reader.ramkumar.expensemanager.Expense_add_window;
 import com.reader.ramkumar.expensemanager.R;
+import com.reader.ramkumar.expensemanager.db.DBHelper;
+import com.reader.ramkumar.expensemanager.util.TYPES;
+
 public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
     private final SparseArray<Group> groups;
     public LayoutInflater inflater;
     public Activity activity;
+    DBHelper db;
 
     public MyExpandableListAdapter(Activity act, SparseArray<Group> groups) {
         activity = act;
         this.groups = groups;
         inflater = act.getLayoutInflater();
+        db = new DBHelper(act.getApplicationContext());
     }
 
     @Override
@@ -61,11 +71,31 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         convertView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(view.getContext(), Expense_add_window.class);
-                i.putExtra("RECID", children[2]);
-                view.getContext().startActivity(i);
-                /*Toast.makeText(activity, children[0],
-                        Toast.LENGTH_SHORT).show();*/
+
+                Cursor cursor = db.getFromMasterByID(Integer.parseInt(children[2]));
+                if(cursor.moveToNext()) {
+
+                    int id = cursor.getInt(0);
+                    final String trans_type=cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_TRANS_TYPE));
+                    final String sms_id = cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_SMS_ID));
+                    if(trans_type.equalsIgnoreCase(TYPES.TRANSACTION_TYPE.CASH_VAULT.toString())){
+                        showDialogConfirm(view.getContext(),id);
+                    }
+                    else if(sms_id!=null)
+                        showDialogCatogories(view.getContext(),id);
+
+                    else {
+
+                        Intent i = new Intent(view.getContext(), Expense_add_window.class);
+                        i.putExtra("RECID", children[2]);
+                        view.getContext().startActivity(i);
+                    }
+                }
+                else{
+                    Toast.makeText(activity, "No Record Found",
+                        Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         return convertView;
@@ -122,4 +152,65 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return false;
     }
+
+
+    void showDialogCatogories(final Context context, final int RECID){
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+
+        //final CharSequence myList[] = db.getDefaultCategory();
+        Cursor myList =db.getMyBudgetByCategory();
+        dialog.setSingleChoiceItems(myList, -1,"category",  new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+
+            }
+        });
+        dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ListView lw = ((AlertDialog) dialog).getListView();
+                if(lw.getCheckedItemPosition()>=0) {
+                    Cursor checkedItem =(Cursor) lw.getAdapter().getItem(lw.getCheckedItemPosition());
+                    db.updateMaster(RECID, db.MASTER_COLUMN_CATEGORY, checkedItem.getString(checkedItem.getColumnIndex("category")));
+                }
+                // TODO Auto-generated method stub
+
+            }
+
+        });
+        dialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+
+        // Set dialog title
+        dialog.setTitle("Choose the Category");
+        dialog.show();
+    }
+    void showDialogConfirm(final Context context, final int RECID){
+        new AlertDialog.Builder(context)
+                .setTitle("Delete entry")
+                .setMessage("Remove from Cash Vault ?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        db.updateMasterStatus(RECID, TYPES.TRANSACTION_STATUS.PENDING.toString());
+
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
 }

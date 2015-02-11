@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ import com.melnykov.fab.FloatingActionButton;
 import com.reader.ramkumar.SMSparser.SMS;
 import com.reader.ramkumar.expensemanager.adapter.ExpenseCard;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
+import com.reader.ramkumar.expensemanager.util.MonthOperations;
 import com.reader.ramkumar.expensemanager.util.TYPES;
 
 import java.util.ArrayList;
@@ -63,6 +65,9 @@ public class main extends Fragment {
     private Handler mHandler = new Handler();
     private ProgressBar mProgress;
     private DBHelper db;
+    private View view;
+    private ExpenseCard card;
+    Button btn_month;
     public main() {
         // Required empty public constructor
     }
@@ -102,7 +107,7 @@ public class main extends Fragment {
 
         mContainer = container;
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = mInflater.inflate(R.layout.fragment_main, mContainer, false);
+        view = mInflater.inflate(R.layout.fragment_main, mContainer, false);
 
 
         //check for new SMS
@@ -133,60 +138,7 @@ public class main extends Fragment {
 
         }
         new MyAsyncTask().execute();
-
-        ExpenseCard card = new ExpenseCard(getActivity());
-
-        ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
-        card.setViewToClickToExpand(viewToClickToExpand);
-        card.init();
-        //Set card in the cardView
-        CardViewNative cardView = (CardViewNative) view.findViewById(R.id.carddemo); //if you want list, pls change the xml to "CardListView"
-        cardView.setCard(card);
-
-        mChart = (PieChart) view.findViewById(R.id.chart);
-
-        // change the color of the center-hole
-        mChart.setHoleColor(Color.rgb(235, 235, 235));
-        mChart.setBackgroundColor(Color.WHITE);
-
-        mChart.setHoleRadius(60f);
-
-        mChart.setDescription("");
-
-        mChart.setDrawYValues(true);
-        mChart.setDrawCenterText(true);
-
-        mChart.setDrawHoleEnabled(true);
-
-        mChart.setRotationAngle(0);
-
-        // draws the corresponding description value into the slice
-        mChart.setDrawXValues(true);
-
-        // enable rotation of the chart by touch
-        mChart.setRotationEnabled(true);
-
-        // display percentage values
-        mChart.setUsePercentValues(true);
-        // mChart.setUnit(" €");
-        // mChart.setDrawUnitsInChart(true);
-
-        // add a selection listener
-        //mChart.setOnChartValueSelectedListener(this);//need to uncomment
-        // mChart.setTouchEnabled(false);
-
-        mChart.setCenterText(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())+"\n"+Calendar.getInstance().get(Calendar.YEAR));
-
-        setData(3, 100);
-
-        mChart.animateXY(1500, 1500);
-        // mChart.spin(2000, 0, 360);
-
-        /*Legend l = mChart.getLegend();
-        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
-        l.setXEntrySpace(7f);
-        l.setYEntrySpace(5f);
-*/
+        init();
 
         //fab
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
@@ -195,6 +147,25 @@ public class main extends Fragment {
                 Toast.makeText(mContainer.getContext(), "New Clicked", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(mContainer.getContext(), Expense_add_window.class);
                 startActivity(i);
+            }
+        });
+
+        //month navigation
+        Button btn_prev = (Button) view.findViewById(R.id.btn_prev);
+        btn_prev.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                int prev_month = MonthOperations.getMonthAsInt(MonthOperations.previous(btn_month.getText().toString()))+1;
+                db=new DBHelper(getActivity(),MonthOperations.getMonthin2Digit(prev_month));
+                init();
+            }
+        });
+        //month navigation
+        Button btn_next = (Button) view.findViewById(R.id.btn_next);
+        btn_next.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                int next_month = MonthOperations.getMonthAsInt(MonthOperations.next(btn_month.getText().toString()))+1;
+                db=new DBHelper(getActivity(),MonthOperations.getMonthin2Digit(next_month));
+                init();
             }
         });
 
@@ -245,6 +216,70 @@ public class main extends Fragment {
             db.firstUser();
         }
 
+
+
+        return view;
+    }
+
+    void init(){
+
+        card = new ExpenseCard(getActivity(),db);
+
+        btn_month = (Button) view.findViewById(R.id.btn_month);
+        btn_month.setText(MonthOperations.getMonthAsString(Integer.parseInt(db.month)-1));
+
+        ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
+        card.setViewToClickToExpand(viewToClickToExpand);
+        card.init();
+        //Set card in the cardView
+        CardViewNative cardView = (CardViewNative) view.findViewById(R.id.carddemo); //if you want list, pls change the xml to "CardListView"
+        cardView.setCard(card);
+
+
+        mChart = (PieChart) view.findViewById(R.id.chart);
+
+        // change the color of the center-hole
+        mChart.setHoleColor(Color.rgb(235, 235, 235));
+        mChart.setBackgroundColor(Color.WHITE);
+
+        mChart.setHoleRadius(60f);
+
+        mChart.setDescription("");
+
+        mChart.setDrawYValues(true);
+        mChart.setDrawCenterText(true);
+
+        mChart.setDrawHoleEnabled(true);
+
+        mChart.setRotationAngle(0);
+
+        // draws the corresponding description value into the slice
+        mChart.setDrawXValues(true);
+
+        // enable rotation of the chart by touch
+        mChart.setRotationEnabled(true);
+
+        // display percentage values
+        mChart.setUsePercentValues(true);
+        // mChart.setUnit(" €");
+        // mChart.setDrawUnitsInChart(true);
+
+        // add a selection listener
+        //mChart.setOnChartValueSelectedListener(this);//need to uncomment
+        // mChart.setTouchEnabled(false);
+
+        mChart.setCenterText(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())+"\n"+Calendar.getInstance().get(Calendar.YEAR));
+
+        setData(3, 100);
+
+        mChart.animateXY(1500, 1500);
+        // mChart.spin(2000, 0, 360);
+
+        /*Legend l = mChart.getLegend();
+        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
+        l.setXEntrySpace(7f);
+        l.setYEntrySpace(5f);
+*/
         //setting up remaining amount in cash vault
         //https://github.com/akexorcist/Android-RoundCornerProgressBar
         int cash_vault = db.getCashVault();
@@ -258,9 +293,7 @@ public class main extends Fragment {
         TextView progress_caption =  (TextView)view.findViewById(R.id.txt_progress);
         progress_caption.setText("You have Rs "+(cash_vault-cash_expense)+" left in your Cash Vault");
 
-        return view;
     }
-
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

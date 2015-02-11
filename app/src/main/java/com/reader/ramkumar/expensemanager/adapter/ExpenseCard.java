@@ -28,9 +28,9 @@ import it.gmariotti.cardslib.library.prototypes.LinearListView;
 
 public class ExpenseCard extends CardWithList {
     DBHelper db;
-    public ExpenseCard(Context context) {
+    public ExpenseCard(Context context,DBHelper db) {
         super(context);
-        db=new DBHelper(context);
+        this.db=db;
     }
 
     @Override

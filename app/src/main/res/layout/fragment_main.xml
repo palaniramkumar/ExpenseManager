@@ -32,6 +32,7 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/btn_prev"
                     android:background="@android:color/transparent"
                     android:textColor="@android:color/holo_blue_light"
                     android:text="&lt;"/>
@@ -41,6 +42,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/holo_orange_dark"
                     android:background="@android:color/transparent"
+                    android:id="@+id/btn_month"
                     android:text="January"/>
 
                 <Button
@@ -48,6 +50,7 @@
                     android:background="@android:color/transparent"
                     android:textColor="@android:color/holo_blue_light"
                     android:layout_height="wrap_content"
+                    android:id="@+id/btn_next"
                     android:text="&gt;"/>
 
             </LinearLayout>

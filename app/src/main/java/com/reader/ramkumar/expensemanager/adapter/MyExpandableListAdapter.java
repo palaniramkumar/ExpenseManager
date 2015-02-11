@@ -32,6 +32,10 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
     private final SparseArray<Group> groups;
     public LayoutInflater inflater;
     public Activity activity;
+    String trans_type;
+    String sms_id;
+    String category;
+    int id;
     DBHelper db;
 
     public MyExpandableListAdapter(Activity act, SparseArray<Group> groups) {
@@ -56,28 +60,44 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
-        final String[] children = (String[]) getChild(groupPosition, childPosition); //this array of data added in the group from the fragment
+        final String children = (String) getChild(groupPosition, childPosition); //this array of data added in the group from the fragment
         TextView text = null;
         TextView amount = null;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_row_details, null);
         }
         /*setting up values into the list*/
+        final Cursor cursor = db.getFromMasterByID(Integer.parseInt(children));
+
+        final String amt ;
+
+
         text = (TextView) convertView.findViewById(R.id.textView1);
         amount = (TextView) convertView.findViewById(R.id.textView2);
-        text.setText(children[0]);
-        amount.setText(children[1]);
+
+        if(cursor.moveToNext()) { /* this code displays the amount and the category in the list */
+            id=  cursor.getInt(0);
+            trans_type=cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_TRANS_TYPE));
+            sms_id = cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_SMS_ID));
+            category=cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_CATEGORY));
+            amt = cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_AMOUNT));
+            text.setText(category);
+            amount.setText(amt);
+        }
         final View view = convertView;
         convertView.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { /*this code always invoked when the user clicked the list item*/
+                final Cursor cursor = db.getFromMasterByID(Integer.parseInt(children));
 
-                Cursor cursor = db.getFromMasterByID(Integer.parseInt(children[2]));
                 if(cursor.moveToNext()) {
+                    id=  cursor.getInt(0);
+                    trans_type=cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_TRANS_TYPE));
+                    sms_id = cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_SMS_ID));
+                    category=cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_CATEGORY));
 
-                    int id = cursor.getInt(0);
-                    final String trans_type=cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_TRANS_TYPE));
-                    final String sms_id = cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_SMS_ID));
+                }
+
                     if(trans_type.equalsIgnoreCase(TYPES.TRANSACTION_TYPE.CASH_VAULT.toString())){
                         showDialogConfirm(view.getContext(),id);
                     }
@@ -87,14 +107,10 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
                     else {
 
                         Intent i = new Intent(view.getContext(), Expense_add_window.class);
-                        i.putExtra("RECID", children[2]);
+                        i.putExtra("RECID", children);
                         view.getContext().startActivity(i);
                     }
-                }
-                else{
-                    Toast.makeText(activity, "No Record Found",
-                        Toast.LENGTH_SHORT).show();
-                }
+
 
             }
         });

@@ -147,14 +147,11 @@ public class FragmentHistory extends Fragment {
             Group group = new Group(cur.getString(0)+", "+cur.getString(1));
             System.out.println(cur.getString(0)+":"+cur.getString(1)+":"+cur.getString(2));
 
-            String [] category = cur.getString(2).split(","); //Bug: code glitch in spltting files. fc split values are mis mattching between others - headers wrong
-            String [] amount = cur.getString(3).split(",");
+          //  String [] category = cur.getString(2).split(","); //Bug: code glitch in spltting files. fc split values are mis mattching between others - headers wrong
+          //  String [] amount = cur.getString(3).split(",");
             String [] id=cur.getString(4).split(",");
-            for (int i = 0; i < category.length; i++) {
-                String [] param =new String[3];
-                param[0]=category[i];
-                param[1]=amount[i];
-                param[2]=id[i];
+            for (int i = 0; i < id.length; i++) {
+                String param =id[i];
                 group.children.add(param);
             }
            // group.children.add(cur.getString(1) +":"+ cur.getString(2));

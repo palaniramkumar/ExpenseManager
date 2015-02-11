@@ -254,10 +254,17 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor res =  db.rawQuery( "select * from MASTER", null );
         return res;
     }
-    public Cursor getmMasterByStatus(String status)
+    public Cursor getMasterByStatus(String status)
     {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from MASTER where status ='"+status+"'", null );
+        return res;
+    }
+    public Cursor getMasterByStatus(String status,int days)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from MASTER where status ='"+status+"' and trans_time >= date('now', '-"+days+" days')" +
+                "  AND trans_time <  date('now')", null );
         return res;
     }
     public int getLastSMSID(){

@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -24,7 +23,6 @@ import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.internal.base.BaseCard;
 import it.gmariotti.cardslib.library.prototypes.CardWithList;
 import it.gmariotti.cardslib.library.prototypes.LinearListView;
 
@@ -120,7 +118,7 @@ public class NotificationCard extends CardWithList {
     @Override
     protected List<ListObject> initChildren() {
         db=new DBHelper(getContext());
-        final Cursor cursor= db.getmMasterByStatus(TYPES.TRANSACTION_STATUS.PENDING.toString());
+        final Cursor cursor= db.getMasterByStatus(TYPES.TRANSACTION_STATUS.PENDING.toString(),30); //last 30 days
         cursor.moveToFirst();
         //Init the list
         List<ListObject> mObjects = new ArrayList<ListObject>();
@@ -135,6 +133,7 @@ public class NotificationCard extends CardWithList {
             CostObject c = new CostObject(this);
             c.message = "Rs."+ amount +" spent at "+cursor.getString(8);
             c.messagegId=cursor.getInt(7)+"";//RECID+"";
+            c.ts = cursor.getString(cursor.getColumnIndex(db.MASTER_COLUMN_TRANSACTION_TIME));
             c.setObjectId(c.messagegId); //It can be important to set ad id
             c.setOnItemClickListener(new OnItemClickListener() {
                 @Override
@@ -169,7 +168,7 @@ public class NotificationCard extends CardWithList {
         //Retrieve the values from the object
         CostObject costObject = (CostObject) object;
         content.setText(costObject.message);
-        timestamp.setText(costObject.messagegId);
+        timestamp.setText(costObject.ts);
 
         return convertView;
     }
@@ -188,6 +187,7 @@ public class NotificationCard extends CardWithList {
 
         public String message;
         public String messagegId;
+        public String ts;
 
         public CostObject(Card parentCard) {
             super(parentCard);

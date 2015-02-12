@@ -46,8 +46,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String MASTER_COLUMN_SHAREDEXPENSE = "SharedExpense";
     public static final String MASTER_COLUMN_SHAREDMEMBERS = "SharedMembers";
     public static final String MASTER_COLUMN_STATUS = "status"; //pending,deleted,accepted
-
     public static final String CATEGORY_TABLE_NAME = "category";
+
+    public final String UNCATEGORIZED = "UNCATEGORIZED";
 
     public String month = ""; //where strftime('%m', `date column`) = '04'
 
@@ -67,6 +68,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
         //context.deleteDatabase(DATABASE_NAME); //force close if the db is not created
     }
+    public void deleteDB(Context context){
+        context.deleteDatabase(DATABASE_NAME);
+    }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -74,7 +78,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL(
                 "create table MASTER " +
-                        "(id integer primary key, amount text,bank_name text,trans_source text, trans_type text,category text," +
+                        "(id integer primary key, amount text,bank_name text,trans_source text, trans_type text,category text DEFAULT '"+UNCATEGORIZED+"'," +
                         " notes text,sms_id integer UNIQUE,desc text, place text,trans_time DATETIME DEFAULT CURRENT_TIMESTAMP," +
                         "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP," +
                         "geo_tag text,SharedExpense text, SharedMembers text,status text)"
@@ -107,7 +111,6 @@ public class DBHelper extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-
         contentValues.put("amount", amount);
         contentValues.put("bank_name", bank_name);
         contentValues.put("trans_source", trans_source);
@@ -248,10 +251,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 new String[] { Integer.toString(id) });
     }
 
-    public Cursor getAllFromMaster()
+    public Cursor getFromMaster(String field,String value)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from MASTER", null );
+        Cursor res =  db.rawQuery( "select * from MASTER where "+field+" = '"+value+"'", null );
         return res;
     }
     public Cursor getMasterByStatus(String status)
@@ -290,7 +293,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     public CharSequence [] getDefaultCategory(){
-        final CharSequence myList[] = { "Food", "Home", "Fuel" ,"Groceries","Travel","Medicine","Restaurant","Others"};
+        final CharSequence myList[] = { "Food", "Home", "Fuel" ,"Groceries","Travel","Medicine","Restaurant","UNCATEGORIZED"};
         return  myList;
     }
 
@@ -327,7 +330,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public Cursor getBudgetSummary(){
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select  c.category,c.amount,sum(m.amount) from category c left join master m " +
+        Cursor res =  db.rawQuery( "select  c.category,c.amount,sum(m.amount) from category c CROSS join master m " +
                 "on c.category=m.category where  c.status='"+TYPES.TRANSACTION_STATUS.APPROVED+"'  and strftime('%m', `trans_time`) = '"+month+"'" + //bug: Use case: user removed category this month, but the trans entry was there for previous month
                 " group by m.category", null );
         return res;
@@ -374,6 +377,12 @@ public class DBHelper extends SQLiteOpenHelper {
                 "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         dateFormat.setCalendar(calendar);
         return dateFormat.format(calendar.getTime());
+    }
+    public String getNow(){
+        // set the format to sql date time
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 
 }

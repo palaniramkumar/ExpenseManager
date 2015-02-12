@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.jensdriller.libs.undobar.UndoBar;
 import com.reader.ramkumar.expensemanager.R;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
+import com.reader.ramkumar.expensemanager.util.Common;
 import com.reader.ramkumar.expensemanager.util.TYPES;
 
 import java.util.ArrayList;
@@ -120,7 +121,7 @@ public class NotificationCard extends CardWithList {
     @Override
     protected List<ListObject> initChildren() {
         db=new DBHelper(getContext());
-        final Cursor cursor= db.getMasterByStatus(TYPES.TRANSACTION_STATUS.PENDING.toString(),30); //last 30 days
+        final Cursor cursor= db.getFromMaster(db.MASTER_COLUMN_CATEGORY,db.UNCATEGORIZED); //last 30 days
         cursor.moveToFirst();
         //Init the list
         List<ListObject> mObjects = new ArrayList<ListObject>();
@@ -133,7 +134,7 @@ public class NotificationCard extends CardWithList {
             final String trans_type=cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_TRANS_TYPE));
             //Add an object to the list
             CostObject c = new CostObject(this);
-            c.message = "Rs."+ amount +" spent at "+cursor.getString(8);
+            c.message = Common.CURRENCY+". " + amount +" spent at "+cursor.getString(8);
             c.messagegId=cursor.getInt(7)+"";//RECID+"";
             c.ts = cursor.getString(cursor.getColumnIndex(db.MASTER_COLUMN_TRANSACTION_TIME));
             c.setObjectId(c.messagegId); //It can be important to set ad id

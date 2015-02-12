@@ -130,7 +130,7 @@ public class main extends Fragment {
             @Override
             protected Integer doInBackground(Void... params) {
                 DBHelper db=new DBHelper(getActivity().getApplicationContext());
-                db.deleteMaster(1);
+                //db.deleteMaster(1);
                 if(getActivity()==null) return 0; //safe condition while rotating view. This throws null)
                 syncSMS(getActivity());
                 return 0;
@@ -377,20 +377,17 @@ public class main extends Fragment {
             colors.add(c);
 */
 
+            colors.add(ColorTemplate.getHoloBlue());
 
+            set1.setColors(colors);
 
+            PieData data = new PieData(xVals, set1);
+            mChart.setData(data);
 
-        colors.add(ColorTemplate.getHoloBlue());
+            // undo all highlights
+            mChart.highlightValues(null);
 
-        set1.setColors(colors);
-
-        PieData data = new PieData(xVals, set1);
-        mChart.setData(data);
-
-        // undo all highlights
-        mChart.highlightValues(null);
-
-        mChart.invalidate();
+            mChart.invalidate();
 
 
     }
@@ -441,8 +438,8 @@ public class main extends Fragment {
             if(s.findSMS() && s.amount!=null) {
                 //Add an object to the list
                 System.out.println("when = "+s.when);
-                db.insertMaster(s.amount,s.bankName,s.trans_src,s.trans_type,s.expanse_type,null,s.id,s.where,s.when,
-                        "datetime()",s.place,null,null,null, TYPES.TRANSACTION_STATUS.PENDING.toString());
+                db.insertMaster(s.amount, s.bankName, s.trans_src, s.trans_type,db.UNCATEGORIZED, s.where, s.id, s.where, s.when,
+                        db.getNow(), s.place, null, null, null,TYPES.TRANSACTION_STATUS.APPROVED.toString());
             }
         }
         db.close();

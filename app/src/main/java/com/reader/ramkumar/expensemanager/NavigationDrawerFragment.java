@@ -153,6 +153,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         items.add(new NavigationItem("History", getResources().getDrawable(R.drawable.ic_menu_check)));
         items.add(new NavigationItem("Category", getResources().getDrawable(R.drawable.ic_menu_check)));
         items.add(new NavigationItem("DB Backup (Testing)", getResources().getDrawable(R.drawable.ic_menu_check)));
+        items.add(new NavigationItem("Delete DB (Testing)", getResources().getDrawable(R.drawable.ic_menu_check)));
         return items;
     }
 

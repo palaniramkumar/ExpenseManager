@@ -126,10 +126,23 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                         .replace(R.id.frame_container, newFragment)
                         .commit();
                 setTitle("Category List");
+                break;
             case 4:
                 try {
 
                     Toast.makeText(this, "Backup Completed" + copyfile(), Toast.LENGTH_SHORT).show();
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Backup failed" , Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case 5:
+                try {
+
+                    new DBHelper(getApplicationContext()).deleteDB(getApplicationContext());
+                    Toast.makeText(this, "Delete Completed" , Toast.LENGTH_SHORT).show();
 
 
                 } catch (Exception e) {

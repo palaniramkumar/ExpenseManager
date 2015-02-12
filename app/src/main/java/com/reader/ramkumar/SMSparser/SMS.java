@@ -18,7 +18,7 @@ public class SMS {
     public String when;
     public String place;
     public String account;
-    public String expanse_type;
+    public String expanse_type=null;
     public boolean findSMS(){
         if(text.contains("HDFC")) {
             bankName="HDFC";

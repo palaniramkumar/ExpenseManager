@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.jensdriller.libs.undobar.UndoBar;
 import com.reader.ramkumar.expensemanager.R;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
+import com.reader.ramkumar.expensemanager.util.Common;
 import com.reader.ramkumar.expensemanager.util.TYPES;
 
 import java.util.ArrayList;
@@ -160,7 +161,7 @@ public class CategoryCard extends CardWithList {
         public String type;
         public int trendIcon;
         public int amount;
-        public String currencyUnit = "₹";
+        public String currencyUnit = Common.CURRENCY;//"₹"
 
         public CategoryObject(Card parentCard) {
             super(parentCard);

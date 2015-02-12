@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.reader.ramkumar.expensemanager.R;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
+import com.reader.ramkumar.expensemanager.util.Common;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +108,7 @@ public class ExpenseCard extends CardWithList {
         public String type;
         public int trendIcon;
         public int amount;
-        public String currencyUnit = "₹";
+        public String currencyUnit = Common.CURRENCY;//"₹"
 
         public CostObject(Card parentCard) {
             super(parentCard);

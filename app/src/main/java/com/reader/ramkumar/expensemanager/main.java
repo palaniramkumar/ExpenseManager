@@ -64,6 +64,7 @@ public class main extends Fragment {
     private OnFragmentInteractionListener mListener;
     private Handler mHandler = new Handler();
     private ProgressBar mProgress;
+    CardViewNative cardView;
     private DBHelper db;
     private View view;
     private ExpenseCard card;
@@ -112,6 +113,8 @@ public class main extends Fragment {
 
         //check for new SMS
         mProgress= (ProgressBar)view.findViewById(R.id.loading_spinner) ;
+        //Set card in the cardView
+        cardView = (CardViewNative) view.findViewById(R.id.carddemo); //if you want list, pls change the xml to "CardListView"
 
 
         class MyAsyncTask extends AsyncTask<Void, Void, Integer> {
@@ -223,6 +226,7 @@ public class main extends Fragment {
 
     void init(){
 
+
         card = new ExpenseCard(getActivity(),db);
 
         btn_month = (Button) view.findViewById(R.id.btn_month);
@@ -231,10 +235,14 @@ public class main extends Fragment {
         ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
         card.setViewToClickToExpand(viewToClickToExpand);
         card.init();
-        //Set card in the cardView
-        CardViewNative cardView = (CardViewNative) view.findViewById(R.id.carddemo); //if you want list, pls change the xml to "CardListView"
-        cardView.setCard(card);
 
+        /*code to update the card value without overlaping the previous text Defect #11*/
+        if(cardView.getCard()==null)
+            cardView.setCard(card);
+        else
+            cardView.replaceCard(card);
+
+        /*generate the expense distribution pie chart*/
 
         mChart = (PieChart) view.findViewById(R.id.chart);
 

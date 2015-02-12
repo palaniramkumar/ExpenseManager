@@ -110,7 +110,12 @@ public class CategoryCard extends CardWithList {
                              String budget = txt_amount.getText().toString();
                              db.updateCategory(Integer.parseInt(object.getObjectId()),"category",category);
                              db.updateCategory(Integer.parseInt(object.getObjectId()),"amount",budget);
+
+                             //realtime update at table
+                             TextView txt_amount = (TextView) parent.getChildAt(position).findViewById(R.id.table_txt_amount);
+                             txt_amount.setText(budget);
                              ((CategoryObject)object).amount=Integer.parseInt(budget);// This code is not updating in real time, need a page refresh
+                             parent.refreshDrawableState();
                          }
                      });
 

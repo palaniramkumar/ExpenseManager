@@ -48,6 +48,7 @@ public class Categories extends Fragment {
     ViewGroup mContainer;
     NotificationCard card;
     DBHelper db;
+    View view;
 
     /**
      * Use this factory method to create a new instance of
@@ -90,23 +91,16 @@ public class Categories extends Fragment {
         db=new DBHelper(getActivity());
         mContainer = container;
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = mInflater.inflate(R.layout.fragment_categories, mContainer, false);
+        view = mInflater.inflate(R.layout.fragment_categories, mContainer, false);
 
-        CategoryCard card = new CategoryCard(getActivity());
-
-        ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
-        card.setViewToClickToExpand(viewToClickToExpand);
-        card.init();
-
-        CardViewNative cardView = (CardViewNative) view.findViewById(R.id.card_category); //if you want list, pls change the xml to "CardListView"
-        cardView.setCard(card);
+        init();
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 //you should edit this to fit your needs
-                builder.setTitle("Edit Category");
+                builder.setTitle("Add Category");
 
                 final EditText txt_category = new EditText(getActivity());
                 txt_category.setHint("Category");//optional
@@ -131,6 +125,7 @@ public class Categories extends Fragment {
                         String category  =txt_category.getText().toString();
                         String budget = txt_amount.getText().toString();
                         db.insertCategory(category,budget, TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                        init();
 
                     }
                 });
@@ -184,6 +179,21 @@ public class Categories extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+    void init(){
+        CategoryCard card = new CategoryCard(getActivity());
+
+        ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
+        card.setViewToClickToExpand(viewToClickToExpand);
+        card.init();
+
+        CardViewNative cardView = (CardViewNative) view.findViewById(R.id.card_category); //if you want list, pls change the xml to "CardListView"
+        //cardView.setCard(card);
+         /*code to update the card value without overlaping the previous text Defect #11*/
+        if(cardView.getCard()==null)
+            cardView.setCard(card);
+        else
+            cardView.replaceCard(card);
     }
 
 }

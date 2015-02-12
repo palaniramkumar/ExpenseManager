@@ -102,6 +102,19 @@ public class main extends Fragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 201) {
+            if(resultCode == Activity.RESULT_OK){
+                //String result=data.getStringExtra("result");
+                init();
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+    }//onActivityResult
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -149,7 +162,7 @@ public class main extends Fragment {
             public void onClick(View v) {
                 Toast.makeText(mContainer.getContext(), "New Clicked", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(mContainer.getContext(), Expense_add_window.class);
-                startActivity(i);
+                startActivityForResult(i,201); //201 -Create: assume HTTP 201 for create request :). It can be any value
             }
         });
 

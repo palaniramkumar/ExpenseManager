@@ -1,5 +1,6 @@
 package com.reader.ramkumar.expensemanager;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
@@ -190,6 +191,12 @@ public class Expense_add_window extends ListActivity {
 
                     Toast.makeText(getApplicationContext(), "Successfully Added",
                             Toast.LENGTH_LONG).show();
+
+                    /*returning results*/
+
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("result","Success");
+                    setResult(RESULT_OK,returnIntent);
                     finish();
                 }
                 else

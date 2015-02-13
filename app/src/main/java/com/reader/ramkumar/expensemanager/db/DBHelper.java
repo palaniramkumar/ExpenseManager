@@ -192,6 +192,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return count;
 
     }
+    public  Cursor getCategory(Integer id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery( "select * from CATEGORY where id = "+id, null );
+        return res;
+
+    }
 
     public int getCashExpense(){
         SQLiteDatabase db = this.getReadableDatabase();

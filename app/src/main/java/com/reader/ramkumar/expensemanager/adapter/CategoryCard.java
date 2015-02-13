@@ -72,8 +72,9 @@ public class CategoryCard extends CardWithList {
 
         while(cursor.moveToNext()){
             CategoryObject c = new CategoryObject(this);
-            final int tmp_amount =cursor.getInt(2); //Decl as final since it required for inner functions
-            final String tmp_type = cursor.getString(1);
+            int tmp_amount =cursor.getInt(2);
+            final int id=cursor.getInt(0);
+            String tmp_type = cursor.getString(1);
             c.type = tmp_type; //setter for categoryObject
             c.amount = tmp_amount;
             c.trendIcon = R.drawable.ic_action_expand; //need to implement with Dynamic icons by comparing with last month expense
@@ -82,49 +83,53 @@ public class CategoryCard extends CardWithList {
                  @Override
                  public void onItemClick(final LinearListView parent, View view, final int position, final ListObject object) {
                      AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                     //you should edit this to fit your needs
-                     builder.setTitle("Edit Category");
+                     Cursor c = db.getCategory(id);
+                     if(c.moveToNext()) {
+                         //you should edit this to fit your needs
+                         builder.setTitle("Edit Category");
 
-                     final EditText txt_category = new EditText(getContext());
-                     txt_category.setHint("Category");//optional
-                     txt_category.setText(tmp_type);
-                     final EditText txt_amount = new EditText(getContext());
-                     txt_amount.setHint("Amount");//optional
-                     txt_amount.setText(tmp_amount+"");
+                         final EditText txt_category = new EditText(getContext());
+                         txt_category.setHint("Category");//optional
+                         txt_category.setText(c.getString(c.getColumnIndex(DBHelper.MASTER_COLUMN_CATEGORY)));
+                         final EditText txt_amount = new EditText(getContext());
+                         txt_amount.setHint("Amount");//optional
+                         txt_amount.setText(c.getString(c.getColumnIndex(DBHelper.MASTER_COLUMN_AMOUNT)));;
 
-                     // use TYPE_CLASS_NUMBER for input only numbers
-                     txt_category.setInputType(InputType.TYPE_CLASS_TEXT);
-                     txt_amount.setInputType(InputType.TYPE_CLASS_NUMBER);
-                     //Setting up dynamic dialog
-                     LinearLayout lay = new LinearLayout(getContext());
-                     lay.setOrientation(LinearLayout.VERTICAL);
-                     lay.addView(txt_category);
-                     lay.addView(txt_amount);
-                     builder.setView(lay);
+                         // use TYPE_CLASS_NUMBER for input only numbers
+                         txt_category.setInputType(InputType.TYPE_CLASS_TEXT);
+                         txt_amount.setInputType(InputType.TYPE_CLASS_NUMBER);
+                         //Setting up dynamic dialog
+                         LinearLayout lay = new LinearLayout(getContext());
+                         lay.setOrientation(LinearLayout.VERTICAL);
+                         lay.addView(txt_category);
+                         lay.addView(txt_amount);
+                         builder.setView(lay);
 
-                     // Set up the buttons
-                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                         public void onClick(DialogInterface dialog, int whichButton) {
-                             //get the two inputs
-                             String category  =txt_category.getText().toString();
-                             String budget = txt_amount.getText().toString();
-                             db.updateCategory(Integer.parseInt(object.getObjectId()),"category",category);
-                             db.updateCategory(Integer.parseInt(object.getObjectId()),"amount",budget);
+                         // Set up the buttons
+                         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                             public void onClick(DialogInterface dialog, int whichButton) {
+                                 //get the two inputs
+                                 String category = txt_category.getText().toString();
+                                 String budget = txt_amount.getText().toString();
+                                 db.updateCategory(Integer.parseInt(object.getObjectId()), "category", category);
+                                 db.updateCategory(Integer.parseInt(object.getObjectId()), "amount", budget);
 
-                             //realtime update at table
-                             TextView txt_amount = (TextView) parent.getChildAt(position).findViewById(R.id.table_txt_amount);
-                             txt_amount.setText(budget);
-                             ((CategoryObject)object).amount=Integer.parseInt(budget);// This code is not updating in real time, need a page refresh
-                             parent.refreshDrawableState();
-                         }
-                     });
+                                 //realtime update at table
+                                 TextView txt_amount = (TextView) parent.getChildAt(position).findViewById(R.id.table_txt_amount);
+                                 txt_amount.setText(budget);
+                                 ((CategoryObject) object).amount = Integer.parseInt(budget);// This code is not updating in real time, need a page refresh
+                                 parent.refreshDrawableState();
+                             }
+                         });
 
-                     builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                         public void onClick(DialogInterface dialog, int whichButton) {
-                             dialog.cancel();
-                         }
-                     });
-                     builder.show();
+                         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                             public void onClick(DialogInterface dialog, int whichButton) {
+                                 dialog.cancel();
+                             }
+                         });
+                         builder.show();
+                     }
+                     
                  }
              });
             mObjects.add(c);

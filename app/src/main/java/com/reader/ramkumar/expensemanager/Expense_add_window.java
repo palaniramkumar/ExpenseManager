@@ -17,6 +17,7 @@ import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.reader.ramkumar.expensemanager.adapter.ListAdapterForRadioButton;
@@ -52,6 +53,7 @@ public class Expense_add_window extends ListActivity {
     String recid;
     String place;
     String geo_tag;
+    ArrayAdapter<ListAdapterRadioModel> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +64,7 @@ public class Expense_add_window extends ListActivity {
         db=new DBHelper(this);
 
         setContentView(R.layout.activity_expense_add_window);
-        ArrayAdapter<ListAdapterRadioModel> adapter = new ListAdapterForRadioButton(this, getModel());
+        adapter = new ListAdapterForRadioButton(this, getModel());
 
         //finding all fields
         btn_amount = ((Button) findViewById(R.id.btn_amount));
@@ -107,7 +109,7 @@ public class Expense_add_window extends ListActivity {
                 System.out.println(category);
                 int selectedIndex = getListIndex(category);
                 if(selectedIndex !=-1)
-                list.get(selectedIndex).setSelected(true); //bug: getListIndex(category) is retuning -1 which led to fc. need to check theList adapter.
+                    list.get(selectedIndex).setSelected(true); //bug: getListIndex(category) is retuning -1 which led to fc. need to check theList adapter.
 
                 /*storing it in global variable*/
                 bank_name = sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_BANK_NAME) );
@@ -184,6 +186,7 @@ public class Expense_add_window extends ListActivity {
                         if(trans_type.equalsIgnoreCase("income")) trans_type=TYPES.TRANSACTION_TYPE.INCOME.toString();
                         if(trans_type.equalsIgnoreCase("atm")) trans_type=TYPES.TRANSACTION_TYPE.CASH_VAULT.toString(); //ATM transactions considered as cash vault
                         System.out.println("Expense Source: "+trans_src);
+                        System.out.println("Category : "+category+" , Index: "+listIndex);
                         db.insertMaster(amount, null, trans_src, trans_type, category, notes, null, entryDesc, date, "datetime()", null, null, null, null, TYPES.TRANSACTION_STATUS.APPROVED.toString()); //date:datetime() is returning just a text not a value
                     }
                     if(ENTRY_TYPE.equalsIgnoreCase("UPDATE"))//this code is for future enhancement
@@ -287,6 +290,7 @@ public class Expense_add_window extends ListActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            Toast.makeText(getApplicationContext(),"Clicked Menu",Toast.LENGTH_SHORT);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -307,16 +311,14 @@ public class Expense_add_window extends ListActivity {
         return new ListAdapterRadioModel(s);
     }
 
-    public void onClickRadioButton(View v) {
-        View vMain = ((View) v.getParent());
-        int newIndex = ((ViewGroup) vMain.getParent()).indexOfChild(vMain);
-        if (listIndex == newIndex) return;
 
-        if (listRadioButton != null) {
-            listRadioButton.setChecked(false);
-        }
-        listRadioButton = (RadioButton) v;
-        listIndex = newIndex;
+    public void onClickListView(View v) {
+        TextView txt_view = (TextView) v.findViewById(R.id.label);
+        for(int i=0;i<list.size();i++)
+            list.get(i).setSelected(false);
+        listIndex = getListIndex(txt_view.getText());
+        list.get(listIndex).setSelected(true);
+        adapter.notifyDataSetChanged();
     }
 
     public int getListIndex(Object object){

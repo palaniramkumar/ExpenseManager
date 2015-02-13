@@ -108,7 +108,8 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
                         Intent i = new Intent(view.getContext(), Expense_add_window.class);
                         i.putExtra("RECID", children);
-                        view.getContext().startActivity(i);
+                        ((Activity)view.getContext()).startActivityForResult(i,201); //201 -Create: assume HTTP 201 for create request :). It can be any value
+                        //view.getContext().startActivity(i);
                     }
 
 
@@ -116,6 +117,8 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         });
         return convertView;
     }
+
+
 
     @Override
     public int getChildrenCount(int groupPosition) {

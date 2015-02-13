@@ -39,6 +39,8 @@ public class FragmentHistory extends Fragment {
     private String mParam2;
     ViewGroup mContainer;
     DBHelper db;
+    ExpandableListView listView;
+    MyExpandableListAdapter adapter;
     SparseArray<Group> groups = new SparseArray<Group>();
 
     private OnFragmentInteractionListener mListener;
@@ -83,8 +85,8 @@ public class FragmentHistory extends Fragment {
         View view = mInflater.inflate(R.layout.fragment_fragment_history, mContainer, false);
         db=new DBHelper(getActivity());
         createData();
-        ExpandableListView listView = (ExpandableListView) view.findViewById(R.id.listView);
-        MyExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(),groups);
+        listView = (ExpandableListView) view.findViewById(R.id.listView);
+        adapter = new MyExpandableListAdapter(getActivity(),groups);
         listView.setAdapter(adapter);
 
         /*FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
@@ -137,6 +139,19 @@ public class FragmentHistory extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+    // this code has no impact
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        // check if the request code is same as what is passed  here it is 2
+        if(requestCode==201)
+        {
+            Toast.makeText(getActivity(),"Results Invoked",Toast.LENGTH_SHORT);
+            createData();
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void createData() {

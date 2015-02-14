@@ -2,6 +2,7 @@ package com.reader.ramkumar.expensemanager;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,8 +10,12 @@ import android.os.Environment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.melnykov.fab.FloatingActionButton;
@@ -33,6 +38,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         {
 
     private Toolbar mToolbar;
+            ViewGroup mContainer;
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
     @Override
@@ -51,11 +57,14 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_topdrawer);
         mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         mToolbar.setLayoutParams(params);
-        mToolbar.setPadding(0,25,0,0);
+        mToolbar.setPadding(0,5,0,0); //modify the text and other object position
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
         mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.fragment_drawer);
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);

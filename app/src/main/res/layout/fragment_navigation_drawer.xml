@@ -17,7 +17,7 @@
         android:paddingLeft="20dp"
         android:paddingTop="40dp"
         android:singleLine="false"
-        android:text="Expense Manager"
+        android:text="My Expense Buddy"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textColor="@color/background_material_light"

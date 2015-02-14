@@ -26,7 +26,7 @@
     </style>
 
     <style name="ToolBarStyle" parent="">
-        <item name="android:elevation">@dimen/toolbar_elevation</item>
+        <!--item name="android:elevation">@dimen/toolbar_elevation</item-->
         <item name="android:transitionName">actionBar</item>
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>

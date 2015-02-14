@@ -108,8 +108,10 @@ public class Expense_add_window extends ListActivity {
                 String category= sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_CATEGORY));
                 System.out.println(category);
                 int selectedIndex = getListIndex(category);
-                if(selectedIndex !=-1)
+                if(selectedIndex !=-1) {
                     list.get(selectedIndex).setSelected(true); //bug: getListIndex(category) is retuning -1 which led to fc. need to check theList adapter.
+                    listIndex = selectedIndex;
+                }
 
                 /*storing it in global variable*/
                 bank_name = sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_BANK_NAME) );
@@ -117,7 +119,6 @@ public class Expense_add_window extends ListActivity {
                 place =sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_PLACE) );
                 geo_tag =sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_GEO_TAG) );
 
-                btn_amount.setEnabled(false);
             }
         }
         else {

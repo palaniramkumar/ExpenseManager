@@ -129,7 +129,7 @@ public class CategoryCard extends CardWithList {
                          });
                          builder.show();
                      }
-                     
+
                  }
              });
             mObjects.add(c);

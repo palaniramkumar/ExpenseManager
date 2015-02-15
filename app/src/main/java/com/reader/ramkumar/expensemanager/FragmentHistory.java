@@ -1,8 +1,10 @@
 package com.reader.ramkumar.expensemanager;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,13 +13,23 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.melnykov.fab.FloatingActionButton;
 import com.reader.ramkumar.expensemanager.adapter.Group;
 import com.reader.ramkumar.expensemanager.adapter.MyExpandableListAdapter;
+import com.reader.ramkumar.expensemanager.adapter.StickyHistoryAdapter;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
+import com.reader.ramkumar.expensemanager.util.MonthOperations;
+import com.reader.ramkumar.expensemanager.util.TYPES;
+
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 
 /**
@@ -28,7 +40,7 @@ import com.reader.ramkumar.expensemanager.db.DBHelper;
  * Use the {@link FragmentHistory#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentHistory extends Fragment {
+public class FragmentHistory extends Fragment implements AdapterView.OnItemClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -38,9 +50,12 @@ public class FragmentHistory extends Fragment {
     private String mParam1;
     private String mParam2;
     ViewGroup mContainer;
+    Button btn_month;
     DBHelper db;
-    ExpandableListView listView;
-    MyExpandableListAdapter adapter;
+    View view;
+    //ExpandableListView listView;
+    StickyListHeadersListView listView;
+    StickyHistoryAdapter adapter;
     SparseArray<Group> groups = new SparseArray<Group>();
 
     private OnFragmentInteractionListener mListener;
@@ -82,23 +97,55 @@ public class FragmentHistory extends Fragment {
         // Inflate the layout for this fragment
         mContainer = container;
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = mInflater.inflate(R.layout.fragment_fragment_history, mContainer, false);
+        view = mInflater.inflate(R.layout.fragment_fragment_history, mContainer, false);
         db=new DBHelper(getActivity());
-        createData();
-        listView = (ExpandableListView) view.findViewById(R.id.listView);
-        adapter = new MyExpandableListAdapter(getActivity(),groups);
-        listView.setAdapter(adapter);
+        //createData();
+        //listView = (ExpandableListView) view.findViewById(R.id.listView);
 
-        /*FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        //adapter = new MyExpandableListAdapter(getActivity(),groups);
+        //listView.setAdapter(adapter);
+
+        /*new ui code */
+        init();
+
+
+        //month navigation
+        Button btn_prev = (Button) view.findViewById(R.id.btn_prev);
+        btn_prev.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(mContainer.getContext(), "New Clicked", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(mContainer.getContext(), Expense_add_window.class);
-                startActivity(i);
+                int prev_month = MonthOperations.getMonthAsInt(MonthOperations.previous(btn_month.getText().toString()))+1;
+                db=new DBHelper(getActivity(),MonthOperations.getMonthin2Digit(prev_month));
+                Toast.makeText(getActivity(), "Item " + db.month + " clicked!", Toast.LENGTH_SHORT).show();
+
+                init();
             }
-        });*/
+        });
+        //month navigation
+        Button btn_next = (Button) view.findViewById(R.id.btn_next);
+        btn_next.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                int next_month = MonthOperations.getMonthAsInt(MonthOperations.next(btn_month.getText().toString()))+1;
+                db=new DBHelper(getActivity(),MonthOperations.getMonthin2Digit(next_month));
+                Toast.makeText(getActivity(), "Item " + db.month + " clicked!", Toast.LENGTH_SHORT).show();
+
+                init();
+            }
+        });
+
 
         return view;
+    }
+
+
+    void init(){
+
+        btn_month = (Button) view.findViewById(R.id.btn_month);
+        btn_month.setText(MonthOperations.getMonthAsString(Integer.parseInt(db.month)-1));
+
+        adapter = new StickyHistoryAdapter(getActivity(),db);
+        listView = (StickyListHeadersListView) view.findViewById(R.id.sticky_list);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -106,6 +153,33 @@ public class FragmentHistory extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String click_id = ((TextView) view.findViewById(R.id.txt_id)).getText().toString();
+        final Cursor cursor = db.getFromMasterByID(Integer.parseInt(click_id));
+        String trans_type="",sms_id="";
+        if(cursor.moveToNext()) {
+            trans_type=cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_TRANS_TYPE));
+            sms_id = cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_SMS_ID));
+
+
+        }
+
+        if(trans_type.equalsIgnoreCase(TYPES.TRANSACTION_TYPE.CASH_VAULT.toString())){
+            showDialogConfirm(getActivity(),Integer.parseInt(click_id));
+        }
+        else if(sms_id!=null)
+            showDialogCatogories(getActivity(),Integer.parseInt(click_id));
+
+        else {
+            Intent i = new Intent(view.getContext(), Expense_add_window.class);
+            i.putExtra("RECID", click_id);
+            startActivityForResult(i, 201); //201 -Create: assume HTTP 201 for create request :). It can be any value
+        }
+        Toast.makeText(getActivity(), "Item " + click_id + " clicked!", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
@@ -146,14 +220,72 @@ public class FragmentHistory extends Fragment {
     {
         super.onActivityResult(requestCode, resultCode, data);
         // check if the request code is same as what is passed  here it is 2
+        Toast.makeText(getActivity(),"Results Invoked",Toast.LENGTH_SHORT);
         if(requestCode==201)
         {
-            Toast.makeText(getActivity(),"Results Invoked",Toast.LENGTH_SHORT);
-            createData();
+
             adapter.notifyDataSetChanged();
         }
     }
 
+    void showDialogCatogories(final Context context, final int RECID){
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+
+        //final CharSequence myList[] = db.getDefaultCategory();
+        Cursor myList =db.getMyBudgetByCategory();
+        dialog.setSingleChoiceItems(myList, -1,"category",  new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+
+            }
+        });
+        dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ListView lw = ((AlertDialog) dialog).getListView();
+                if(lw.getCheckedItemPosition()>=0) {
+                    Cursor checkedItem =(Cursor) lw.getAdapter().getItem(lw.getCheckedItemPosition());
+                    db.updateMaster(RECID, db.MASTER_COLUMN_CATEGORY, checkedItem.getString(checkedItem.getColumnIndex("category")));
+                }
+                // TODO Auto-generated method stub
+
+            }
+
+        });
+        dialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+
+        // Set dialog title
+        dialog.setTitle("Choose the Category");
+        dialog.show();
+    }
+    void showDialogConfirm(final Context context, final int RECID){
+        new AlertDialog.Builder(context)
+                .setTitle("Delete entry")
+                .setMessage("Remove from Cash Vault ?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        db.updateMasterStatus(RECID, TYPES.TRANSACTION_STATUS.PENDING.toString());
+
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
     public void createData() {
         Cursor cur = db.getTransactionHistory();
         int j=0;

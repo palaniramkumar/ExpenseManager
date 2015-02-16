@@ -5,6 +5,7 @@ package com.reader.ramkumar.expensemanager.db;
  */
 
 import java.security.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -260,7 +261,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public Cursor getFromMaster(String field,String value)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from MASTER where "+field+" = '"+value+"'", null );
+        Cursor res =  db.rawQuery( "select * from MASTER where "+field+" = '"+value+"' and status='"+TYPES.TRANSACTION_STATUS.APPROVED+"'", null );
         return res;
     }
     public Cursor getMasterByStatus(String status)
@@ -346,6 +347,21 @@ public class DBHelper extends SQLiteOpenHelper {
     /*Date Conversion Methods */
 
 
+    public Cursor getTransactionHistory1(){
+        String sql = "select case strftime('%m', trans_time) when '01' then 'January' when '02' then 'Febuary' when '03' then 'March' when '04' then 'April' when '05' then 'May' when '06' then 'June' when '07' then 'July' when '08' then 'August' when '09' then 'September' when '10' then 'October' when '11' then 'November' when '12' then 'December' else '' end\n" +
+                "as month,strftime('%d',trans_time) day, GROUP_CONCAT(category), GROUP_CONCAT(amount),GROUP_CONCAT(id) from MASTER where status ='"+TYPES.TRANSACTION_STATUS.APPROVED+"' group by strftime('%m', trans_time) order by day asc";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( sql, null );
+        return res;
+    }
+    public Cursor getTransactionHistory(){
+        String sql = "select case strftime('%m', trans_time) when '01' then 'January' when '02' then 'Febuary' when '03' then 'March' when '04' then 'April' when '05' then 'May' when '06' then 'June' when '07' then 'July' when '08' then 'August' when '09' then 'September' when '10' then 'October' when '11' then 'November' when '12' then 'December' else '' end\n" +
+                "as month,strftime('%d',trans_time) day, category, amount,id,UPPER(notes) from MASTER where status ='"+TYPES.TRANSACTION_STATUS.APPROVED+"' and  strftime('%m', `trans_time`) = '"+month+"' order by day desc";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( sql, null );
+        return res;
+    }
+
     public static String getDateTime(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
@@ -366,21 +382,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return "";
     }
-    public Cursor getTransactionHistory1(){
-        String sql = "select case strftime('%m', trans_time) when '01' then 'January' when '02' then 'Febuary' when '03' then 'March' when '04' then 'April' when '05' then 'May' when '06' then 'June' when '07' then 'July' when '08' then 'August' when '09' then 'September' when '10' then 'October' when '11' then 'November' when '12' then 'December' else '' end\n" +
-                "as month,strftime('%d',trans_time) day, GROUP_CONCAT(category), GROUP_CONCAT(amount),GROUP_CONCAT(id) from MASTER where status ='"+TYPES.TRANSACTION_STATUS.APPROVED+"' group by strftime('%m', trans_time) order by day asc";
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( sql, null );
-        return res;
-    }
-    public Cursor getTransactionHistory(){
-        String sql = "select case strftime('%m', trans_time) when '01' then 'January' when '02' then 'Febuary' when '03' then 'March' when '04' then 'April' when '05' then 'May' when '06' then 'June' when '07' then 'July' when '08' then 'August' when '09' then 'September' when '10' then 'October' when '11' then 'November' when '12' then 'December' else '' end\n" +
-                "as month,strftime('%d',trans_time) day, category, amount,id,UPPER(notes) from MASTER where status ='"+TYPES.TRANSACTION_STATUS.APPROVED+"' and  strftime('%m', `trans_time`) = '"+month+"' order by day desc";
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( sql, null );
-        return res;
-    }
-
     public static String getDateTime(String dateinactivity) {
         int day=Integer.parseInt(dateinactivity.split("/")[0]);
         int month=Integer.parseInt(dateinactivity.split("/")[1])-1;
@@ -396,6 +397,11 @@ public class DBHelper extends SQLiteOpenHelper {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         return dateFormat.format(date);
+    }
+    public String getJavaDate(String sqltime) throws ParseException{
+        SimpleDateFormat DFTS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formatteddate= new SimpleDateFormat("MMM, dd").format(DFTS.parse(sqltime));
+        return formatteddate;
     }
 
 }

@@ -19,6 +19,7 @@ import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.Common;
 import com.reader.ramkumar.expensemanager.util.TYPES;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class NotificationCard extends CardWithList {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
 
         //final CharSequence myList[] = db.getDefaultCategory();
-        Cursor myList =db.getMyBudgetByCategory();
+        Cursor myList =db.getMyBudgetByCategory(); //to showup all the categories in the approval dialog
         dialog.setSingleChoiceItems(myList, -1,"category",  new DialogInterface.OnClickListener() {
 
             @Override
@@ -134,9 +135,17 @@ public class NotificationCard extends CardWithList {
             final String trans_type=cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_TRANS_TYPE));
             //Add an object to the list
             CostObject c = new CostObject(this);
-            c.message = Common.CURRENCY+". " + amount +" spent at "+cursor.getString(8);
-            c.messagegId=cursor.getInt(7)+"";//RECID+"";
-            c.ts = cursor.getString(cursor.getColumnIndex(db.MASTER_COLUMN_TRANSACTION_TIME));
+            c.message = cursor.getString(8);
+            c.amount = Common.CURRENCY+". " + amount;
+            c.trans_src = cursor.getString(cursor.getColumnIndex(db.MASTER_COLUMN_TRANS_SOURCE));
+            c.messagegId=cursor.getInt(0)+"";//RECID+"";
+            try {
+                c.ts = db.getJavaDate(cursor.getString(cursor.getColumnIndex(db.MASTER_COLUMN_TRANSACTION_TIME)));
+                System.out.println(c.ts);
+            }
+            catch (ParseException e){
+                e.printStackTrace();
+            }
             c.setObjectId(c.messagegId); //It can be important to set ad id
             c.setOnItemClickListener(new OnItemClickListener() {
                 @Override
@@ -166,13 +175,16 @@ public class NotificationCard extends CardWithList {
 
         //Setup the ui elements inside the item
         TextView content = (TextView) convertView.findViewById(R.id.card_notification_content);
+        TextView amount = (TextView) convertView.findViewById(R.id.card_notification_amount);
         TextView timestamp = (TextView) convertView.findViewById(R.id.card_notification_time);
+        TextView tran_src = (TextView) convertView.findViewById(R.id.card_notification_tran_src);
 
         //Retrieve the values from the object
         CostObject costObject = (CostObject) object;
-        content.setText(costObject.message);
+        content.setText(costObject.message.toUpperCase());
         timestamp.setText(costObject.ts);
-
+        amount.setText(costObject.amount);
+        tran_src.setText(costObject.trans_src);
         return convertView;
     }
 
@@ -189,6 +201,8 @@ public class NotificationCard extends CardWithList {
     public class CostObject extends DefaultListObject implements UndoBar.Listener {
 
         public String message;
+        public String amount;
+        public String trans_src;
         public String messagegId;
         public String ts;
 
@@ -209,7 +223,7 @@ public class NotificationCard extends CardWithList {
         ListObject deletedObject;
         @Override
         public void onUndo(Parcelable token) {
-            db.updateMasterStatus(token.describeContents(),"PENDING");
+            db.updateMasterStatus(token.describeContents(),TYPES.TRANSACTION_STATUS.APPROVED.toString());
             mLinearListAdapter.add(deletedObject);
             log("onUndo() " + token.describeContents());
         }
@@ -227,7 +241,7 @@ public class NotificationCard extends CardWithList {
                     Toast.makeText(getContext(), "Swipe on " + object.getObjectId(), Toast.LENGTH_SHORT).show();
                     final String objId=object.getObjectId();
                     deletedObject=object;
-                    db.updateMasterStatus(Integer.parseInt(objId),"DELETED");
+                    db.updateMasterStatus(Integer.parseInt(objId),TYPES.TRANSACTION_STATUS.DELETED.toString());
 
                     //new TestDialog(getContext()).show();
 

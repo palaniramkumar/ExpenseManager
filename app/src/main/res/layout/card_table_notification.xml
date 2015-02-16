@@ -36,26 +36,61 @@
         android:layout_marginRight="12dp"
         android:minHeight="55dp">
 
-        <TextView
-            android:id="@+id/card_notification_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerInParent="true"
-            android:textColor="@color/primary"
-            android:textSize="15sp"
-            tools:text="London" />
-
 
         <TextView
             android:id="@+id/card_notification_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:width="50dp"
+            android:textAlignment="center"
+            android:gravity="center_vertical|center_horizontal"
+            android:height="50dp"
+            android:background="@color/accent_material_light"
+            android:layout_gravity="start|left"
+            android:textColor="@color/abc_primary_text_disable_only_material_dark"
+            android:textSize="10sp"
+            tools:text="Feb, 20" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+
+            android:layout_toRightOf="@+id/card_notification_time"
+            android:layout_height="wrap_content">
+            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/card_notification_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Credit Card"
+                android:paddingLeft="10dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/primary"
+                android:layout_toRightOf="@+id/txt_desc"
+                />
+            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/card_notification_tran_src"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Online Transaction for food"
+                android:textColor="@color/accent"
+                android:paddingLeft="10dp"
+                />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/card_notification_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
-            android:textColor="@color/accent"
+            android:textColor="@color/card_undobar_material_text_color"
             android:textSize="10sp"
-            tools:text="16°C" />
+            tools:text="Rs. 2100" />
+
 
 
     </RelativeLayout>

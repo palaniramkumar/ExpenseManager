@@ -39,7 +39,19 @@
                 android:textColor="@android:color/holo_orange_dark"
                 android:background="@android:color/transparent"
                 android:id="@+id/btn_month"
+                android:gravity="right|center_vertical"
                 android:text="January"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/holo_orange_dark"
+                android:background="@android:color/transparent"
+                android:id="@+id/btn_year"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="5dp"
+                android:text="2014"/>
+
 
             <Button
                 android:layout_width="wrap_content"

@@ -52,12 +52,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public final String UNCATEGORIZED = "UNCATEGORIZED";
 
     public String month = ""; //where strftime('%m', `date column`) = '04'
-
+    public String year = "";
     public DBHelper(Context context)
     {
 
         super(context, DATABASE_NAME , null, 1);
         month= new SimpleDateFormat("MM").format(Calendar.getInstance().getTime());
+        year  = new SimpleDateFormat("yyyy").format(Calendar.getInstance().getTime());
 
         //context.deleteDatabase(DATABASE_NAME); //force close if the db is not created
     }

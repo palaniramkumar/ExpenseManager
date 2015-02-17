@@ -28,6 +28,8 @@ import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.MonthOperations;
 import com.reader.ramkumar.expensemanager.util.TYPES;
 
+import java.util.Date;
+
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
@@ -51,6 +53,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
     private String mParam2;
     ViewGroup mContainer;
     Button btn_month;
+    Button btn_year;
     DBHelper db;
     View view;
     //ExpandableListView listView;
@@ -113,8 +116,12 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         Button btn_prev = (Button) view.findViewById(R.id.btn_prev);
         btn_prev.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                int prev_month = MonthOperations.getMonthAsInt(MonthOperations.previous(btn_month.getText().toString()))+1;
-                db=new DBHelper(getActivity(),MonthOperations.getMonthin2Digit(prev_month));
+
+                String current_month = btn_month.getText().toString();
+                Date date = MonthOperations.previous(current_month,db.year);
+                int prev_month = date.getMonth();
+                db.month = MonthOperations.getMonthin2Digit(prev_month+1);
+                db.year = date.getYear()+"";
                 Toast.makeText(getActivity(), "Item " + db.month + " clicked!", Toast.LENGTH_SHORT).show();
 
                 init();
@@ -124,8 +131,11 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         Button btn_next = (Button) view.findViewById(R.id.btn_next);
         btn_next.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                int next_month = MonthOperations.getMonthAsInt(MonthOperations.next(btn_month.getText().toString()))+1;
-                db=new DBHelper(getActivity(),MonthOperations.getMonthin2Digit(next_month));
+                String current_month = btn_month.getText().toString();
+                Date date = MonthOperations.next(current_month,db.year);
+                int next_month = date.getMonth();
+                db.month = MonthOperations.getMonthin2Digit(next_month+1);
+                db.year = date.getYear()+"";
                 Toast.makeText(getActivity(), "Item " + db.month + " clicked!", Toast.LENGTH_SHORT).show();
 
                 init();
@@ -141,7 +151,8 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
 
         btn_month = (Button) view.findViewById(R.id.btn_month);
         btn_month.setText(MonthOperations.getMonthAsString(Integer.parseInt(db.month)-1));
-
+        btn_year = (Button) view.findViewById(R.id.btn_year);
+        btn_year.setText(db.year);
         adapter = new StickyHistoryAdapter(getActivity(),db);
         listView = (StickyListHeadersListView) view.findViewById(R.id.sticky_list);
         listView.setAdapter(adapter);

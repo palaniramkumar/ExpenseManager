@@ -34,6 +34,7 @@ import com.reader.ramkumar.expensemanager.util.TYPES;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -69,6 +70,7 @@ public class main extends Fragment {
     private View view;
     private ExpenseCard card;
     Button btn_month;
+    Button btn_year;
     public main() {
         // Required empty public constructor
     }
@@ -170,8 +172,12 @@ public class main extends Fragment {
         Button btn_prev = (Button) view.findViewById(R.id.btn_prev);
         btn_prev.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                int prev_month = MonthOperations.getMonthAsInt(MonthOperations.previous(btn_month.getText().toString()))+1;
-                db=new DBHelper(getActivity(),MonthOperations.getMonthin2Digit(prev_month));
+                String current_month = btn_month.getText().toString();
+                Date date = MonthOperations.previous(current_month,db.year);
+                int prev_month = date.getMonth();
+                db.month = MonthOperations.getMonthin2Digit(prev_month+1);
+                db.year = date.getYear()+"";
+                //db=new DBHelper(getActivity(),MonthOperations.getMonthin2Digit(prev_month+1));
                 init();
             }
         });
@@ -179,8 +185,12 @@ public class main extends Fragment {
         Button btn_next = (Button) view.findViewById(R.id.btn_next);
         btn_next.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                int next_month = MonthOperations.getMonthAsInt(MonthOperations.next(btn_month.getText().toString()))+1;
-                db=new DBHelper(getActivity(),MonthOperations.getMonthin2Digit(next_month));
+                String current_month = btn_month.getText().toString();
+                Date date = MonthOperations.next(current_month,db.year);
+                int next_month = date.getMonth();
+                db.month = MonthOperations.getMonthin2Digit(next_month+1);
+                db.year = date.getYear()+"";
+                //db=new DBHelper(getActivity(),MonthOperations.getMonthin2Digit(next_month+1));
                 init();
             }
         });
@@ -243,7 +253,9 @@ public class main extends Fragment {
         card = new ExpenseCard(getActivity(),db);
 
         btn_month = (Button) view.findViewById(R.id.btn_month);
+        btn_year = (Button) view.findViewById(R.id.btn_year);
         btn_month.setText(MonthOperations.getMonthAsString(Integer.parseInt(db.month)-1));
+        btn_year.setText(db.year);
 
         ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
         card.setViewToClickToExpand(viewToClickToExpand);

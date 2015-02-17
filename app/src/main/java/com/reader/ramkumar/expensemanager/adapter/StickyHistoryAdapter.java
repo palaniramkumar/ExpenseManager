@@ -107,7 +107,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
         }
         //set header text as first char in name
         String headerText = month +", " + entry_day[position]; //code for showing header
-        String headerAmount = db.getExpensebyDay(entry_day[position]);
+        String headerAmount = Common.CURRENCY+" "+db.getExpensebyDay(entry_day[position]);
         holder.text.setText(headerText);
         holder.amount.setText(headerAmount);
         return convertView;

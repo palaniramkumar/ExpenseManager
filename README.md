@@ -2,16 +2,7 @@
 
 Action Items:
 -------------
-- Change all Hard Coded String values to R.string
-- Implement Logs.log in the replacement to System.out
-- Page is not refreshing after db update. This requires user to select that menu
-- Get Dynamic Currency value.
-- All Card classes uses log() as toast. Need to change this code with actual log class
-- In all card classes , the undo bar padding need to be fix. The expected behaviour is, it should be 0 padding
-- Change popup from HaloBlack  to halo.white 
-- ListRadio index is in appropriate for the next pager items(List Adapter class)
-- Hard coded value is SMSListener
-- Notification icon should be in white color
+- Check the defect/enhancement request
 
 
 Adapter

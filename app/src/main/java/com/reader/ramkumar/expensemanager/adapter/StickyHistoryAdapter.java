@@ -100,13 +100,16 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
             holder = new HeaderViewHolder();
             convertView = inflater.inflate(R.layout.sticky_header, parent, false);
             holder.text = (TextView) convertView.findViewById(R.id.text1);
+            holder.amount = (TextView) convertView.findViewById(R.id.sum_amount);
             convertView.setTag(holder);
         } else {
             holder = (HeaderViewHolder) convertView.getTag();
         }
         //set header text as first char in name
         String headerText = month +", " + entry_day[position]; //code for showing header
+        String headerAmount = db.getExpensebyDay(entry_day[position]);
         holder.text.setText(headerText);
+        holder.amount.setText(headerAmount);
         return convertView;
     }
 
@@ -118,7 +121,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
 
     class HeaderViewHolder {
         TextView text;
-
+        TextView amount;
     }
 
     class ViewHolder {

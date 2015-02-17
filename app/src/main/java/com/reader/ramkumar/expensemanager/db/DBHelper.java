@@ -213,6 +213,18 @@ public class DBHelper extends SQLiteOpenHelper {
             return 0;
         }
     }
+    public String getExpensebyDay(String day){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql="select sum(amount) from master where strftime('%m', `trans_time`) = '"+month+"' and strftime('%d', `trans_time`) = '"+day+"' group by strftime('%d', `trans_time`)";
+        Cursor res =  db.rawQuery( sql, null );
+        if(res.moveToNext()){
+            if(res.getString(0) == null) return "0";
+            return res.getString(0);
+        }
+        else{
+            return "0";
+        }
+    }
     public int getCashVault(){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select sum(amount) from MASTER where trans_type = '"+TYPES.TRANSACTION_TYPE.CASH_VAULT+"' and status = '"+TYPES.TRANSACTION_STATUS.APPROVED+"'" +
@@ -346,14 +358,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     /*Date Conversion Methods */
 
-
-    public Cursor getTransactionHistory1(){
-        String sql = "select case strftime('%m', trans_time) when '01' then 'January' when '02' then 'Febuary' when '03' then 'March' when '04' then 'April' when '05' then 'May' when '06' then 'June' when '07' then 'July' when '08' then 'August' when '09' then 'September' when '10' then 'October' when '11' then 'November' when '12' then 'December' else '' end\n" +
-                "as month,strftime('%d',trans_time) day, GROUP_CONCAT(category), GROUP_CONCAT(amount),GROUP_CONCAT(id) from MASTER where status ='"+TYPES.TRANSACTION_STATUS.APPROVED+"' group by strftime('%m', trans_time) order by day asc";
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( sql, null );
-        return res;
-    }
     public Cursor getTransactionHistory(){
         String sql = "select case strftime('%m', trans_time) when '01' then 'January' when '02' then 'Febuary' when '03' then 'March' when '04' then 'April' when '05' then 'May' when '06' then 'June' when '07' then 'July' when '08' then 'August' when '09' then 'September' when '10' then 'October' when '11' then 'November' when '12' then 'December' else '' end\n" +
                 "as month,strftime('%d',trans_time) day, category, amount,id,UPPER(notes) from MASTER where status ='"+TYPES.TRANSACTION_STATUS.APPROVED+"' and  strftime('%m', `trans_time`) = '"+month+"' order by day desc";

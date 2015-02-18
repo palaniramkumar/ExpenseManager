@@ -1,8 +1,11 @@
 package com.reader.ramkumar.expensemanager;
 
+import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 //import com.melnykov.fab.FloatingActionButton;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.service.SMSListener;
+import com.reader.ramkumar.expensemanager.service.SummaryReceiver;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
+import java.util.Calendar;
 
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks,
@@ -68,6 +73,19 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
         mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.fragment_drawer);
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
+
+        //Set the alarm to 10 seconds from now
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 30    );
+        calendar.set(Calendar.AM_PM,Calendar.PM);
+
+        Intent myIntent = new Intent(getBaseContext(), SummaryReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);;
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(), 24*60*60*1000, pendingIntent);
+        //currently 24 hours
 
     }
 

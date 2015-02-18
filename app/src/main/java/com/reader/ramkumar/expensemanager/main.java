@@ -1,7 +1,10 @@
 package com.reader.ramkumar.expensemanager;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Fragment;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,6 +32,7 @@ import com.melnykov.fab.FloatingActionButton;
 import com.reader.ramkumar.SMSparser.SMS;
 import com.reader.ramkumar.expensemanager.adapter.ExpenseCard;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
+import com.reader.ramkumar.expensemanager.service.SummaryReceiver;
 import com.reader.ramkumar.expensemanager.util.MonthOperations;
 import com.reader.ramkumar.expensemanager.util.TYPES;
 
@@ -241,8 +245,6 @@ public class main extends Fragment {
             System.out.println("Created New Endpoint");
             db.firstUser();
         }
-
-
 
         return view;
     }

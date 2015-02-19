@@ -238,10 +238,10 @@ public class main extends Fragment {
 */
         /* first user check */
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        String endpoint = sharedPref.getString("Endpoint", "0");
+        String endpoint = sharedPref.getString("Endpoint1", "0");
         if(endpoint.equalsIgnoreCase("0")) {
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("Endpoint", UUID.randomUUID().toString());
+            editor.putString("Endpoint1", UUID.randomUUID().toString());
             editor.commit();
             System.out.println("Created New Endpoint");
             db.firstUser();

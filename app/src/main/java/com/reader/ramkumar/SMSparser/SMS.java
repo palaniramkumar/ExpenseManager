@@ -49,6 +49,10 @@ public class SMS {
                 trans_type = TYPES.TRANSACTION_TYPE.NEUTRAL.toString();
             if(isAvailable(TYPES.KNOWN_BILLS,where))
                 expanse_category = DBHelper.BILL_PAYMENT;
+            if(isAvailable(TYPES.KNOWN_SHOP,where))
+                expanse_category = DBHelper.SHOPPING;
+            if(isAvailable(TYPES.KNOWN_TRAVEL,where))
+                expanse_category = DBHelper.TRAVEL;
 
             return true;
         }

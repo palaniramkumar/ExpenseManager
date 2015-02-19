@@ -49,8 +49,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String MASTER_COLUMN_STATUS = "status"; //pending,deleted,accepted
     public static final String CATEGORY_TABLE_NAME = "category";
 
+    //{ "Food & Drinks", "Home", "Fuel" ,"Groceries","Travel","Health","Entertainment","Shopping","BILL","UNCATEGORIZED"};
     public static final String UNCATEGORIZED = "UNCATEGORIZED";
     public static final String BILL_PAYMENT = "BILL";
+    public static final String SHOPPING = "Shopping";
+    public static final String TRAVEL = "Travel";
 
     public String month = "";
     public String year = "";
@@ -275,7 +278,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public Cursor getFromMaster(String field,String value)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from MASTER where "+field+" = '"+value+"' and status='"+TYPES.TRANSACTION_STATUS.APPROVED+"'", null );
+        Cursor res =  db.rawQuery( "select * from MASTER where "+field+" = '"+value+"' and status='"+TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' order by trans_time desc", null );
         return res;
     }
     public Cursor getMasterByStatus(String status)
@@ -352,7 +355,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select  c.category,c.amount,sum(m.amount) from category c CROSS join master m " +
-                "on c.category=m.category where  c.status='"+TYPES.TRANSACTION_STATUS.APPROVED+"'  and strftime('%m', `trans_time`) = '"+month+"'" + //bug: Use case: user removed category this month, but the trans entry was there for previous month
+                "on c.category=m.category where  c.status='"+TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' and strftime('%m', `trans_time`) = '"+month+"'" + //bug: Use case: user removed category this month, but the trans entry was there for previous month
                 " group by m.category", null );
         return res;
     }

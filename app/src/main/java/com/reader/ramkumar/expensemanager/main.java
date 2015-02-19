@@ -237,10 +237,10 @@ public class main extends Fragment {
 */
         /* first user check */
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        String endpoint = sharedPref.getString("Endpoint3", "0");
+        String endpoint = sharedPref.getString("Endpoint", "0");
         if(endpoint.equalsIgnoreCase("0")) {
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("Endpoint3", UUID.randomUUID().toString());
+            editor.putString("Endpoint", UUID.randomUUID().toString());
             editor.commit();
             System.out.println("Created New Endpoint");
             db.firstUser();
@@ -473,7 +473,7 @@ public class main extends Fragment {
             if(s.findSMS() && s.amount!=null) {
                 //Add an object to the list
                 System.out.println("when = "+s.when);
-                db.insertMaster(s.amount, s.bankName, s.trans_src, s.trans_type,db.UNCATEGORIZED, s.where, s.id, s.where, s.when,
+                db.insertMaster(s.amount, s.bankName, s.trans_src, s.trans_type,s.expanse_category, s.where, s.id, s.where, s.when,
                         db.getNow(), s.place, null, null, null,TYPES.TRANSACTION_STATUS.APPROVED.toString());
             }
         }

@@ -49,9 +49,10 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String MASTER_COLUMN_STATUS = "status"; //pending,deleted,accepted
     public static final String CATEGORY_TABLE_NAME = "category";
 
-    public final String UNCATEGORIZED = "UNCATEGORIZED";
+    public static final String UNCATEGORIZED = "UNCATEGORIZED";
+    public static final String BILL_PAYMENT = "BILL";
 
-    public String month = ""; //where strftime('%m', `date column`) = '04'
+    public String month = "";
     public String year = "";
     public DBHelper(Context context)
     {
@@ -313,7 +314,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     public CharSequence [] getDefaultCategory(){
-        final CharSequence myList[] = { "Food", "Home", "Fuel" ,"Groceries","Travel","Medicine","Restaurant","UNCATEGORIZED"};
+        final CharSequence myList[] = { "Food & Drinks", "Home", "Fuel" ,"Groceries","Travel","Health","Entertainment","Shopping","BILL","UNCATEGORIZED"};
         return  myList;
     }
 

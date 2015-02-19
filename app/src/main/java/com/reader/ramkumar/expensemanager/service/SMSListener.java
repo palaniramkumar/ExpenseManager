@@ -73,7 +73,7 @@ public class SMSListener extends BroadcastReceiver{
 
                 note.setLatestEventInfo(context, "New Expense",
                         "Rs." + s.amount + " - " + s.where, i);
-                db.insertMaster(s.amount,s.bankName,s.trans_src,s.trans_type,db.UNCATEGORIZED,s.where,s.id,s.where,s.when,
+                db.insertMaster(s.amount,s.bankName,s.trans_src,s.trans_type,s.expanse_category,s.where,s.id,s.where,s.when,
                         db.getNow(),s.place,null,null,null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
                 //After uncomment this line you will see number of notification arrived
                 //note.number=2;

@@ -1,6 +1,9 @@
 package com.reader.ramkumar.SMSparser;
 
 
+import com.reader.ramkumar.expensemanager.db.DBHelper;
+import com.reader.ramkumar.expensemanager.util.TYPES;
+
 /**
  * Created by Ram on 04/01/2015.
  * SMS value setter from the bank object
@@ -18,7 +21,15 @@ public class SMS {
     public String when;
     public String place;
     public String account;
-    public String expanse_type=null;
+    public String expanse_category = DBHelper.UNCATEGORIZED;
+
+    public boolean isAvailable(String [] array,String val){
+        for(int i=0;i< array.length;i++) {
+            if (val.toLowerCase().contains(array[i].toLowerCase()))
+                return true;
+        }
+        return false;
+    }
     public boolean findSMS(){
         if(text.contains("HDFC")) {
             bankName="HDFC";
@@ -30,8 +41,12 @@ public class SMS {
             //when = smsparsedata.valueSet[2];
             place = smsparsedata.valueSet[4];
             account=smsparsedata.valueSet[1];
-            trans_type = smsparsedata.trans_type;
+            trans_type = smsparsedata.trans_type;            
             trans_src = smsparsedata.trans_src;
+            if(amount==null)return false;
+            if(isAvailable(TYPES.NEUTRAL,where))
+                trans_type = TYPES.TRANSACTION_TYPE.NEUTRAL.toString();
+
             return true;
         }
         else

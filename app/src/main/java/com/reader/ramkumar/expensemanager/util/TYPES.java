@@ -5,10 +5,14 @@ package com.reader.ramkumar.expensemanager.util;
  * custom staus codes in the project
  */
 public class TYPES {
+    public static final String [] KNOWN_BILLS = {"Credit","Airtel","Vodafone","Aircel"}; //not yet implemented
+    public static final String [] NEUTRAL = {"Credit"};
+    
     public enum TRANSACTION_TYPE {
         EXPENSE  ("EXPENSE"),  //calls constructor with value 3
         INCOME ("INCOME"),  //calls constructor with value 2
-        CASH_VAULT("CASH VAULT") //ATM WRL
+        CASH_VAULT("CASH VAULT"), //ATM WRL
+        NEUTRAL("NEUTRAL") //can be added to expense. Introduced, to avoid duplicate expense like credit card payment and credit card transactions
         ; // semicolon needed when fields / methods follow
 
         private final String tranType;
@@ -57,6 +61,7 @@ public class TYPES {
         }
 
     }
+    
 
 }
 

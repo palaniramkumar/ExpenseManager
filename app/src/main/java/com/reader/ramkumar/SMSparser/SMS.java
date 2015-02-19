@@ -21,7 +21,7 @@ public class SMS {
     public String when;
     public String place;
     public String account;
-    public String expanse_category = DBHelper.UNCATEGORIZED;
+    public String expanse_category; 
 
     public boolean isAvailable(String [] array,String val){
         for(int i=0;i< array.length;i++) {
@@ -43,9 +43,12 @@ public class SMS {
             account=smsparsedata.valueSet[1];
             trans_type = smsparsedata.trans_type;            
             trans_src = smsparsedata.trans_src;
+            expanse_category = DBHelper.UNCATEGORIZED;
             if(amount==null)return false;
             if(isAvailable(TYPES.NEUTRAL,where))
                 trans_type = TYPES.TRANSACTION_TYPE.NEUTRAL.toString();
+            if(isAvailable(TYPES.KNOWN_BILLS,where))
+                expanse_category = DBHelper.BILL_PAYMENT;
 
             return true;
         }

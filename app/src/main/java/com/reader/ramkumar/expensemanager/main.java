@@ -151,10 +151,11 @@ public class main extends Fragment {
 
             @Override
             protected Integer doInBackground(Void... params) {
-                DBHelper db=new DBHelper(getActivity().getApplicationContext());
+                //DBHelper db=new DBHelper(getActivity().getApplicationContext());
                 //db.deleteMaster(1);
                 if(getActivity()==null) return 0; //safe condition while rotating view. This throws null)
                 syncSMS(getActivity());
+
                 return 0;
             }
 

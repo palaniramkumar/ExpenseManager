@@ -145,8 +145,8 @@ public class Expense_add_window extends ListActivity {
             }
 
         });
-
-        setListAdapter(adapter);
+        if(adapter.getViewTypeCount()>0) //safe condition to avoid fc - Issue #30
+            setListAdapter(adapter);
 
       /*  Cursor cur = db.getAllFromMaster();
         while(cur.moveToNext())

@@ -208,7 +208,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public int getCashExpense(){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select sum(amount) from MASTER where trans_source='"+TYPES.TRANSACTION_SOURCE.CASH+"' and trans_type = '"+TYPES.TRANSACTION_TYPE.EXPENSE+"'" +
-                " and strftime('%m', `trans_time`) = '"+month+"'", null );
+                " and strftime('%m', `trans_time`) = '"+month+"' and strftime('%Y', `trans_time`) = '"+year+"'", null );
         if(res.moveToNext()){
             if(res.getString(0) == null) return 0;
             System.out.println("Inside Cash Expense: "+res.getString(0));
@@ -220,7 +220,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public String getExpensebyDay(String day){
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql="select sum(amount) from master where strftime('%m', `trans_time`) = '"+month+"' and strftime('%d', `trans_time`) = '"+day+"' group by strftime('%d', `trans_time`)";
+        String sql="select sum(amount) from master where strftime('%m', `trans_time`) = '"+month+"' and strftime('%d', `trans_time`) = '"+day+"' and  strftime('%Y', `trans_time`) = '"+year+"' group by strftime('%d', `trans_time`)";
         Cursor res =  db.rawQuery( sql, null );
         if(res.moveToNext()){
             if(res.getString(0) == null) return "0";
@@ -233,7 +233,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public int getCashVault(){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select sum(amount) from MASTER where trans_type = '"+TYPES.TRANSACTION_TYPE.CASH_VAULT+"' and status = '"+TYPES.TRANSACTION_STATUS.APPROVED+"'" +
-                "  and strftime('%m', `trans_time`) = '"+month+"'", null );
+                "  and strftime('%m', `trans_time`) = '"+month+"' and  strftime('%Y', `trans_time`) = '"+year+"'", null );
         if(res.moveToNext()){
             if(res.getString(0) == null) return 0;
             return Integer.parseInt(res.getString(0));
@@ -324,14 +324,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public float getMyTotalExpense(){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select sum(amount) from MASTER where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"'" +
-                " and  strftime('%m', `trans_time`) = '"+month+"'", null );
+                " and  strftime('%m', `trans_time`) = '"+month+"' and  strftime('%Y', `trans_time`) = '"+year+"'", null );
         if(res.moveToNext())return res.getFloat(0);
         else return 0;
     }
     public Cursor getMyExpenseByCategory(){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select category,sum(amount) from MASTER  where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' " +
-                " and strftime('%m', `trans_time`) = '"+month+"' group by category", null );
+                " and strftime('%m', `trans_time`) = '"+month+"' and  strftime('%Y', `trans_time`) = '"+year+"' group by category", null );
         return res;
     }
 
@@ -356,7 +356,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select  c.category,c.amount,sum(m.amount) from category c CROSS join master m " +
                 "on c.category=m.category where  c.status='"+TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' and strftime('%m', `trans_time`) = '"+month+"'" + //bug: Use case: user removed category this month, but the trans entry was there for previous month
-                " group by m.category", null );
+                " and  strftime('%Y', `trans_time`) = '"+year+"' group by m.category", null );
         return res;
     }
 
@@ -365,7 +365,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Cursor getTransactionHistory(){
         String sql = "select case strftime('%m', trans_time) when '01' then 'January' when '02' then 'Febuary' when '03' then 'March' when '04' then 'April' when '05' then 'May' when '06' then 'June' when '07' then 'July' when '08' then 'August' when '09' then 'September' when '10' then 'October' when '11' then 'November' when '12' then 'December' else '' end\n" +
-                "as month,strftime('%d',trans_time) day, category, amount,id,UPPER(notes) from MASTER where status ='"+TYPES.TRANSACTION_STATUS.APPROVED+"' and  strftime('%m', `trans_time`) = '"+month+"' order by day desc";
+                "as month,strftime('%d',trans_time) day, category, amount,id,UPPER(notes) from MASTER where status ='"+TYPES.TRANSACTION_STATUS.APPROVED+"' and  strftime('%m', `trans_time`) = '"+month+"' and  strftime('%Y', `trans_time`) = '"+year+"' order by day desc";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( sql, null );
         return res;

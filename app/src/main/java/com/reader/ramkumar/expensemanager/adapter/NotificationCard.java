@@ -249,6 +249,7 @@ public class NotificationCard extends CardWithList {
                             .setMessage("Successfully Deleted ")//
                             .setStyle(UndoBar.Style.LOLLIPOP)//
                             .setUndoColor(getContext().getResources().getColor(R.color.accent))
+                            .setAlignParentBottom(true)
                             .setUndoToken(new Parcelable() {
                                 @Override
                                 public int describeContents() {

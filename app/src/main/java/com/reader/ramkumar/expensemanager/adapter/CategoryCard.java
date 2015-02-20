@@ -213,6 +213,7 @@ public class CategoryCard extends CardWithList {
                             .setMessage("Successfully Deleted ")
                             .setStyle(UndoBar.Style.LOLLIPOP)//Undo bar style
                             .setUndoColor(getContext().getResources().getColor(R.color.accent))
+                            .setAlignParentBottom(true)
                             .setUndoToken(new Parcelable() {
                                 @Override
                                 public int describeContents() {

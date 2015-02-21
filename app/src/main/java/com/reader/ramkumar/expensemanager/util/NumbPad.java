@@ -58,16 +58,14 @@ public class NumbPad {
         addl_text = inTxt;
     }
 
-    public void show(final Activity a, final String promptString, int inFlags,
+    public void show(final Activity a, int inFlags,
                      final numbPadInterface postrun) {
         me = this;
         flag_hideInput = inFlags % 2;
         flag_hidePrompt = (inFlags / 2) % 2;
 
-        Builder dlg = new AlertDialog.Builder(a);
-        if (flag_hidePrompt == 0) {
-            dlg.setTitle(promptString);
-        }
+        Builder dlg = new AlertDialog.Builder(a, AlertDialog.THEME_HOLO_LIGHT);
+
         // Inflate the dialog layout
         LayoutInflater inflater = a.getLayoutInflater();
         View iView = inflater.inflate(R.layout.numb_pad, null, false);
@@ -96,6 +94,9 @@ public class NumbPad {
         btn0 = (Button) iView.findViewById(R.id.button0);
         btnC = (Button) iView.findViewById(R.id.buttonC);
         btnDot = (Button) iView.findViewById(R.id.buttonDot);
+        
+        TextView cur_txt = (TextView) iView.findViewById(R.id.txt_currency_sbl);
+        cur_txt.setText(Common.CURRENCY);
 
         btnC.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
@@ -172,6 +173,7 @@ public class NumbPad {
                 postrun.numPadCanceled();
             }
         });
+
         dlg.show();
     }
 

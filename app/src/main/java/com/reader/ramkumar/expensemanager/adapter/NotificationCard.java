@@ -58,7 +58,7 @@ public class NotificationCard extends CardWithList {
     //this code is duplicated in myexpandablelist adapter
 
     void showDialogCatogories(final int RECID,final int position){
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext(), AlertDialog.THEME_HOLO_LIGHT);
 
         //final CharSequence myList[] = db.getDefaultCategory();
         Cursor myList =db.getMyBudgetByCategory(); //to showup all the categories in the approval dialog
@@ -100,7 +100,7 @@ public class NotificationCard extends CardWithList {
         dialog.show();
     }
     void showDialogConfirm(final int RECID,final int position){
-        new AlertDialog.Builder(getContext())
+        new AlertDialog.Builder(getContext(), AlertDialog.THEME_HOLO_LIGHT)
                 .setTitle("Delete entry")
                 .setMessage("Can I add this is Cash Vault ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {

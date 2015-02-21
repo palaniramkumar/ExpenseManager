@@ -1,12 +1,15 @@
 package com.reader.ramkumar.expensemanager;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -221,7 +224,7 @@ public class Expense_add_window extends ListActivity {
         // optionally set additional title
         //np.setAdditionalText("Enter the Amount");
         // show the NumbPad to capture input.
-        np.show(this, "Enter the Amount", NumbPad.HIDE_INPUT,
+        np.show(this,  NumbPad.HIDE_INPUT,
                 new NumbPad.numbPadInterface() {
                     // This is called when the user click the 'Ok' button on the dialog
                     // value is the captured input from the dialog.
@@ -253,24 +256,27 @@ public class Expense_add_window extends ListActivity {
             @Override
             public void onClick(View arg0) {
 
-                final Dialog dialog = new Dialog(Expense_add_window.this);
-
-                dialog.setContentView(R.layout.calender);
-                calendar = (CalendarView) dialog.findViewById(R.id.calendarView1);
-
-
-                calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-
-                    @Override
-                    public void onSelectedDayChange(CalendarView view, int year, int month,
-                                                    int dayOfMonth) {
-                        // TODO Auto-generated method stub
+                final  AlertDialog.Builder dialog = new  AlertDialog.Builder(Expense_add_window.this, AlertDialog.THEME_HOLO_LIGHT);
+                LayoutInflater inflater = getLayoutInflater();
+                View iView = inflater.inflate(R.layout.calender, null, false);
+                dialog.setView(iView);
+                calendar = (CalendarView) iView.findViewById(R.id.calendarView1);
+                //dialog.setContentView(R.layout.calender);
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dlg, int sumthin) {
                         Button edit_amount = (Button) findViewById(R.id.btn_date);
-                        edit_amount.setText(dayOfMonth+"/"+(month+1)+"/"+year);
-                        //Toast.makeText(getBaseContext(), "Selected Date is\n\n" + dayOfMonth + " : " + month + " : " + year,Toast.LENGTH_LONG).show();
-                        dialog.dismiss();
+                        edit_amount.setText(db.getLocalDate(calendar.getDate()/1000));
+                        dlg.dismiss();
+
                     }
                 });
+                dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dlg, int sumthin) {
+                        dlg.dismiss();
+                        //postrun.numPadCanceled();
+                    }
+                });
+
                 dialog.show();
 
             }

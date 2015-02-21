@@ -174,7 +174,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
 
     void showDialogCatogories(final Context context, final int RECID){
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT);
 
         //final CharSequence myList[] = db.getDefaultCategory();
         Cursor myList =db.getMyBudgetByCategory();
@@ -214,7 +214,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         dialog.show();
     }
     void showDialogConfirm(final Context context, final int RECID){
-        new AlertDialog.Builder(context)
+        new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT)
                 .setTitle("Delete entry")
                 .setMessage("Remove from Cash Vault ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {

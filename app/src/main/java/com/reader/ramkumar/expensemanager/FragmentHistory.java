@@ -15,14 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import com.melnykov.fab.FloatingActionButton;
 import com.reader.ramkumar.expensemanager.adapter.Group;
-import com.reader.ramkumar.expensemanager.adapter.MyExpandableListAdapter;
 import com.reader.ramkumar.expensemanager.adapter.StickyHistoryAdapter;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.MonthOperations;
@@ -30,7 +27,6 @@ import com.reader.ramkumar.expensemanager.util.TYPES;
 
 import java.util.Date;
 
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 
@@ -240,7 +236,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
     }
 
     void showDialogCatogories(final Context context, final int RECID){
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT);
 
         //final CharSequence myList[] = db.getDefaultCategory();
         Cursor myList =db.getMyBudgetByCategory();
@@ -280,7 +276,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         dialog.show();
     }
     void showDialogConfirm(final Context context, final int RECID){
-        new AlertDialog.Builder(context)
+        new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT)
                 .setTitle("Delete entry")
                 .setMessage("Remove from Cash Vault ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {

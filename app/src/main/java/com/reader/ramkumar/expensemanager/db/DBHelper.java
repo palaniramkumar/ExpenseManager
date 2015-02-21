@@ -378,6 +378,19 @@ public class DBHelper extends SQLiteOpenHelper {
         return dateFormat.format(date);
     }
 
+    public  static String getLocalDate(long timestamp) {
+        try{
+            Calendar calendar = Calendar.getInstance();
+            TimeZone tz = TimeZone.getDefault();
+            calendar.setTimeInMillis(timestamp * 1000);
+            calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+            Date date = (Date) calendar.getTime();
+            return sdf.format(date);
+        }catch (Exception e) {
+        }
+        return "";
+    }
     public  static String getDroidDate(long timestamp) {
         try{
             Calendar calendar = Calendar.getInstance();

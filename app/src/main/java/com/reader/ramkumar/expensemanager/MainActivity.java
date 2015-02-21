@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -115,6 +116,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     }
 
 
+    public void aboutApp(MenuItem item){
+        Toast.makeText(this, "Hello World", Toast.LENGTH_LONG).show();
+    }
 
     private void selectItem(int position) {
 
@@ -128,7 +132,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 fragmentManager.beginTransaction()
                         .replace(R.id.frame_container, newFragment)
                         .commit();
-                setTitle("Expense Summary");
+                setTitle("Summary");
                 break;
             case 1:
                 newFragment = new PendingApproval();
@@ -136,7 +140,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 fragmentManager.beginTransaction()
                         .replace(R.id.frame_container, newFragment)
                         .commit();
-                setTitle("Pending Approval");
+                setTitle("Customize Category");
                 break;
             case 2:
                 newFragment = new FragmentHistory();

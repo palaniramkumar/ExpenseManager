@@ -24,7 +24,7 @@ import it.gmariotti.cardslib.library.prototypes.LinearListView;
 
 /**
  * Created by Ramkumar on 27/12/14.
- * Expense against budget in at home screen
+ * Expense at home screen
  */
 
 public class ExpenseCard extends CardWithList {
@@ -41,7 +41,7 @@ public class ExpenseCard extends CardWithList {
         CardHeader header = new CardHeader(getContext(), R.layout.card_table_header);
 
        float remainingAmount =  db.getMyTotalExpense();
-        header.setTitle("Total spent for this month "+remainingAmount); //should use R.string.
+        header.setTitle("Total spent for this month "+Common.CURRENCY+" "+remainingAmount); //should use R.string.
         return header;
     }
 

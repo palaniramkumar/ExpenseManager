@@ -15,8 +15,8 @@ Adapter
 - ListAdaptersForRadioButton
 - ListAdaptersForRadioModel
 
-db 
---
+DB
+----
 (this needs to be split in to master,category,budget,dateoperations,cashvault,trends(year progress)
 
 - DBHealper
@@ -83,3 +83,7 @@ Layouts: (need to find why do we have so much Layouts)
 - list_row_groups
 - numb_pad
 - toolbar_default
+
+Future Reference
+----------------
+- BudgetCard.java

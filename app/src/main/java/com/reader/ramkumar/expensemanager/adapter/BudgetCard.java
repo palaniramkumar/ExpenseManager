@@ -2,7 +2,6 @@ package com.reader.ramkumar.expensemanager.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,7 +17,6 @@ import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.internal.base.BaseCard;
 import it.gmariotti.cardslib.library.prototypes.CardWithList;
 import it.gmariotti.cardslib.library.prototypes.LinearListView;
 
@@ -27,9 +25,9 @@ import it.gmariotti.cardslib.library.prototypes.LinearListView;
  * Expense against budget in at home screen
  */
 
-public class ExpenseCard extends CardWithList {
+public class BudgetCard extends CardWithList {
     DBHelper db;
-    public ExpenseCard(Context context,DBHelper db) {
+    public BudgetCard(Context context, DBHelper db) {
         super(context);
         this.db=db;
     }
@@ -40,8 +38,8 @@ public class ExpenseCard extends CardWithList {
         //Add Header
         CardHeader header = new CardHeader(getContext(), R.layout.card_table_header);
 
-       float remainingAmount =  db.getMyTotalExpense();
-        header.setTitle("Total spent for this month "+remainingAmount); //should use R.string.
+       int remainingAmount = (int)(db.getBudget() - db.getMyTotalExpense());
+        header.setTitle("You have remaining "+remainingAmount+" Left"); //should use R.string.
         return header;
     }
 
@@ -58,13 +56,15 @@ public class ExpenseCard extends CardWithList {
         //Init the list
         List<ListObject> mObjects = new ArrayList<ListObject>();
 
-        Cursor cursor = db.getMyExpenseByCategory();
+        Cursor cursor = db.getBudgetSummary();
         //Add an object to the list
 
         while(cursor.moveToNext()){
+            int pending_amt= cursor.getInt(1)-cursor.getInt(2);
+            if(pending_amt==0 &&  cursor.getInt(1) ==0) continue; //code for skiping content disp when the budget is 0 and no expense is tracked so far in that department
             CostObject c = new CostObject(this);
             c.type = cursor.getString(0);
-            c.amount = cursor.getFloat(1);
+            c.amount = cursor.getInt(1)-cursor.getInt(2);
             c.trendIcon = R.drawable.ic_action_expand;
             c.setObjectId(c.type); //It can be important to set tyoe id, In future we shall show all the curresponding ID expense in history fragment
             mObjects.add(c);
@@ -105,7 +105,7 @@ public class ExpenseCard extends CardWithList {
 
         public String type;
         public int trendIcon;
-        public float amount;
+        public int amount;
         public String currencyUnit = Common.CURRENCY;//"₹"
 
         public CostObject(Card parentCard) {

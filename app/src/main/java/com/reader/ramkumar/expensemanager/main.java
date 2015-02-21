@@ -33,6 +33,7 @@ import com.reader.ramkumar.SMSparser.SMS;
 import com.reader.ramkumar.expensemanager.adapter.ExpenseCard;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.service.SummaryReceiver;
+import com.reader.ramkumar.expensemanager.util.Common;
 import com.reader.ramkumar.expensemanager.util.MonthOperations;
 import com.reader.ramkumar.expensemanager.util.TYPES;
 
@@ -254,6 +255,9 @@ public class main extends Fragment {
 
 
         card = new ExpenseCard(getActivity(),db);
+        
+        TextView amountHdr = (TextView) view.findViewById(R.id.txt_tot_amount);
+        amountHdr.setText(Common.CURRENCY+" "+db.getMyTotalExpense());
 
         btn_month = (Button) view.findViewById(R.id.btn_month);
         btn_year = (Button) view.findViewById(R.id.btn_year);

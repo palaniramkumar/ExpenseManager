@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -108,6 +110,11 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
         public ViewHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.item_name);
+            ImageView divider = new ImageView(itemView.getContext());
+            LinearLayout.LayoutParams lp =
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            divider.setLayoutParams(lp);
+            divider.setBackgroundColor(Color.CYAN);
         }
     }
 }

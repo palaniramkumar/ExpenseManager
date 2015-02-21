@@ -11,7 +11,7 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="129dp"
         android:height="100dp"
         android:autoText="false"
         android:paddingLeft="20dp"
@@ -20,13 +20,14 @@
         android:text="My Expense Buddy"
         android:textAlignment="center"
         android:textAllCaps="true"
-        android:textColor="@color/background_material_light"
+        android:background="@drawable/material_wp"
+
         android:textSize="20dp" />
 
     <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/drawerList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/myDrawerBackground"
         android:clickable="true"
         android:focusable="true"
@@ -34,4 +35,6 @@
         android:scrollbars="vertical">
 
     </android.support.v7.widget.RecyclerView>
+
+
 </LinearLayout>

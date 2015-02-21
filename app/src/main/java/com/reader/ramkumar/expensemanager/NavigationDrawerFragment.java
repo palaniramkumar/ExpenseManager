@@ -148,12 +148,13 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
 
     public List<NavigationItem> getMenu() {
         List<NavigationItem> items = new ArrayList<NavigationItem>();
-        items.add(new NavigationItem("Summary", getResources().getDrawable(R.drawable.ic_menu_check)));
-        items.add(new NavigationItem("Pending Approval", getResources().getDrawable(R.drawable.ic_menu_check)));
-        items.add(new NavigationItem("History", getResources().getDrawable(R.drawable.ic_menu_check)));
-        items.add(new NavigationItem("Category", getResources().getDrawable(R.drawable.ic_menu_check)));
-        items.add(new NavigationItem("DB Backup (Testing)", getResources().getDrawable(R.drawable.ic_menu_check)));
-        items.add(new NavigationItem("Delete DB (Testing)", getResources().getDrawable(R.drawable.ic_menu_check)));
+        items.add(new NavigationItem("Summary", getResources().getDrawable(R.drawable.ic_poll_grey600_24dp)));
+        items.add(new NavigationItem("User Action", getResources().getDrawable(R.drawable.ic_notifications_grey600_24dp)));
+        items.add(new NavigationItem("Transaction History", getResources().getDrawable(R.drawable.ic_textsms_grey600_24dp)));
+        items.add(new NavigationItem("Category Items", getResources().getDrawable(R.drawable.ic_iso_grey600_24dp)));
+        
+        items.add(new NavigationItem("DB Backup (Testing)", getResources().getDrawable(R.drawable.ic_file_upload_grey600_24dp)));
+        items.add(new NavigationItem("Delete DB (Testing)", getResources().getDrawable(R.drawable.ic_delete_grey600_24dp)));
         return items;
     }
 

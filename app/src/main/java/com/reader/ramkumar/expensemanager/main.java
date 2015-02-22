@@ -334,7 +334,7 @@ public class main extends Fragment {
         progress1.setMax(cash_vault);
         progress1.setProgress(cash_vault-cash_expense);
         TextView progress_caption =  (TextView)view.findViewById(R.id.txt_progress);
-        progress_caption.setText("You have Rs "+(cash_vault-cash_expense)+" left in your Cash Vault");
+        progress_caption.setText("You Can Spend Rs "+(cash_vault-cash_expense)+" from your Cash Vault");
 
     }
 

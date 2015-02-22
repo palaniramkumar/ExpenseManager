@@ -207,7 +207,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int getCashExpense(){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select sum(amount) from MASTER where trans_source='"+TYPES.TRANSACTION_SOURCE.CASH+"' and trans_type = '"+TYPES.TRANSACTION_TYPE.EXPENSE+"'" +
+        Cursor res =  db.rawQuery( "select sum(amount) from MASTER where trans_source='"+TYPES.TRANSACTION_SOURCE.CASH+"' and trans_type = '"+TYPES.TRANSACTION_TYPE.EXPENSE+"' and status = '"+TYPES.TRANSACTION_STATUS.APPROVED+"' " +
                 " and strftime('%m', `trans_time`) = '"+month+"' and strftime('%Y', `trans_time`) = '"+year+"'", null );
         if(res.moveToNext()){
             if(res.getString(0) == null) return 0;
@@ -220,7 +220,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public String getExpensebyDay(String day){
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql="select sum(amount) from master where strftime('%m', `trans_time`) = '"+month+"' and strftime('%d', `trans_time`) = '"+day+"' and  strftime('%Y', `trans_time`) = '"+year+"' group by strftime('%d', `trans_time`)";
+        String sql="select sum(amount) from master where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED +"' and strftime('%m', `trans_time`) = '"+month+"' and strftime('%d', `trans_time`) = '"+day+"' and  strftime('%Y', `trans_time`) = '"+year+"' group by strftime('%d', `trans_time`)";
         Cursor res =  db.rawQuery( sql, null );
         if(res.moveToNext()){
             if(res.getString(0) == null) return "0";

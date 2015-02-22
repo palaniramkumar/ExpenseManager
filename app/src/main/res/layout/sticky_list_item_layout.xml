@@ -15,7 +15,7 @@
     android:textAlignment="center"
     android:gravity="center_vertical|center_horizontal"
     android:height="50dp"
-    android:background="@color/accent_material_light"
+    android:background="@drawable/rounded_corner"
     android:layout_height="wrap_content"
     android:layout_gravity="start|left"
     android:textColor="@color/abc_primary_text_disable_only_material_dark"

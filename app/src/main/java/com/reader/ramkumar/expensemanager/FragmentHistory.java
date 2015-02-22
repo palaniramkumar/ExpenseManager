@@ -153,6 +153,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         listView = (StickyListHeadersListView) view.findViewById(R.id.sticky_list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -183,11 +184,21 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         else {
             Intent i = new Intent(view.getContext(), Expense_add_window.class);
             i.putExtra("RECID", click_id);
-            startActivityForResult(i, 201); //201 -Create: assume HTTP 201 for create request :). It can be any value
+            startActivityForResult(i, 200); //200 -OK: assume HTTP 200 for create request :). It can be any value
         }
-        Toast.makeText(getActivity(), "Item " + click_id + " clicked!", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "Item " + click_id + " clicked!", Toast.LENGTH_SHORT).show();
 
     }
+
+    // this code has no impact
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        // check if the request code is same as what is passed  here it is 2
+        Toast.makeText(getActivity(),"Results Invoked",Toast.LENGTH_SHORT);
+        init();
+    }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -221,20 +232,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
-    // this code has no impact
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-        // check if the request code is same as what is passed  here it is 2
-        Toast.makeText(getActivity(),"Results Invoked",Toast.LENGTH_SHORT);
-        if(requestCode==201)
-        {
-
-            adapter.notifyDataSetChanged();
-        }
-    }
-
+    
     void showDialogCatogories(final Context context, final int RECID){
         final AlertDialog.Builder dialog = new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT);
 
@@ -255,6 +253,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
                 if(lw.getCheckedItemPosition()>=0) {
                     Cursor checkedItem =(Cursor) lw.getAdapter().getItem(lw.getCheckedItemPosition());
                     db.updateMaster(RECID, db.MASTER_COLUMN_CATEGORY, checkedItem.getString(checkedItem.getColumnIndex("category")));
+                    init();
                 }
                 // TODO Auto-generated method stub
 
@@ -275,6 +274,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         dialog.setTitle("Choose the Category");
         dialog.show();
     }
+    //we may need to remove this code. No options for cash vault for now
     void showDialogConfirm(final Context context, final int RECID){
         new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT)
                 .setTitle("Delete entry")
@@ -282,6 +282,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         db.updateMasterStatus(RECID, TYPES.TRANSACTION_STATUS.PENDING.toString());
+                        init();
 
                     }
                 })

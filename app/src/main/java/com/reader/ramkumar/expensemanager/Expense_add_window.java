@@ -75,6 +75,7 @@ public class Expense_add_window extends ListActivity {
         trans_type = ((RadioGroup) findViewById(R.id.rdo_trans_type));
         edit_notes = ((EditText) findViewById(R.id.edit_notes));
         btn_date = ((Button) findViewById(R.id.btn_date));
+        Button btn_delete= ((Button) findViewById(R.id.btn_delete));
 
         //business logic
         onAcceptButtonClick();
@@ -86,6 +87,7 @@ public class Expense_add_window extends ListActivity {
             Cursor sms=db.getFromMasterByID(Integer.parseInt(recid));
             if(sms!=null){
                 sms.moveToFirst();
+                btn_delete.setVisibility(Button.VISIBLE);
                 ENTRY_TYPE="UPDATE";
                 System.out.println("Rec id: "+recid);
                 btn_amount.setText(sms.getString(1));
@@ -121,6 +123,7 @@ public class Expense_add_window extends ListActivity {
                 sms_id = sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_SMS_ID) );
                 place =sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_PLACE) );
                 geo_tag =sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_GEO_TAG) );
+                //btn_delete
 
             }
         }
@@ -139,6 +142,20 @@ public class Expense_add_window extends ListActivity {
             }
 
         });
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+               db.updateMaster(Integer.parseInt(recid),db.MASTER_COLUMN_STATUS,TYPES.TRANSACTION_STATUS.DELETED+"");
+                 /*returning results*/
+
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("result","Success");
+                setResult(RESULT_OK,returnIntent);
+               finish();
+            }
+
+        });
 
         edit_amount.setOnClickListener(new View.OnClickListener() {
 
@@ -150,11 +167,6 @@ public class Expense_add_window extends ListActivity {
         });
         if(adapter.getViewTypeCount()>0) //safe condition to avoid fc - Issue #30
             setListAdapter(adapter);
-
-      /*  Cursor cur = db.getAllFromMaster();
-        while(cur.moveToNext())
-            System.out.println(cur.getString(0)+":"+cur.getString(1)+":"+cur.getString(2)+":"+cur.getString(3)+":"+cur.getString(4)+":"+cur.getString(5)+":"+cur.getString(6)+":"+cur.getString(7)+":"+cur.getString(8)+":"+cur.getString(14)+":");
-    */
 
     }
 

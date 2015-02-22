@@ -221,6 +221,32 @@
         </FrameLayout>
 
     </TableRow>
+    <TableRow>
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <com.andexert.library.RippleView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/more2"
+                ripple:rv_centered="true">
+
+                <Button
+                    android:id="@+id/btn_delete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_column="0"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="0dp"
+                    android:visibility="invisible"
+                    android:background="@color/material_deep_teal_500"
+                    android:text="Delete" />
+            </com.andexert.library.RippleView>
+        </FrameLayout>
+
+    </TableRow>
 
 </TableLayout>
 

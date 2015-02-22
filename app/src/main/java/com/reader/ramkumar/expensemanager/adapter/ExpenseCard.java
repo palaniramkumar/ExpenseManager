@@ -41,7 +41,7 @@ public class ExpenseCard extends CardWithList {
         CardHeader header = new CardHeader(getContext(), R.layout.card_table_header);
 
        float remainingAmount =  db.getMyTotalExpense();
-        header.setTitle("This month total spent "+Common.CURRENCY+" "+remainingAmount); //should use R.string.
+        header.setTitle("The Expense for this month is "+Common.CURRENCY+" "+remainingAmount); //should use R.string.
         return header;
     }
 

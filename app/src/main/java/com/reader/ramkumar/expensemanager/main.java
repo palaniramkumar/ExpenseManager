@@ -386,7 +386,7 @@ public class main extends Fragment {
         int i=0;
         while(cursor.moveToNext()){
             yVals1.add(new Entry(cursor.getInt(1), i++));
-            xVals.add(cursor.getString(0));
+            xVals.add(cursor.getString(0).toUpperCase());
         }
 
 

@@ -154,8 +154,8 @@ public class main extends Fragment {
             protected Integer doInBackground(Void... params) {
                 //DBHelper db=new DBHelper(getActivity().getApplicationContext());
                 //db.deleteMaster(1);
-                if(getActivity()==null) return 0; //safe condition while rotating view. This throws null)
-                syncSMS(getActivity());
+                //if(getActivity()==null) return 0; //safe condition while rotating view. This throws null)
+                //syncSMS(getActivity());
 
                 return 0;
             }
@@ -246,6 +246,8 @@ public class main extends Fragment {
             editor.commit();
             System.out.println("Created New Endpoint");
             db.firstUser();
+            if(getActivity()!=null) //safe condition while rotating view. This throws null)
+                syncSMS(getActivity());
         }
 
         return view;

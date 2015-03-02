@@ -50,8 +50,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String CATEGORY_TABLE_NAME = "category";
 
     //{ "Food & Drinks", "Home", "Fuel" ,"Groceries","Travel","Health","Entertainment","Shopping","BILL","UNCATEGORIZED"};
-    public static final String UNCATEGORIZED = "UNCATEGORIZED";
-    public static final String BILL_PAYMENT = "BILL";
+    public static final String UNCATEGORIZED = "Uncategorized";
+    public static final String BILL_PAYMENT = "Bill";
     public static final String SHOPPING = "Shopping";
     public static final String TRAVEL = "Travel";
 
@@ -317,7 +317,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     public CharSequence [] getDefaultCategory(){
-        final CharSequence myList[] = { "Food & Drinks", "Home", "Fuel" ,"Groceries","Travel","Health","Entertainment","Shopping","BILL","UNCATEGORIZED"};
+        final CharSequence myList[] = { "Food & Drinks", "Home", "Fuel" ,"Groceries","Travel","Health","Entertainment","Shopping","Bill","Uncategorized" +
+                ""};
         return  myList;
     }
 
@@ -327,6 +328,13 @@ public class DBHelper extends SQLiteOpenHelper {
                 " and  strftime('%m', `trans_time`) = '"+month+"' and  strftime('%Y', `trans_time`) = '"+year+"'", null );
         if(res.moveToNext())return res.getFloat(0);
         else return 0;
+    }
+    public Cursor getMyExpenseByMonth(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        //Bug: should not use the year
+        Cursor res =  db.rawQuery( "select strftime('%m', `trans_time`), sum(amount) from MASTER where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"'" +
+                " and   strftime('%Y', `trans_time`) = '"+year+"' group by strftime('%m', `trans_time`)", null );
+        return res;
     }
     public Cursor getMyExpenseByCategory(){
         SQLiteDatabase db = this.getReadableDatabase();

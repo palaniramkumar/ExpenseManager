@@ -291,7 +291,7 @@ public class main extends Fragment {
 
         mChart.setDescription("");
 
-        mChart.setDrawYValues(true);
+        //mChart.setDrawYValues(true);
         mChart.setDrawCenterText(true);
 
         mChart.setDrawHoleEnabled(true);
@@ -299,7 +299,7 @@ public class main extends Fragment {
         mChart.setRotationAngle(0);
 
         // draws the corresponding description value into the slice
-        mChart.setDrawXValues(true);
+        //mChart.setDrawXValues(true);
 
         // enable rotation of the chart by touch
         mChart.setRotationEnabled(true);

@@ -40,7 +40,8 @@ import java.util.Calendar;
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks,
         FragmentHistory.OnFragmentInteractionListener, main.OnFragmentInteractionListener,
-        PendingApproval.OnFragmentInteractionListener,Categories.OnFragmentInteractionListener
+        PendingApproval.OnFragmentInteractionListener,Categories.OnFragmentInteractionListener,
+        ExpenseTrend.OnFragmentInteractionListener
         {
 
     private Toolbar mToolbar;
@@ -135,6 +136,15 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 setTitle("Summary");
                 break;
             case 1:
+                newFragment = new ExpenseTrend();
+                // Insert the fragment by replacing any existing fragment
+                fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_container, newFragment)
+                        .commit();
+                setTitle("Trend");
+                break;
+            case 2:
                 newFragment = new PendingApproval();
                 fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
@@ -142,7 +152,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                         .commit();
                 setTitle("Customize Category");
                 break;
-            case 2:
+            case 3:
                 newFragment = new FragmentHistory();
                 fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
@@ -150,7 +160,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                         .commit();
                 setTitle("History");
                 break;
-            case 3:
+            case 4:
                 newFragment = new Categories();
                 fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
@@ -158,18 +168,17 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                         .commit();
                 setTitle("Category List");
                 break;
-            case 4:
+            case 6:
                 try {
 
                     Toast.makeText(this, "Backup Completed" + copyfile(), Toast.LENGTH_SHORT).show();
-
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "Backup failed" , Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case 5:
+            case 7:
                 try {
 
                     new DBHelper(getApplicationContext()).deleteDB(getApplicationContext());

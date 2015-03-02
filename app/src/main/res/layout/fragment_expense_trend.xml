@@ -1,0 +1,32 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    tools:context="com.reader.ramkumar.expensemanager.ExpenseTrend">
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chart_trend"
+
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:layout_gravity="bottom"
+                android:layout_margin="10dp" />
+            <it.gmariotti.cardslib.library.view.CardViewNative
+                android:id="@+id/cardbudget"
+                android:layout_below="@id/chart_trend"
+                style="@style/card_external"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card:card_layout_resourceID="@layout/native_cardwithlist_layout" />
+            </RelativeLayout>
+        </ScrollView>
+
+</FrameLayout>

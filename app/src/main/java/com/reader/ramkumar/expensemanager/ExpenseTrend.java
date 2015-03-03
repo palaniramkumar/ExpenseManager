@@ -27,6 +27,7 @@ import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
 import it.gmariotti.cardslib.library.view.CardViewNative;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.reader.ramkumar.expensemanager.util.MonthOperations;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -114,7 +115,7 @@ public class ExpenseTrend extends Fragment {
         mChart.setDescription("");
 
         // enable value highlighting
-        mChart.setHighlightEnabled(true);
+        //mChart.setHighlightEnabled(true);
 
         // enable touch gestures
         //mChart.setTouchEnabled(true);
@@ -130,39 +131,42 @@ public class ExpenseTrend extends Fragment {
         mChart.setBackgroundColor(Color.WHITE);
 
         mChart.setDrawBarShadow(false);
-        mChart.setDrawValueAboveBar(true);
+        mChart.setDrawValueAboveBar(false);
+        
+       // mChart.setDrawValueAboveBar(true);
         
         XAxis x = mChart.getXAxis();
         x.setDrawGridLines(false);
+        x.setDrawLabels(true);
+        x.setDrawAxisLine(false);
+        x.setPosition(XAxis.XAxisPosition.BOTTOM);
+       
 
         //x.setTypeface(tf);
 
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setLabelCount(6);
+        leftAxis.setDrawLabels(false);
+        leftAxis.setDrawGridLines(false);
+        leftAxis.setDrawAxisLine(false);
 
         YAxis rightAxis = mChart.getAxisRight();
         rightAxis.setDrawGridLines(false);
-        rightAxis.setLabelCount(6);
+        rightAxis.setDrawAxisLine(false);
+        leftAxis.setDrawLabels(false);
 
         // add data
-        setData(45, 100);
+        setData();
 
-        mChart.getLegend().setEnabled(false);
+        mChart.getLegend().setEnabled(true);
 
         mChart.animateXY(2000, 2000);
-
-        Legend l = mChart.getLegend();
-        l.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
-        l.setForm(Legend.LegendForm.SQUARE);
-        l.setFormSize(9f);
-        l.setTextSize(11f);
-        l.setXEntrySpace(4f);
-        
+     
         // dont forget to refresh the drawing
         mChart.invalidate();
         
     }
-    private void setData(int count, float range) {
+    private void setData() {
 
         Cursor cur = db.getMyExpenseByMonth();
         
@@ -170,21 +174,22 @@ public class ExpenseTrend extends Fragment {
         ArrayList<BarEntry> vals1 = new ArrayList<BarEntry>();
         int i=0;
         while(cur.moveToNext()){
-            xVals.add(cur.getString(0));
+            xVals.add(MonthOperations.getMonthAsString(Integer.parseInt(cur.getString(0))-1));
             vals1.add(new BarEntry(cur.getFloat(1), i));
             i++;
         }
 
 
-        BarDataSet set1 = new BarDataSet(vals1, "DataSet");
+        BarDataSet set1 = new BarDataSet(vals1, "Months");
         set1.setBarSpacePercent(35f);
-
+/*
         ArrayList<Integer> colors = new ArrayList<Integer>();
         for (int c : ColorTemplate.COLORFUL_COLORS)
             colors.add(c);
 
          set1.setColors(colors);
-
+*/
+        set1.setColor(getResources().getColor(R.color.accent));
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         dataSets.add(set1);
 

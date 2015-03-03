@@ -122,7 +122,7 @@ public class NotificationCard extends CardWithList {
     @Override
     protected List<ListObject> initChildren() {
         db=new DBHelper(getContext());
-        final Cursor cursor= db.getFromMaster(db.MASTER_COLUMN_CATEGORY,db.UNCATEGORIZED); //last 30 days
+        final Cursor cursor= db.getFromMaster(db.MASTER_COLUMN_CATEGORY,db.UNCATEGORIZED,true); //last 30 days
         cursor.moveToFirst();
         //Init the list
         List<ListObject> mObjects = new ArrayList<ListObject>();

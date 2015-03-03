@@ -275,12 +275,17 @@ public class DBHelper extends SQLiteOpenHelper {
                 new String[] { Integer.toString(id) });
     }
 
-    public Cursor getFromMaster(String field,String value)
+
+    public Cursor getFromMaster(String field,String value,Boolean all)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from MASTER where "+field+" = '"+value+"' and status='"+TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' order by trans_time desc", null );
+        String sql = "select * from MASTER where "+field+" = '"+value+"' and status='"+TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' order by trans_time desc";
+        if(!all)
+            sql =  "select * from MASTER where "+field+" = '"+value+"' and status='"+TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' and  strftime('%m', `trans_time`) = '"+month+"' and  strftime('%Y', `trans_time`) = '"+year+"' order by trans_time desc";
+        Cursor res =  db.rawQuery(sql, null );
         return res;
     }
+    
     public Cursor getMasterByStatus(String status)
     {
         SQLiteDatabase db = this.getReadableDatabase();

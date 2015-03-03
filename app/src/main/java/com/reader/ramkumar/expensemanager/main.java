@@ -10,24 +10,36 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.ClipDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.Utils;
 import com.melnykov.fab.FloatingActionButton;
 import com.reader.ramkumar.SMSparser.SMS;
 import com.reader.ramkumar.expensemanager.adapter.ExpenseCard;
@@ -67,6 +79,7 @@ public class main extends Fragment {
     private String mParam1;
     private String mParam2;
     private PieChart mChart;
+    private HorizontalBarChart hChart;
     private OnFragmentInteractionListener mListener;
     private Handler mHandler = new Handler();
     private ProgressBar mProgress;
@@ -257,7 +270,7 @@ public class main extends Fragment {
 
 
         card = new ExpenseCard(getActivity(),db);
-        
+
         TextView amountHdr = (TextView) view.findViewById(R.id.txt_tot_amount);
         amountHdr.setText(Common.CURRENCY+" "+db.getMyTotalExpense());
 
@@ -338,6 +351,89 @@ public class main extends Fragment {
         TextView progress_caption =  (TextView)view.findViewById(R.id.txt_progress);
         progress_caption.setText("You Can Spend Rs "+(cash_vault-cash_expense)+" from your Cash Vault");
 
+        /* Dynamic Progress Bar Creation
+
+        // Define a shape with rounded corners
+        final float[] roundedCorners = new float[] { 5, 5, 5, 5, 5, 5, 5, 5 };
+        ShapeDrawable pgDrawable = new ShapeDrawable(new RoundRectShape(roundedCorners,     null, null));
+
+        // Sets the progressBar color
+        pgDrawable.getPaint().setColor(getActivity().getResources()
+                .getColor(R.color.material_blue_grey_800));
+
+        // Adds the drawable to your progressBar
+        ClipDrawable progress = new ClipDrawable(pgDrawable, Gravity.LEFT, ClipDrawable.HORIZONTAL);
+
+
+        LinearLayout progressLayout = (LinearLayout)view.findViewById(R.id.arrayBills);
+
+
+        TextView txtDyn =new TextView(getActivity());
+        txtDyn.setText("Airtel - Rs 2500");
+        txtDyn.setTextColor(getActivity().getResources()
+                .getColor(R.color.material_deep_teal_500));
+
+        progressLayout.addView(txtDyn);
+
+
+        ProgressBar progressDyn=new ProgressBar(getActivity(), null, android.R.attr.progressBarStyleHorizontal);
+
+        progressDyn.setProgressDrawable(progress);
+
+        // Sets a background to have the 3D effect
+        progressDyn.setBackgroundColor(getActivity().getResources()
+                .getColor(R.color.material_blue_grey_950));
+
+        progressDyn.setVisibility(View.VISIBLE);
+        progressDyn.setIndeterminate(false);
+        progressDyn.setMax(100);
+        progressDyn.setProgress(80);
+        progressLayout.addView(progressDyn);
+        */
+
+        hChart = (HorizontalBarChart) view.findViewById(R.id.chart_horz);
+
+        hChart.setDrawBarShadow(false);
+
+        hChart.setDrawValueAboveBar(true);
+
+        hChart.setDescription("");
+
+        // if more than 60 entries are displayed in the chart, no values will be
+        // drawn
+        hChart.setMaxVisibleValueCount(60);
+
+        // scaling can now only be done on x- and y-axis separately
+        hChart.setPinchZoom(false);
+
+        // draw shadows for each bar that show the maximum value
+        // mChart.setDrawBarShadow(true);
+
+        // mChart.setDrawXLabels(false);
+
+        hChart.setDrawGridBackground(false);
+
+        XAxis xl = hChart.getXAxis();
+        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xl.setDrawAxisLine(false);
+        xl.setDrawGridLines(false);
+        xl.setGridLineWidth(0.3f);
+        // xl.setEnabled(false);
+
+        YAxis yl = hChart.getAxisLeft();
+        yl.setDrawAxisLine(false);
+        yl.setDrawGridLines(false);
+        yl.setGridLineWidth(0.3f);
+        yl.setDrawLabels(false);
+
+        YAxis yr = hChart.getAxisRight();
+        yr.setDrawAxisLine(false);
+        yr.setDrawGridLines(false);
+        yl.setDrawLabels(false);
+
+        horizontal_setData(12, 50);
+        hChart.animateY(2500);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -375,6 +471,37 @@ public class main extends Fragment {
         mListener = null;
     }
 
+    private void horizontal_setData(int count, float range) {
+        
+        Cursor cur = db.getFromMaster(db.MASTER_COLUMN_CATEGORY,db.BILL_PAYMENT,false);
+
+        ArrayList<String> xVals = new ArrayList<String>();
+        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+        int i=0;
+        while(cur.moveToNext()){
+            xVals.add(cur.getString(cur.getColumnIndex(db.MASTER_COLUMN_NOTES)));
+            yVals1.add(new BarEntry(cur.getFloat(cur.getColumnIndex(db.MASTER_COLUMN_AMOUNT)), i));
+            i++;
+        }
+        
+         BarDataSet set1 = new BarDataSet(yVals1, "DataSet");
+        set1.setBarSpacePercent(35f);
+
+        ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
+        ArrayList<Integer> colors = new ArrayList<Integer>();
+        for (int c : ColorTemplate.COLORFUL_COLORS)
+            colors.add(c);
+        set1.setColors(colors);
+        dataSets.add(set1);
+
+        BarData data = new BarData(xVals, dataSets);
+        data.setValueTextSize(10f);
+
+
+        hChart.setData(data);
+        hChart.invalidate();
+    }
+
     private void setData(int count, float range) {
 
         float mult = range;
@@ -397,7 +524,7 @@ public class main extends Fragment {
         for (int i = 0; i < count + 1; i++)
             xVals.add(mType[i % mType.length]);
         */
-        PieDataSet set1 = new PieDataSet(yVals1, "Expense Distribution");
+        PieDataSet set1 = new PieDataSet(yVals1, "");
         set1.setSliceSpace(3f);
 
         // add a lot of colors

@@ -35,12 +35,25 @@ public class BudgetCard extends CardWithList {
     @Override
     protected CardHeader initCardHeader() {
 
-        //Add Header
-        CardHeader header = new CardHeader(getContext(), R.layout.card_table_header);
+        return new CustomHeader(getContext());
+    }
+    public class CustomHeader extends CardHeader {
 
-       int remainingAmount = (int)(db.getBudget() - db.getMyTotalExpense());
-        header.setTitle("You have remaining "+remainingAmount+" Left"); //should use R.string.
-        return header;
+        public CustomHeader(Context context) {
+            super(context, R.layout.card_header_inner);
+        }
+
+        @Override
+        public void setupInnerViewElements(ViewGroup parent, View view) {
+
+            int remainingAmount = (int)(db.getBudget() - db.getMyTotalExpense());
+            if (view != null) {
+                TextView t1 = (TextView) view.findViewById(R.id.text_exmple_card1);
+                if (t1 != null)
+                    t1.setText("You have remaining "+remainingAmount+" Left");
+
+            }
+        }
     }
 
     @Override

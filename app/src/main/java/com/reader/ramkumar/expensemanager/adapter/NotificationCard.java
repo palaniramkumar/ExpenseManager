@@ -41,13 +41,25 @@ public class NotificationCard extends CardWithList {
     @Override
     protected CardHeader initCardHeader() {
 
-        //Add Header
-        CardHeader header = new CardHeader(getContext(), R.layout.card_table_header);
-
-        header.setTitle("You have few Pending Approvals"); //should use R.string.
-        return header;
+        return new CustomHeader(getContext());
     }
+    public class CustomHeader extends CardHeader {
 
+        public CustomHeader(Context context) {
+            super(context, R.layout.card_header_inner);
+        }
+
+        @Override
+        public void setupInnerViewElements(ViewGroup parent, View view) {
+
+            if (view != null) {
+                TextView t1 = (TextView) view.findViewById(R.id.text_exmple_card1);
+                if (t1 != null)
+                    t1.setText("You have few Pending Approvals");
+
+            }
+        }
+    }
     @Override
     protected void initCard() {
         //Set the whole card as swipeable

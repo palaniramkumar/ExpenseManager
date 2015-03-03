@@ -36,7 +36,7 @@
             android:paddingBottom="10dp"
             android:paddingTop="5dp"
             android:layout_toRightOf="@+id/txt_desc"
-            android:textColor="@color/accent_pressed"
+            android:textColor="@color/myAccentColor"
             />
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/txt_desc"

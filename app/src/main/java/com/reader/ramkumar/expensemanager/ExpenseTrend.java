@@ -132,7 +132,7 @@ public class ExpenseTrend extends Fragment {
 
         mChart.setDrawBarShadow(false);
         mChart.setDrawValueAboveBar(false);
-        
+
        // mChart.setDrawValueAboveBar(true);
         
         XAxis x = mChart.getXAxis();
@@ -189,7 +189,7 @@ public class ExpenseTrend extends Fragment {
 
          set1.setColors(colors);
 */
-        set1.setColor(getResources().getColor(R.color.accent));
+        set1.setColor(getResources().getColor(R.color.myAccentColor));
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         dataSets.add(set1);
 

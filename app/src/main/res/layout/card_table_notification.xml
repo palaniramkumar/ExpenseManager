@@ -66,7 +66,7 @@
                 android:paddingLeft="10dp"
                 android:paddingBottom="10dp"
                 android:paddingTop="5dp"
-                android:textColor="@color/primary"
+                android:textColor="@color/myPrimaryDarkColor"
                 android:layout_toRightOf="@+id/txt_desc"
                 />
             <TextView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -74,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Online Transaction for food"
-                android:textColor="@color/accent"
+                android:textColor="@color/myAccentColor"
                 android:paddingLeft="10dp"
                 />
 

@@ -12,13 +12,27 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/myPrimaryDarkColor"
+                android:textColor="@color/myLightPrimaryColor"
+                android:textAlignment="center"
+                android:padding="8dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="Expense Trend"
+                android:id="@+id/dummy_name"
+                android:textSize="@dimen/card_header_native_simple_title_text_size"
+                />
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/chart_trend"
-
+                android:layout_below="@id/dummy_name"
                 android:layout_width="match_parent"
                 android:layout_height="240dp"
                 android:layout_gravity="bottom"
-                android:layout_margin="10dp" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
             <it.gmariotti.cardslib.library.view.CardViewNative
                 android:id="@+id/cardbudget"
                 android:layout_below="@id/chart_trend"

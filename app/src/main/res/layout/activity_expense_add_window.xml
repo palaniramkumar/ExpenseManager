@@ -38,7 +38,7 @@
                     android:layout_column="0"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="0dp"
-                    android:background="@color/accent"
+                    android:background="@color/myAccentColor"
                     android:text="Decline" />
             </com.andexert.library.RippleView>
         </FrameLayout>

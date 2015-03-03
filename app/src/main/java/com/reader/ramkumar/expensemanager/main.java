@@ -343,11 +343,19 @@ public class main extends Fragment {
         int cash_vault = db.getCashVault();
         int cash_expense = db.getCashExpense();//db.getCashExpense();
         System.out.println("Cash Expense ="+cash_expense+", Cash Vault = "+cash_vault);
-        RoundCornerProgressBar progress1 = (RoundCornerProgressBar) view.findViewById(R.id.progress_1);
-        progress1.setProgressColor(Color.WHITE);
-        progress1.setBackgroundColor(Color.parseColor("#303f9f"));
-        progress1.setMax(cash_vault);
-        progress1.setProgress(cash_vault-cash_expense);
+        final float[] roundedCorners = new float[] { 5, 5, 5, 5, 5, 5, 5, 5 };
+        ShapeDrawable pgDrawable = new ShapeDrawable(new RoundRectShape(roundedCorners,     null, null));
+
+        // Sets the progressBar color
+        pgDrawable.getPaint().setColor(getActivity().getResources()
+                .getColor(R.color.myWindowBackground));
+        ProgressBar progress_bar = (ProgressBar) view.findViewById(R.id.progress_1);
+        ClipDrawable progress = new ClipDrawable(pgDrawable, Gravity.LEFT, ClipDrawable.HORIZONTAL);
+        progress_bar.setProgressDrawable(progress);
+        progress_bar.setBackgroundColor(getActivity().getResources()
+                .getColor(R.color.myLightPrimaryColor));
+        progress_bar.setMax(cash_vault);
+        progress_bar.setProgress(cash_vault - cash_expense);
         TextView progress_caption =  (TextView)view.findViewById(R.id.txt_progress);
         progress_caption.setText("You Can Spend Rs "+(cash_vault-cash_expense)+" from your Cash Vault");
 

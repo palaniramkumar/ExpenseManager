@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:text="&lt;"
-                    android:textColor="@android:color/holo_blue_light" />
+                    android:textColor="@color/myLightPrimaryColor" />
 
 
                 <Button
@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:text="&gt;"
-                    android:textColor="@android:color/holo_blue_light" />
+                    android:textColor="@color/myLightPrimaryColor" />
 
             </LinearLayout>
 
@@ -107,9 +107,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/chart"
+                android:background="@color/background_floating_material_light"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:background="@color/primary"
                 android:padding="16dp">
 
                 <TextView
@@ -117,17 +117,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="4dp"
+                    android:textColor="@color/myTextSecondaryColor"
                     android:text="You have Rs 2,600 left in your Cash Vault"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
-                <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+                <ProgressBar
                     android:id="@+id/progress_1"
-
+                    style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:layout_below="@id/txt_progress"
-                    app:backgroundPadding="5dp" />
+                   />
             </RelativeLayout>
 
             <LinearLayout
@@ -138,7 +139,17 @@
                 android:layout_margin="8dp"
                 android:background="@color/background_floating_material_light"
                 android:orientation="vertical"
-                android:padding="16dp">
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@color/myPrimaryDarkColor"
+                    android:textColor="@color/myLightPrimaryColor"
+                    android:textAlignment="center"
+                    android:padding="8dp"
+                    android:text="Bill Payment"
+                    android:textSize="@dimen/card_header_native_simple_title_text_size"
+                    />
                 <com.github.mikephil.charting.charts.HorizontalBarChart
                     android:id="@+id/chart_horz"
                     android:layout_width="match_parent"
@@ -150,11 +161,13 @@
 
             <it.gmariotti.cardslib.library.view.CardViewNative
                 android:id="@+id/carddemo"
-                style="@style/card_external"
+                style="@style/card.native.header_outer_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/arrayBills"
-                card:card_layout_resourceID="@layout/native_cardwithlist_layout" />
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                card:card_layout_resourceID="@layout/card_native_card_layout" />
         </RelativeLayout>
     </ScrollView>
 
@@ -178,7 +191,7 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:src="@drawable/ic_action_edit"
-        fab:fab_colorNormal="@color/accent"
-        fab:fab_colorPressed="@color/primary_pressed"
-        fab:fab_colorRipple="@color/ripple" />
+        fab:fab_colorNormal="@color/myAccentColor"
+        fab:fab_colorPressed="@color/myPrimaryDarkColor"
+        fab:fab_colorRipple="@color/myTextSecondaryColor" />
 </FrameLayout>

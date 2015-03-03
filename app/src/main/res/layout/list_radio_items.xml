@@ -16,8 +16,8 @@
         android:textAlignment="center"
         android:gravity="center_vertical|center_horizontal"
         android:textSize="32sp"
-        android:background="@color/primary"
-        android:text=""></TextView>
+        android:background="@color/myPrimaryColor"
+        android:text=""/>
 
     <TextView
         android:paddingLeft="10dp"
@@ -26,7 +26,7 @@
         android:gravity="center_vertical"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text=""></TextView>
+        android:text=""/>
 
     <RadioButton
         android:id="@+id/radio"
@@ -37,5 +37,5 @@
         android:layout_marginLeft="4px"
         android:gravity="center_vertical|center_horizontal"
         android:background="@drawable/abc_ab_share_pack_holo_dark"
-        android:layout_marginRight="10px"></RadioButton>
+        android:layout_marginRight="10px"/>
 </LinearLayout>

@@ -49,7 +49,7 @@
                     android:id="@+id/txt_category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/primary"
+                    android:textColor="@color/myPrimaryDarkColor"
                     android:textSize="17sp"
                     tools:text="London" />
             </FrameLayout>
@@ -78,7 +78,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:textColor="@color/accent"
+                    android:textColor="@color/myAccentColor"
                     android:textSize="16sp"
                     tools:text="Rs" />
 
@@ -94,7 +94,7 @@
                     android:layout_width="wrap_content"
                     android:gravity="left"
                     android:layout_height="wrap_content"
-                     android:textColor="@color/accent"
+                     android:textColor="@color/myAccentColor"
                     android:textSize="20sp"
                     tools:text="0" />
             </FrameLayout>

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.InputType;
@@ -44,13 +45,25 @@ public class CategoryCard extends CardWithList {
 
     @Override
     protected CardHeader initCardHeader() {
+        return new CustomHeader(getContext());
+    }
+    public class CustomHeader extends CardHeader {
 
-        //Add Header
-        CardHeader header = new CardHeader(getContext(), R.layout.card_table_header);
+        public CustomHeader(Context context) {
+            super(context, R.layout.card_header_inner);
+        }
 
-        int totalBudget = db.getBudget();
-        header.setTitle("Total Budget: "+totalBudget); //should use R.string.
-        return header;
+        @Override
+        public void setupInnerViewElements(ViewGroup parent, View view) {
+
+            int totalBudget = db.getBudget();
+            if (view != null) {
+                TextView t1 = (TextView) view.findViewById(R.id.text_exmple_card1);
+                if (t1 != null)
+                    t1.setText("Total Budget: "+totalBudget);
+
+            }
+        }
     }
 
     @Override
@@ -211,7 +224,7 @@ public class CategoryCard extends CardWithList {
                     UndoBar undoBar = new UndoBar.Builder((Activity) getContext())//
                             .setMessage("Successfully Deleted ")
                             .setStyle(UndoBar.Style.LOLLIPOP)//Undo bar style
-                            .setUndoColor(getContext().getResources().getColor(R.color.accent))
+                            .setUndoColor(getContext().getResources().getColor(R.color.myAccentColor))
                             .setAlignParentBottom(true)
                             .setUndoToken(new Parcelable() {
                                 @Override

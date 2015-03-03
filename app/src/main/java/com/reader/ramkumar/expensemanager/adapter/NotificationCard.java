@@ -248,7 +248,7 @@ public class NotificationCard extends CardWithList {
                     UndoBar undoBar = new UndoBar.Builder((Activity) getContext())//
                             .setMessage("Successfully Deleted ")//
                             .setStyle(UndoBar.Style.LOLLIPOP)//
-                            .setUndoColor(getContext().getResources().getColor(R.color.accent))
+                            .setUndoColor(getContext().getResources().getColor(R.color.myAccentColor))
                             .setAlignParentBottom(true)
                             .setUndoToken(new Parcelable() {
                                 @Override

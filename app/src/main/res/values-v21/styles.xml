@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/myAccentColor</item>
         <item name="android:textColorPrimary">@color/myTextPrimaryColor</item>
         <!--item name="android:navigationBarColor">@color/myNavigationColor</item-->
-        <item name="android:navigationBarColor">@color/myAccentColor</item>
+        <item name="android:navigationBarColor">@color/myPrimaryColor</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>

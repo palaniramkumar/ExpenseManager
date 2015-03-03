@@ -49,7 +49,7 @@
             android:gravity="center"
             android:hint="0.00"
             android:textColorHint="@color/button_material_dark"
-            android:textColor="@color/accent"
+            android:textColor="@color/myAccentColor"
             android:textSize="22dp" />
 
     </LinearLayout>
@@ -180,7 +180,7 @@
                     android:background="@color/material_deep_teal_500"
                     android:layout_height="60dp"
                     android:text="C"
-                    android:textColor="@color/accent"
+                    android:textColor="@color/myAccentColor"
                     android:layout_margin="0dp"
                     android:textSize="20dp" />
 

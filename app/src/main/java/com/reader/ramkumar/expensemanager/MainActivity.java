@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.widget.DrawerLayout;
@@ -18,11 +19,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.melnykov.fab.FloatingActionButton;
+import com.reader.ramkumar.SMSparser.SMS;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.service.SMSListener;
 import com.reader.ramkumar.expensemanager.service.SummaryReceiver;
@@ -45,8 +49,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         {
 
     private Toolbar mToolbar;
-            ViewGroup mContainer;
     private NavigationDrawerFragment mNavigationDrawerFragment;
+    Fragment newFragment = null;
+    ViewGroup mContainer;
+    FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,13 +126,20 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public void aboutApp(MenuItem item){
         Toast.makeText(this, "Hello World", Toast.LENGTH_LONG).show();
     }
+    public void refreshSMS(MenuItem item){
 
-    private void selectItem(int position) {
+        class MyAsyncTask extends AsyncTask<Void, Void, Integer> {
 
-        Fragment newFragment = null;
-        FragmentManager fragmentManager;
-        switch (position) {
-            case 0:
+            @Override
+            protected void onPreExecute() {
+
+                Fragment frag = getFragmentManager().findFragmentById(R.id.frame_container);
+                if(frag!=null)
+                    ((ProgressBar) frag.getView().findViewById(R.id.loading_spinner)).setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            protected void onPostExecute(Integer result) {
                 newFragment = new main();
                 // Insert the fragment by replacing any existing fragment
                 fragmentManager = getFragmentManager();
@@ -134,6 +147,38 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                         .replace(R.id.frame_container, newFragment)
                         .commit();
                 setTitle("Summary");
+                
+                //invalidate all UI object
+                TextView header = (TextView)findViewById(R.id.banner_header);
+                header.setText("");
+                TextView progress_txt = (TextView)findViewById(R.id.txt_progress);
+                progress_txt.setText("");
+                ProgressBar master_progressBar = (ProgressBar)findViewById(R.id.loading_spinner) ;
+                master_progressBar.setVisibility(View.INVISIBLE);
+                Fragment frag = getFragmentManager().findFragmentById(R.id.frame_container);
+                if(frag!=null)
+                    frag.getView().findViewById(R.id.loading_spinner).setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            protected Integer doInBackground(Void... params) {
+                SMS.syncSMS(getApplicationContext());
+                return 0;
+            }
+
+        }
+        new MyAsyncTask().execute();
+        
+
+        
+    }
+
+    private void selectItem(int position) {
+
+
+        switch (position) {
+            case 0:
+                refreshSMS(null);
                 break;
             case 1:
                 newFragment = new ExpenseTrend();

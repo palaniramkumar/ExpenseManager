@@ -23,11 +23,28 @@
             android:layout_height="wrap_content" />
         <TextView
             android:layout_width="match_parent"
+            android:id="@+id/banner_header"
             android:background="?attr/colorPrimary"
+            android:text="MyWallet"
+            android:gravity="center_horizontal|center_vertical"
+            android:textSize="@dimen/abc_text_size_headline_material"
+            android:layout_height="120dp" />
+        <ProgressBar android:id="@+id/loading_spinner"
+            style="?android:progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+        <TextView
+            android:layout_width="match_parent"
+            android:textColor="@color/myPrimaryDarkColor"
+            android:id="@+id/txt_progress"
+            android:text="Please wait... We are refreshing your Data"
+            android:gravity="center_horizontal|center_vertical"
+            android:textSize="18dp"
             android:layout_height="120dp" />
 
-
     </LinearLayout>
+
 
     <FrameLayout
         android:id="@+id/frame_container"
@@ -47,4 +64,7 @@
         android:layout_gravity="start"
         app:layout="@layout/fragment_navigation_drawer"
         tools:layout="@layout/fragment_navigation_drawer" />
+
+   
+    
 </android.support.v4.widget.DrawerLayout>

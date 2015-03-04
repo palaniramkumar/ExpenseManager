@@ -76,7 +76,7 @@ public class main extends Fragment {
     private HorizontalBarChart hChart;
     private OnFragmentInteractionListener mListener;
     private Handler mHandler = new Handler();
-    private ProgressBar mProgress;
+    public ProgressBar mProgress;
     CardViewNative cardView;
     private DBHelper db;
     private View view;
@@ -137,38 +137,11 @@ public class main extends Fragment {
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = mInflater.inflate(R.layout.fragment_main, mContainer, false);
 
-
-        //check for new SMS
         mProgress= (ProgressBar)view.findViewById(R.id.loading_spinner) ;
+        mProgress.setVisibility(View.INVISIBLE);
         //Set card in the cardView
         cardView = (CardViewNative) view.findViewById(R.id.carddemo); //if you want list, pls change the xml to "CardListView"
 
-
-        class MyAsyncTask extends AsyncTask<Void, Void, Integer> {
-
-
-            @Override
-            protected void onPreExecute() {
-                mProgress.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            protected void onPostExecute(Integer result) {
-                mProgress.setVisibility(View.GONE);
-            }
-
-            @Override
-            protected Integer doInBackground(Void... params) {
-                //DBHelper db=new DBHelper(getActivity().getApplicationContext());
-                //db.deleteMaster(1);
-                //if(getActivity()==null) return 0; //safe condition while rotating view. This throws null)
-                //syncSMS(getActivity());
-
-                return 0;
-            }
-
-        }
-        new MyAsyncTask().execute();
         init();
 
         //fab
@@ -254,7 +227,7 @@ public class main extends Fragment {
             System.out.println("Created New Endpoint");
             db.firstUser();
             if(getActivity()!=null) //safe condition while rotating view. This throws null)
-                syncSMS(getActivity());
+                SMS.syncSMS(getActivity());
         }
 
         return view;
@@ -588,42 +561,5 @@ public class main extends Fragment {
     }
 
 
-    protected boolean syncSMS(Context context) {
 
-
-
-        DBHelper db=new DBHelper(context);
-        int last_sms_id = db.getLastSMSID();
-
-        Uri uriSms = Uri.parse("content://sms/inbox");
-        final Cursor cursor =context.getContentResolver().query(uriSms, new String[]{"_id", "address", "date", "body"},"_id > "+last_sms_id,null,null);
-
-        //cursor.moveToFirst();
-
-
-        while  (cursor.moveToNext())
-        {
-            System.out.println("last id: "+last_sms_id+"; smsid:"+cursor.getString(0));
-            String address = cursor.getString(1);
-            String body = cursor.getString(3);
-
-            /* custom code*/
-            final SMS s= new SMS();
-            s.address=address;
-            s.text=body;
-            s.id=cursor.getString(0);
-            s.when=db.getDroidDate(cursor.getLong(2) /1000);
-
-             /* this may need to tune further for better accurecy */
-            if(s.findSMS() && s.amount!=null) {
-                //Add an object to the list
-                System.out.println("when = "+s.when);
-                db.insertMaster(s.amount, s.bankName, s.trans_src, s.trans_type,s.expanse_category, s.where, s.id, s.where, s.when,
-                        db.getNow(), s.place, null, null, null,TYPES.TRANSACTION_STATUS.APPROVED.toString());
-            }
-        }
-        db.close();
-        return true;
-
-    }
 }

@@ -1,6 +1,10 @@
 package com.reader.ramkumar.SMSparser;
 
 
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.TYPES;
 
@@ -59,6 +63,43 @@ public class SMS {
         else
             return false;
     }
+    public static boolean syncSMS(Context context) {
 
+
+
+        DBHelper db=new DBHelper(context);
+        int last_sms_id = db.getLastSMSID();
+
+        Uri uriSms = Uri.parse("content://sms/inbox");
+        final Cursor cursor =context.getContentResolver().query(uriSms, new String[]{"_id", "address", "date", "body"},"_id > "+last_sms_id,null,null);
+
+        //cursor.moveToFirst();
+
+
+        while  (cursor.moveToNext())
+        {
+            System.out.println("last id: "+last_sms_id+"; smsid:"+cursor.getString(0));
+            String address = cursor.getString(1);
+            String body = cursor.getString(3);
+
+            /* custom code*/
+            final SMS s= new SMS();
+            s.address=address;
+            s.text=body;
+            s.id=cursor.getString(0);
+            s.when=db.getDroidDate(cursor.getLong(2) /1000);
+
+             /* this may need to tune further for better accurecy */
+            if(s.findSMS() && s.amount!=null) {
+                //Add an object to the list
+                System.out.println("when = "+s.when);
+                db.insertMaster(s.amount, s.bankName, s.trans_src, s.trans_type,s.expanse_category, s.where, s.id, s.where, s.when,
+                        db.getNow(), s.place, null, null, null,TYPES.TRANSACTION_STATUS.APPROVED.toString());
+            }
+        }
+        db.close();
+        return true;
+
+    }
 
 }

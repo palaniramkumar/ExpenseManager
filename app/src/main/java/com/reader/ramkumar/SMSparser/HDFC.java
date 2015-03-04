@@ -19,6 +19,8 @@ import java.util.regex.Pattern;
  Thank you for using your HDFC Bank DEBIT/ATM Card ending (.*?) for Rs. (.*?) towards ATM WDL in (.*?) at (.*?) on 2015-01-02:16:04:16.
 
  Your BANK a/c xxxx (.*?) will be debited for Rs (.*?) towards (.*?) on 08/JAN/2015 .
+
+ 01-03-2015: Thank you for using your HDFC Bank DEBIT/ATM Card ending 4046 for Rs. 15000.00 towards ATM WDL in BANGALORE-URB at +MICO LAYOUT OATM on 2015-02-01:17:45:00.
  */
 public class HDFC {
     /*this class variables and name needs to be same for all other banks*/
@@ -32,7 +34,7 @@ public class HDFC {
     /*sms template needs to be parsed */
     final String [][] template ={
             {"Rs.(.*?) was spent on ur HDFCBank CREDIT Card ending (.*?) on (.*?) at (.*?).Avl", TYPES.TRANSACTION_TYPE.EXPENSE.toString(),TYPES.TRANSACTION_SOURCE.CREDIT_CARD.toString()},
-            {"An amount of Rs.(.*?) has been debited from your account  number (.*?) for (.*?) done using HDFC Bank NetBanking",TYPES.TRANSACTION_TYPE.EXPENSE.toString(),TYPES.TRANSACTION_SOURCE.NET_BANKING.toString()},
+            {"An amount of Rs.(.*?) has been debited from your account number (.*?) for (.*?) done using HDFC Bank NetBanking",TYPES.TRANSACTION_TYPE.EXPENSE.toString(),TYPES.TRANSACTION_SOURCE.NET_BANKING.toString()},
             {"INR (.*?) deposited to A/c No (.*?)",TYPES.TRANSACTION_TYPE.INCOME.toString(),TYPES.TRANSACTION_SOURCE.NET_BANKING.toString()},
             {"Thank you for using your HDFC Bank DEBIT/ATM Card ending (.*?) for Rs. (.*?) towards ATM WDL in (.*?) at (.*?) on (.*?)",TYPES.TRANSACTION_TYPE.CASH_VAULT.toString(),TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString()},
             {"Your BANK a/c xxxx (.*?) will be debited for Rs (.*?) towards (.*?) on (.*?)",TYPES.TRANSACTION_TYPE.EXPENSE.toString(),TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString()}

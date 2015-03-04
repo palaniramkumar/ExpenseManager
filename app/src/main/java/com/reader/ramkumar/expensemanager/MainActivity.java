@@ -134,8 +134,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             protected void onPreExecute() {
 
                 Fragment frag = getFragmentManager().findFragmentById(R.id.frame_container);
-                if(frag!=null)
-                    ((ProgressBar) frag.getView().findViewById(R.id.loading_spinner)).setVisibility(View.VISIBLE);
+                if(frag!=null && (frag.getView()!=null)) {
+                    ProgressBar progressBar = ((ProgressBar) frag.getView().findViewById(R.id.loading_spinner));
+                    if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -156,8 +158,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 ProgressBar master_progressBar = (ProgressBar)findViewById(R.id.loading_spinner) ;
                 master_progressBar.setVisibility(View.INVISIBLE);
                 Fragment frag = getFragmentManager().findFragmentById(R.id.frame_container);
-                if(frag!=null)
-                    frag.getView().findViewById(R.id.loading_spinner).setVisibility(View.INVISIBLE);
+                if(frag!=null  && (frag.getView()!=null)) {
+                    ProgressBar progressBar = ((ProgressBar) frag.getView().findViewById(R.id.loading_spinner));
+                    if (progressBar != null) progressBar.setVisibility(View.INVISIBLE);
+                }
             }
 
             @Override

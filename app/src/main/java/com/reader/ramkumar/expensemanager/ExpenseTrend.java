@@ -13,11 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.reader.ramkumar.expensemanager.adapter.BudgetCard;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 
@@ -47,11 +45,9 @@ public class ExpenseTrend extends Fragment {
     private String mParam1;
     private String mParam2;
     ViewGroup mContainer;
-    Button btn_month;
-    Button btn_year;
     DBHelper db;
     View view;
-    BarChart mChart;
+    BarChart mChart,dChart;
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -109,7 +105,7 @@ public class ExpenseTrend extends Fragment {
         else
             cardView.replaceCard(card);
         
-        //chart creation
+        //month chart creation
         mChart = (BarChart) view.findViewById(R.id.chart_trend);
         // no description text
         mChart.setDescription("");
@@ -156,7 +152,7 @@ public class ExpenseTrend extends Fragment {
         leftAxis.setDrawLabels(false);
 
         // add data
-        setData();
+        monthTrendData();
 
         mChart.getLegend().setEnabled(true);
 
@@ -165,8 +161,56 @@ public class ExpenseTrend extends Fragment {
         // dont forget to refresh the drawing
         mChart.invalidate();
         
+        
+        //day trend graph started here
+        dChart = (BarChart) view.findViewById(R.id.chart_monthTrend);
+        // no description text
+        dChart.setDescription("");
+
+        dChart.setPinchZoom(false);
+
+        dChart.setDrawGridBackground(false);
+        dChart.setBackgroundColor(Color.WHITE);
+
+        dChart.setDrawBarShadow(false);
+        dChart.setDrawValueAboveBar(true);
+
+        // mChart.setDrawValueAboveBar(true);
+
+        x = dChart.getXAxis();
+        x.setDrawGridLines(false);
+        x.setDrawLabels(true);
+        x.setDrawAxisLine(false);
+        x.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+
+        //x.setTypeface(tf);
+
+        leftAxis = dChart.getAxisLeft();
+        leftAxis.setLabelCount(6);
+        leftAxis.setDrawLabels(false);
+        leftAxis.setDrawGridLines(false);
+        leftAxis.setDrawAxisLine(false);
+
+        rightAxis = dChart.getAxisRight();
+        rightAxis.setDrawGridLines(false);
+        rightAxis.setDrawAxisLine(false);
+        leftAxis.setDrawLabels(false);
+
+        // add data
+        dayTrendData();
+
+        dChart.getLegend().setEnabled(true);
+
+        dChart.animateXY(2000, 2000);
+
+        // dont forget to refresh the drawing
+        dChart.invalidate();
+        
+        
+        
     }
-    private void setData() {
+    private void monthTrendData() {
 
         Cursor cur = db.getMyExpenseByMonth();
         
@@ -197,6 +241,38 @@ public class ExpenseTrend extends Fragment {
         data.setValueTextSize(10f);
         mChart.setData(data);
     }
+    private void dayTrendData() {
+
+        Cursor cur = db.getMyExpenseByDay();
+
+        ArrayList<String> xVals = new ArrayList<String>();
+        ArrayList<BarEntry> vals1 = new ArrayList<BarEntry>();
+        int i=0;
+        while(cur.moveToNext()){
+            xVals.add(cur.getString(0));
+            vals1.add(new BarEntry(cur.getFloat(1), i));
+            i++;
+        }
+
+
+        BarDataSet set1 = new BarDataSet(vals1, "Day");
+        set1.setBarSpacePercent(35f);
+/*
+        ArrayList<Integer> colors = new ArrayList<Integer>();
+        for (int c : ColorTemplate.COLORFUL_COLORS)
+            colors.add(c);
+
+         set1.setColors(colors);
+*/
+        set1.setColor(getResources().getColor(R.color.myAccentColor));
+        ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
+        dataSets.add(set1);
+
+        BarData data = new BarData(xVals, dataSets);
+        data.setValueTextSize(10f);
+        dChart.setData(data);
+    }
+
 
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -40,7 +40,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 card:card_layout_resourceID="@layout/card_native_card_layout" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/myPrimaryDarkColor"
+                android:textColor="@color/myLightPrimaryColor"
+                android:layout_below="@id/cardbudget"
+                android:textAlignment="center"
+                android:padding="8dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="Expense Trend for this month"
+                android:id="@+id/dummy_name2"
+                android:textSize="@dimen/card_header_native_simple_title_text_size"
+                />
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chart_monthTrend"
+                android:layout_below="@id/dummy_name2"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
             </RelativeLayout>
+        
         </ScrollView>
 
 </FrameLayout>

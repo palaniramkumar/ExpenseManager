@@ -341,6 +341,13 @@ public class DBHelper extends SQLiteOpenHelper {
                 " and   strftime('%Y', `trans_time`) = '"+year+"' group by strftime('%m', `trans_time`)", null );
         return res;
     }
+    public Cursor getMyExpenseByDay(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        //Bug: should not use the year
+        Cursor res =  db.rawQuery( "select strftime('%d', `trans_time`), sum(amount) from MASTER where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"'" +
+                " and   strftime('%Y', `trans_time`) = '"+year+"' and strftime('%m', `trans_time`) = '"+month+"' group by strftime('%d', `trans_time`)", null );
+        return res;
+    }
     public Cursor getMyExpenseByCategory(){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select category,sum(amount) from MASTER  where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' " +

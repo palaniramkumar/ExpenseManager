@@ -16,6 +16,7 @@
   ~   See the License for the specific language governing permissions and
   ~   limitations under the License.
   ~  *****************************************************************************
+  We are not using this xml. This is replaced by card_header_inner
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

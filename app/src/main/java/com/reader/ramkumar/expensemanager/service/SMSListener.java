@@ -47,22 +47,15 @@ public class SMSListener extends BroadcastReceiver{
             smsMessage[n] = SmsMessage.createFromPdu((byte[]) messages[n]);
         }
 
-        DBHelper db = new DBHelper(context);
-
         SMS s= new SMS();
-        //parse details from the latest sms
-        s.address=smsMessage[0].getOriginatingAddress();
-        s.text=smsMessage[0].getMessageBody();
-        long ts = smsMessage[0].getTimestampMillis();
-        s.id=getLstSMSIndex(context)+"";
-        s.when = db.getDroidDate(ts/1000) ; //convert android timestamp to SQL ts
-
+        s.text = smsMessage[0].getMessageBody();
+        s.findSMS();
 
             if(s.findSMS() &&  s.amount !=null) {
 
                 final NotificationManager mgr =
                         (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                Notification note = new Notification(R.drawable.ic_action_add_shopping_cart,
+                Notification note = new Notification(R.drawable.ic_shopping_basket_grey600_24dp,
                         "MyWallet",
                         System.currentTimeMillis());
 
@@ -73,8 +66,14 @@ public class SMSListener extends BroadcastReceiver{
 
                 note.setLatestEventInfo(context, "New Expense",
                         "Rs." + s.amount + " - " + s.where, i);
-                db.insertMaster(s.amount,s.bankName,s.trans_src,s.trans_type,s.expanse_category,s.where,s.id,s.where,s.when,
+                
+                
+                
+                /*db.insertMaster(s.amount,s.bankName,s.trans_src,s.trans_type,s.expanse_category,s.where,s.id,s.where,s.when,
                         db.getNow(),s.place,null,null,null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                */
+                SMS.syncSMS(context);
+                
                 //After uncomment this line you will see number of notification arrived
                 //note.number=2;
                 mgr.notify(678, note);//need to cleanup this hard coded value

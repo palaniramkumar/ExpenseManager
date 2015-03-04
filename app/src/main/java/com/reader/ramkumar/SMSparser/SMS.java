@@ -63,15 +63,25 @@ public class SMS {
         else
             return false;
     }
-    public static boolean syncSMS(Context context) {
 
+    public static boolean syncSMS(Context context){
+        return syncSMS(context,false);
+        
+    }
+    
+    public static boolean syncSMS(Context context,boolean force) {
 
+      
 
         DBHelper db=new DBHelper(context);
         int last_sms_id = db.getLastSMSID();
-
+        
+        String filter = null;
+        if(force)
+            filter = "_id > "+last_sms_id;
+        
         Uri uriSms = Uri.parse("content://sms/inbox");
-        final Cursor cursor =context.getContentResolver().query(uriSms, new String[]{"_id", "address", "date", "body"},"_id > "+last_sms_id,null,null);
+        final Cursor cursor =context.getContentResolver().query(uriSms, new String[]{"_id", "address", "date", "body"},filter,null,null);
 
         //cursor.moveToFirst();
 

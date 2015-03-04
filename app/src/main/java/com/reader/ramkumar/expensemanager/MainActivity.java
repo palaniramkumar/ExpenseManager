@@ -126,7 +126,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public void aboutApp(MenuItem item){
         Toast.makeText(this, "Hello World", Toast.LENGTH_LONG).show();
     }
-    public void refreshSMS(MenuItem item){
+    public void refreshSMS(final MenuItem item){
 
         class MyAsyncTask extends AsyncTask<Void, Void, Integer> {
 
@@ -162,14 +162,16 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
             @Override
             protected Integer doInBackground(Void... params) {
-                SMS.syncSMS(getApplicationContext());
+                DBHelper db = new DBHelper(getApplicationContext());
+                if(item!=null || db.getLastSMSID()==0) {
+                    SMS.syncSMS(getApplicationContext(), true);
+                }
+                db.close();
                 return 0;
             }
-
+            
         }
         new MyAsyncTask().execute();
-        
-
         
     }
 

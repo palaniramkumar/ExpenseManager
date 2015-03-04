@@ -1,10 +1,7 @@
 package com.reader.ramkumar.expensemanager;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.Fragment;
-import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,12 +19,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -39,12 +34,11 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.Utils;
 import com.melnykov.fab.FloatingActionButton;
 import com.reader.ramkumar.SMSparser.SMS;
 import com.reader.ramkumar.expensemanager.adapter.ExpenseCard;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
-import com.reader.ramkumar.expensemanager.service.SummaryReceiver;
+import com.reader.ramkumar.expensemanager.util.CashVault;
 import com.reader.ramkumar.expensemanager.util.Common;
 import com.reader.ramkumar.expensemanager.util.MonthOperations;
 import com.reader.ramkumar.expensemanager.util.TYPES;
@@ -340,24 +334,25 @@ public class main extends Fragment {
 */
         //setting up remaining amount in cash vault
         //https://github.com/akexorcist/Android-RoundCornerProgressBar
-        int cash_vault = db.getCashVault();
-        int cash_expense = db.getCashExpense();//db.getCashExpense();
-        System.out.println("Cash Expense ="+cash_expense+", Cash Vault = "+cash_vault);
-        final float[] roundedCorners = new float[] { 5, 5, 5, 5, 5, 5, 5, 5 };
+
+       final float[] roundedCorners = new float[] { 5, 5, 5, 5, 5, 5, 5, 5 };
         ShapeDrawable pgDrawable = new ShapeDrawable(new RoundRectShape(roundedCorners,     null, null));
 
         // Sets the progressBar color
         pgDrawable.getPaint().setColor(getActivity().getResources()
-                .getColor(R.color.myWindowBackground));
+                .getColor(R.color.myAccentColor));
         ProgressBar progress_bar = (ProgressBar) view.findViewById(R.id.progress_1);
         ClipDrawable progress = new ClipDrawable(pgDrawable, Gravity.LEFT, ClipDrawable.HORIZONTAL);
         progress_bar.setProgressDrawable(progress);
         progress_bar.setBackgroundColor(getActivity().getResources()
                 .getColor(R.color.myLightPrimaryColor));
-        progress_bar.setMax(cash_vault);
-        progress_bar.setProgress(cash_vault - cash_expense);
+
+        CashVault vault = new CashVault(view.getContext());
+        
+        progress_bar.setMax(vault.vault_amount);
+        progress_bar.setProgress(vault.amount_left);
         TextView progress_caption =  (TextView)view.findViewById(R.id.txt_progress);
-        progress_caption.setText("You Can Spend Rs "+(cash_vault-cash_expense)+" from your Cash Vault");
+        progress_caption.setText(vault.msg);
 
         /* Dynamic Progress Bar Creation
 

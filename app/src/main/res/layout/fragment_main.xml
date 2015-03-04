@@ -102,21 +102,31 @@
                 android:layout_gravity="bottom"
                 android:layout_margin="10dp" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/progress_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/chart"
-                android:background="@color/background_floating_material_light"
+                android:background="@color/card_background"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:padding="16dp">
-
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@color/myPrimaryDarkColor"
+                    android:textColor="@color/myLightPrimaryColor"
+                    android:textAlignment="center"
+                    android:padding="8dp"
+                    android:text="Cash Vault"
+                    android:textSize="@dimen/card_header_native_simple_title_text_size"
+                    />
                 <TextView
                     android:id="@+id/txt_progress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="4dp"
+                    android:padding="16dp"
                     android:textColor="@color/myTextSecondaryColor"
                     android:text="You have Rs 2,600 left in your Cash Vault"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -124,12 +134,15 @@
 
                 <ProgressBar
                     android:id="@+id/progress_1"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginRight="16dp"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:layout_below="@id/txt_progress"
                    />
-            </RelativeLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/arrayBills"

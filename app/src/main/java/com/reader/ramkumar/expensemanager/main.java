@@ -439,7 +439,7 @@ public class main extends Fragment {
         yr.setDrawGridLines(false);
         yl.setDrawLabels(false);
 
-        horizontal_setData(12, 50);
+        horizontal_setData();
         hChart.animateY(2500);
 
     }
@@ -479,7 +479,7 @@ public class main extends Fragment {
         mListener = null;
     }
 
-    private void horizontal_setData(int count, float range) {
+    private void horizontal_setData() {
         
         Cursor cur = db.getFromMaster(db.MASTER_COLUMN_CATEGORY,db.BILL_PAYMENT,false);
 
@@ -487,7 +487,12 @@ public class main extends Fragment {
         ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
         int i=0;
         while(cur.moveToNext()){
-            xVals.add(cur.getString(cur.getColumnIndex(db.MASTER_COLUMN_NOTES)));
+            String bill_name = cur.getString(cur.getColumnIndex(db.MASTER_COLUMN_NOTES));
+           
+            if(bill_name == null || bill_name.trim().equals(""))
+                bill_name = "<Not Specified>";
+            System.out.println("Retrived Val: "+bill_name+" ,"+cur.getFloat(cur.getColumnIndex(db.MASTER_COLUMN_AMOUNT)));
+            xVals.add(bill_name);
             yVals1.add(new BarEntry(cur.getFloat(cur.getColumnIndex(db.MASTER_COLUMN_AMOUNT)), i));
             i++;
         }

@@ -1,15 +1,24 @@
 package com.reader.ramkumar.expensemanager.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.reader.ramkumar.expensemanager.*;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.Common;
+import com.reader.ramkumar.expensemanager.util.TYPES;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
@@ -27,6 +36,8 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
     private String month;
     private LayoutInflater inflater;
     DBHelper db;
+    Context mContext;
+    
     public StickyHistoryAdapter(Context context,DBHelper db) {
         inflater = LayoutInflater.from(context);
         this.db =db;
@@ -48,6 +59,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
             i++;
         }
         System.out.println("Total Entry: "+i);
+        mContext = context;
         //entry_day = context.getResources().getStringArray(R.array.entry_day);
     }
 
@@ -67,9 +79,8 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-
+    public View getView(int position, View convertView, final ViewGroup parent) {
+        final ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.sticky_list_item_layout, parent, false);
@@ -78,6 +89,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
             holder.txt_desc = (TextView) convertView.findViewById(R.id.txt_desc);
             holder.txt_id = (TextView) convertView.findViewById(R.id.txt_id);
             holder.txt_category = (TextView) convertView.findViewById(R.id.txt_category);
+            holder.popupMenu = (ImageView)convertView.findViewById(R.id.more);
 
             convertView.setTag(holder);
         } else {
@@ -89,6 +101,37 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
         holder.txt_desc.setText(place[position]);
         holder.txt_category.setText(category[position]);
         holder.txt_id.setText(id[position]);
+        final View view = convertView;
+        holder.popupMenu.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Toast.makeText(mContext,holder.txt_id.getText(),Toast.LENGTH_SHORT).show();
+                System.out.println("Clicked Popup menu " + holder.txt_id.getText());
+                /** Instantiating PopupMenu class */
+                PopupMenu popup = new PopupMenu(mContext, v);
+
+                /** Adding menu items to the popumenu */
+                popup.getMenuInflater().inflate(R.menu.history_popup, popup.getMenu());
+
+                /** Defining menu item click listener for the popup menu */
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if(item.getTitle().toString().equalsIgnoreCase("Delete")){
+                            db.updateMaster(Integer.parseInt(holder.txt_id.getText().toString()),db.MASTER_COLUMN_STATUS, TYPES.TRANSACTION_STATUS.DELETED+"");
+                            view.findViewById(R.id.itm_layout).setVisibility(View.GONE);
+
+                        }
+                        return true;
+                    }
+                });
+
+                /** Showing the popup menu */
+                popup.show();
+
+
+            }
+        });
 
         return convertView;
     }
@@ -110,6 +153,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
         String headerAmount = Common.CURRENCY+" "+db.getExpensebyDay(entry_day[position]);
         holder.text.setText(headerText);
         holder.amount.setText(headerAmount);
+        
         return convertView;
     }
 
@@ -130,6 +174,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
         TextView txt_desc;
         TextView txt_id;
         TextView txt_category;
+        ImageView popupMenu;
     }
 
 }

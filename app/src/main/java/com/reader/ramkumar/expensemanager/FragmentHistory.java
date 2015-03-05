@@ -98,13 +98,6 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = mInflater.inflate(R.layout.fragment_fragment_history, mContainer, false);
         db=new DBHelper(getActivity());
-        //createData();
-        //listView = (ExpandableListView) view.findViewById(R.id.listView);
-
-        //adapter = new MyExpandableListAdapter(getActivity(),groups);
-        //listView.setAdapter(adapter);
-
-        /*new ui code */
         init();
 
 
@@ -118,8 +111,6 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
                 int prev_month = date.getMonth();
                 db.month = MonthOperations.getMonthin2Digit(prev_month+1);
                 db.year = date.getYear()+"";
-                Toast.makeText(getActivity(), "Item " + db.month + " clicked!", Toast.LENGTH_SHORT).show();
-
                 init();
             }
         });
@@ -132,9 +123,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
                 int next_month = date.getMonth();
                 db.month = MonthOperations.getMonthin2Digit(next_month+1);
                 db.year = date.getYear()+"";
-                Toast.makeText(getActivity(), "Item " + db.month + " clicked!", Toast.LENGTH_SHORT).show();
-
-                init();
+      init();
             }
         });
 

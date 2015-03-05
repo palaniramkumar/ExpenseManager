@@ -3,9 +3,11 @@
     android:layout_height="wrap_content"
     android:layout_width="fill_parent"
     android:orientation="horizontal"
+    android:id="@+id/itm_layout"
     android:background="@color/card_background"
     android:padding="10dp"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/text"
@@ -49,27 +51,42 @@
 
 
     </LinearLayout>
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/txt_amount"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="20dp"
-        android:text="Rs. 2500"
         android:layout_gravity="end|right"
-        android:textColor="@color/background_material_dark"
         android:layout_alignParentRight="true"
+        android:layout_height="wrap_content">
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/txt_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp"
+            android:text="Rs. 2500"
+            android:textColor="@color/background_material_dark"
+            android:paddingTop="20dp"/>
+        <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_menu_overflow_card_dark_normal"
+            android:background="@android:color/transparent"
+            android:descendantFocusability="blocksDescendants"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text=":"/>
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/txt_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp"
+            android:text="6"
+            android:layout_gravity="end|right"
+            android:textColor="@color/background_material_dark"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:paddingTop="20dp"/>
 
-        android:paddingTop="20dp"/>
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/txt_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="20dp"
-        android:text="6"
-        android:layout_gravity="end|right"
-        android:textColor="@color/background_material_dark"
-        android:layout_alignParentRight="true"
-        android:visibility="gone"
-        android:paddingTop="20dp"/>
 
+    </LinearLayout>
+    
 </RelativeLayout>

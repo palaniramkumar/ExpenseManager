@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -104,11 +105,10 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
         final View view = convertView;
         holder.popupMenu.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Toast.makeText(mContext,holder.txt_id.getText(),Toast.LENGTH_SHORT).show();
-                System.out.println("Clicked Popup menu " + holder.txt_id.getText());
+
                 /** Instantiating PopupMenu class */
-                PopupMenu popup = new PopupMenu(mContext, v);
+                Context wrapper = new ContextThemeWrapper(mContext, R.style.popupMenuStyle);
+                PopupMenu popup = new PopupMenu(wrapper, v);
 
                 /** Adding menu items to the popumenu */
                 popup.getMenuInflater().inflate(R.menu.history_popup, popup.getMenu());

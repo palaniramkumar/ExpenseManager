@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.reader.ramkumar.expensemanager.adapter.StickyHistoryAdapter;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
@@ -53,6 +54,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
     //ExpandableListView listView;
     StickyListHeadersListView listView;
     StickyHistoryAdapter adapter;
+    private String category_filter="%";
 
     private OnFragmentInteractionListener mListener;
     public interface Constants {
@@ -61,6 +63,9 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
 
     public FragmentHistory() {
         // Required empty public constructor
+    }
+    public FragmentHistory(String filter) {
+        category_filter = filter;
     }
 
     /**
@@ -87,6 +92,10 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            
+            //added newly
+            category_filter=getArguments().getString("CATEGORY");
+            
         }
     }
 
@@ -138,7 +147,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         btn_month.setText(MonthOperations.getMonthAsString(Integer.parseInt(db.month)-1));
         btn_year = (Button) view.findViewById(R.id.btn_year);
         btn_year.setText(db.year);
-        adapter = new StickyHistoryAdapter(getActivity(),db);
+        adapter = new StickyHistoryAdapter(getActivity(),db,category_filter);
         listView = (StickyListHeadersListView) view.findViewById(R.id.sticky_list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
@@ -177,7 +186,8 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         }
         if (BuildConfig.DEBUG) {
             Log.e(Constants.TAG, "Item " + click_id + " clicked!");
-        }
+        }        
+
     }
 
     // this code has no impact

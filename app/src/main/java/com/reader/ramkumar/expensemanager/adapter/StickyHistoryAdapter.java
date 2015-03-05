@@ -39,10 +39,10 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
     public interface Constants {
         String TAG = "app:StickyAdapter";
     }
-    public StickyHistoryAdapter(Context context,DBHelper db) {
+    public StickyHistoryAdapter(Context context,DBHelper db,String filter) {
         inflater = LayoutInflater.from(context);
         this.db =db;
-        Cursor cur = db.getTransactionHistory();
+        Cursor cur = db.getTransactionHistory(filter);
         entry_day = new String[cur.getCount()];
         category = new String[cur.getCount()];
         amount = new String[cur.getCount()];

@@ -391,9 +391,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
     /*Date Conversion Methods */
 
-    public Cursor getTransactionHistory(){
+    public Cursor getTransactionHistory(String category_filter){
         String sql = "select case strftime('%m', trans_time) when '01' then 'January' when '02' then 'Febuary' when '03' then 'March' when '04' then 'April' when '05' then 'May' when '06' then 'June' when '07' then 'July' when '08' then 'August' when '09' then 'September' when '10' then 'October' when '11' then 'November' when '12' then 'December' else '' end\n" +
-                "as month,strftime('%d',trans_time) day, category, amount,id,UPPER(notes) from MASTER where status ='"+TYPES.TRANSACTION_STATUS.APPROVED+"' and  strftime('%m', `trans_time`) = '"+month+"' and  strftime('%Y', `trans_time`) = '"+year+"' order by day desc";
+                "as month,strftime('%d',trans_time) day, category, amount,id,UPPER(notes) from MASTER " +
+                "where status ='"+TYPES.TRANSACTION_STATUS.APPROVED+"' and  strftime('%m', `trans_time`) = '"+month+"' " +
+                "and  strftime('%Y', `trans_time`) = '"+year+"' and category like '"+category_filter+"' order by day desc";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( sql, null );
         return res;

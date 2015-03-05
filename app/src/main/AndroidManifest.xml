@@ -23,7 +23,6 @@
         <activity
             android:name=".Expense_add_window"
             android:label="@string/title_activity_expense_add_window" />
-
         <receiver
             android:name=".service.SMSListener"
             android:label="@string/app_name" >
@@ -35,7 +34,7 @@
 
         <receiver android:name=".service.SummaryReceiver">
         <intent-filter>
-            <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            <action android:name="android.intent.action.BOOT_COMPLETED"/>
         </intent-filter>
         </receiver>
 

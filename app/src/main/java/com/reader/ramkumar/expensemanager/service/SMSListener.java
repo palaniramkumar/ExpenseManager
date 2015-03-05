@@ -51,7 +51,7 @@ public class SMSListener extends BroadcastReceiver{
 
                 // This pending intent will open after notification click
                 PendingIntent i = PendingIntent.getActivity(context, 0,
-                        new Intent(context, Expense_add_window.class),
+                        new Intent(context, main.class),
                         0);
 
                 note.setLatestEventInfo(context, "New Expense",

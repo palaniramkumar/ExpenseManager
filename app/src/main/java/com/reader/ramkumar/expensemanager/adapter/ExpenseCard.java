@@ -1,6 +1,9 @@
 package com.reader.ramkumar.expensemanager.adapter;
 
+import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
 import android.view.MenuItem;
@@ -11,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.reader.ramkumar.expensemanager.BuildConfig;
+import com.reader.ramkumar.expensemanager.Expense_add_window;
+import com.reader.ramkumar.expensemanager.FragmentHistory;
 import com.reader.ramkumar.expensemanager.R;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.Common;
@@ -31,11 +36,13 @@ import it.gmariotti.cardslib.library.prototypes.LinearListView;
 
 public class ExpenseCard extends CardWithList {
     DBHelper db;
+    Context mContext;
     public interface Constants {
         String TAG = "app:ExpenseCard";
     }
     public ExpenseCard(Context context,DBHelper db) {
         super(context);
+        mContext=context;
         this.db=db;
     }
 
@@ -57,7 +64,7 @@ public class ExpenseCard extends CardWithList {
             if (view != null) {
                 TextView t1 = (TextView) view.findViewById(R.id.text_exmple_card1);
                 if (t1 != null)
-                    t1.setText("The Expense for this month is "+Common.CURRENCY+" "+remainingAmount);
+                    t1.setText("The Expense for this month - "+Common.CURRENCY+" "+remainingAmount);
 
             }
         }
@@ -103,8 +110,8 @@ public class ExpenseCard extends CardWithList {
         CostObject costObject = (CostObject) object;
         icon.setImageResource(costObject.trendIcon);
         category.setText(costObject.type);
-        amount.setText(costObject.amount+"");
-        currency.setText(costObject.currencyUnit);
+        amount.setText(costObject.currencyUnit+" "+costObject.amount);
+        //currency.setText(costObject.currencyUnit); //can extend later like minified the size etc
 
         return convertView;
     }
@@ -135,6 +142,15 @@ public class ExpenseCard extends CardWithList {
             setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(LinearListView parent, View view, int position, ListObject object) {
+                    /*Intent i = new Intent(view.getContext(), FragmentHistory.class);
+                    i.putExtra("CATEGORY", getObjectId());
+                    ((Activity)mContext).startActivity(i);*/
+                    FragmentHistory secFrag = new FragmentHistory(getObjectId());
+                    FragmentTransaction fragTransaction = ((Activity)mContext).getFragmentManager().beginTransaction();
+                    fragTransaction.replace(R.id.frame_container,secFrag );
+                    fragTransaction.addToBackStack(null);
+                    fragTransaction.commit();
+                    
                     if (BuildConfig.DEBUG) {
                         Log.e(Constants.TAG, "Clicked on " + getObjectId());
                     }

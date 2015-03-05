@@ -63,7 +63,6 @@ public class PendingApproval extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
     public PendingApproval() {
         // Required empty public constructor
     }

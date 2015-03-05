@@ -4,17 +4,16 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.reader.ramkumar.expensemanager.adapter.CategoryCard;
@@ -58,6 +57,7 @@ public class Categories extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment Categories.
      */
+    
     // TODO: Rename and change types and number of parameters
     public static Categories newInstance(String param1, String param2) {
         Categories fragment = new Categories();
@@ -66,6 +66,9 @@ public class Categories extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+    public interface Constants {
+        String TAG = "app:Categories";
     }
 
     public Categories() {
@@ -194,6 +197,9 @@ public class Categories extends Fragment {
             cardView.setCard(card);
         else
             cardView.replaceCard(card);
+        if (BuildConfig.DEBUG) {
+            Log.e(Constants.TAG, "Called Init method()");
+        }
     }
 
 }

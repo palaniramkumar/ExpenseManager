@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.SparseArray;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +17,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.reader.ramkumar.expensemanager.adapter.Group;
 import com.reader.ramkumar.expensemanager.adapter.StickyHistoryAdapter;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.MonthOperations;
@@ -55,9 +53,11 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
     //ExpandableListView listView;
     StickyListHeadersListView listView;
     StickyHistoryAdapter adapter;
-    SparseArray<Group> groups = new SparseArray<Group>();
 
     private OnFragmentInteractionListener mListener;
+    public interface Constants {
+        String TAG = "app:FragmentHistory";
+    }
 
     public FragmentHistory() {
         // Required empty public constructor
@@ -175,16 +175,18 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
             i.putExtra("RECID", click_id);
             startActivityForResult(i, 200); //200 -OK: assume HTTP 200 for create request :). It can be any value
         }
-        //Toast.makeText(getActivity(), "Item " + click_id + " clicked!", Toast.LENGTH_SHORT).show();
-
+        if (BuildConfig.DEBUG) {
+            Log.e(Constants.TAG, "Item " + click_id + " clicked!");
+        }
     }
 
     // this code has no impact
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        // check if the request code is same as what is passed  here it is 2
-        Toast.makeText(getActivity(),"Results Invoked",Toast.LENGTH_SHORT);
+        if (BuildConfig.DEBUG) {
+            Log.e(Constants.TAG, "Results Invoked");
+        }
         init();
     }
 
@@ -282,26 +284,5 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
-    }
-    public void createData() {
-        Cursor cur = db.getTransactionHistory();
-        int j=0;
-        while (cur.moveToNext()) {
-
-            Group group = new Group(cur.getString(0)+", "+cur.getString(1));
-            System.out.println(cur.getString(0)+":"+cur.getString(1)+":"+cur.getString(2));
-
-          //  String [] category = cur.getString(2).split(","); //Bug: code glitch in spltting files. fc split values are mis mattching between others - headers wrong
-          //  String [] amount = cur.getString(3).split(",");
-            String [] id=cur.getString(4).split(",");
-            for (int i = 0; i < id.length; i++) {
-                String param =id[i];
-                group.children.add(param);
-            }
-           // group.children.add(cur.getString(1) +":"+ cur.getString(2));
-            groups.append(j, group);
-            j++;
-        }
-
     }
 }

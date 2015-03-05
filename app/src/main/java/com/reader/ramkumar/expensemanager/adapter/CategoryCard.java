@@ -5,19 +5,19 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jensdriller.libs.undobar.UndoBar;
+import com.reader.ramkumar.expensemanager.BuildConfig;
 import com.reader.ramkumar.expensemanager.R;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.Common;
@@ -38,6 +38,9 @@ import it.gmariotti.cardslib.library.prototypes.LinearListView;
  */
 public class CategoryCard extends CardWithList {
     DBHelper db;
+    public interface Constants {
+        String TAG = "adapter.CategoryCard";
+    }
     public CategoryCard(Context context) {
         super(context);
         db=new DBHelper(context);
@@ -207,15 +210,19 @@ public class CategoryCard extends CardWithList {
             log("onUndo() " + token.describeContents());
         }
         public void log(String text) {
-            Toast.makeText(getContext(), "Swipe on " + text, Toast.LENGTH_SHORT).show();
-
+            if (BuildConfig.DEBUG) {
+                Log.e(Constants.TAG, "Swipe on " + text);
+            }
         }
         private void init() {
             //OnItemSwipeListener
             setOnItemSwipeListener(new OnItemSwipeListener() {
                 @Override
                 public void onItemSwipe(final ListObject object, boolean dismissRight) {
-                    Toast.makeText(getContext(), "Swipe on " + object.getObjectId(), Toast.LENGTH_SHORT).show();
+                    if (BuildConfig.DEBUG) {
+                        Log.e(Constants.TAG, "Swipe on " + object.getObjectId());
+                    }
+                  
                     final String objId=object.getObjectId();
                     deletedObject=object;
                     db.updateCategory(Integer.parseInt(objId), "status", TYPES.TRANSACTION_STATUS.DELETED.toString());

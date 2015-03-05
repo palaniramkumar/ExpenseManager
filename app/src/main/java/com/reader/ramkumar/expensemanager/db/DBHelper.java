@@ -23,7 +23,9 @@ import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
+import com.reader.ramkumar.expensemanager.BuildConfig;
 import com.reader.ramkumar.expensemanager.util.TYPES;
 //http://www.tutorialspoint.com/android/android_sqlite_database.htm
 
@@ -57,6 +59,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public String month = "";
     public String year = "";
+    public interface Constants {
+        String TAG = "app:DBHelper";
+    }
     public DBHelper(Context context)
     {
 
@@ -137,6 +142,9 @@ public class DBHelper extends SQLiteOpenHelper {
             db.insert("MASTER", null, contentValues);
         }
         catch(SQLException e){
+            if (BuildConfig.DEBUG) {
+                Log.e(Constants.TAG, e.getMessage());
+            }
             e.printStackTrace();
             return false;
         }
@@ -211,7 +219,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 " and strftime('%m', `trans_time`) = '"+month+"' and strftime('%Y', `trans_time`) = '"+year+"'", null );
         if(res.moveToNext()){
             if(res.getString(0) == null) return 0;
-            System.out.println("Inside Cash Expense: "+res.getString(0));
+
             return Integer.parseInt(res.getString(0));
         }
         else{

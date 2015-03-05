@@ -25,11 +25,9 @@ public class SummaryReceiver extends BroadcastReceiver
     @Override
     public void onReceive(Context context, Intent intent)
     {
-        //Intent service1 = new Intent(context, SummaryAlarm.class);
-        //context.startService(service1);
         final NotificationManager mgr =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification(R.drawable.ic_launcher,"This is a test message!", System.currentTimeMillis());
+        Notification notification = new Notification(R.drawable.ic_launcher,"Today's Expense Summary", System.currentTimeMillis());
         PendingIntent i = PendingIntent.getActivity(context, 0,
                 new Intent(context, Expense_add_window.class),
                 0);

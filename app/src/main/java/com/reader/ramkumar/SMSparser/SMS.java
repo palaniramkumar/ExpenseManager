@@ -103,7 +103,7 @@ public class SMS {
             if(s.findSMS() && s.amount!=null) {
                 //Add an object to the list
                 System.out.println("when = "+s.when);
-                db.insertMaster(s.amount, s.bankName, s.trans_src, s.trans_type,s.expanse_category, s.where, s.id, s.where, s.when,
+                db.insertMaster(s.amount.replace(",",""), s.bankName, s.trans_src, s.trans_type,s.expanse_category, s.where, s.id, s.where, s.when,
                         db.getNow(), s.place, null, null, null,TYPES.TRANSACTION_STATUS.APPROVED.toString());
             }
         }

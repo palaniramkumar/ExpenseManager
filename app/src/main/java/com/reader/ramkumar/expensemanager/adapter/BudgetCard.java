@@ -2,12 +2,13 @@ package com.reader.ramkumar.expensemanager.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.reader.ramkumar.expensemanager.BuildConfig;
 import com.reader.ramkumar.expensemanager.R;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.Common;
@@ -27,6 +28,9 @@ import it.gmariotti.cardslib.library.prototypes.LinearListView;
 
 public class BudgetCard extends CardWithList {
     DBHelper db;
+    public interface Constants {
+        String TAG = "app:BudgetCard";
+    }
     public BudgetCard(Context context, DBHelper db) {
         super(context);
         this.db=db;
@@ -131,7 +135,10 @@ public class BudgetCard extends CardWithList {
             setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(LinearListView parent, View view, int position, ListObject object) {
-                    Toast.makeText(getContext(), "Click on " + getObjectId(), Toast.LENGTH_SHORT).show();
+                    if (BuildConfig.DEBUG) {
+                        Log.e(Constants.TAG, "Clicked on " + getObjectId());
+                    }
+
                 }
             });
 

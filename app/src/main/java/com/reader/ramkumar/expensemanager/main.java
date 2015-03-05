@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -104,7 +105,9 @@ public class main extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
+    public interface Constants {
+        String TAG = "app:main";
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -181,42 +184,6 @@ public class main extends Fragment {
             }
         });
 
-        //code for adding floating menu dynamically
-/*
-        ImageView icon = new ImageView(getActivity());
-        Drawable drawable = getResources().getDrawable(R.drawable.ic_action_star);
-        icon.setImageDrawable(drawable);
-
-        FloatingActionButton actionButton = new FloatingActionButton.Builder(getActivity())
-                .setTheme(FloatingActionButton.THEME_DARK)
-                .setContentView(icon)
-                .build();
-        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
-        // repeat many times:
-        ImageView itemIcon1 = new ImageView(getActivity());
-        itemIcon1.setImageDrawable( getResources().getDrawable(R.drawable.ic_action_edit) );
-        SubActionButton btn_flexi_expense = itemBuilder.setContentView(itemIcon1)
-                .setTheme(FloatingActionButton.THEME_DARK)
-                .build();
-        ImageView itemIcon2 = new ImageView(getActivity());
-        itemIcon2.setImageDrawable( getResources().getDrawable(R.drawable.ic_action_attach) );
-        SubActionButton btn_bank_expense = itemBuilder.setContentView(itemIcon2)
-                .setTheme(FloatingActionButton.THEME_DARK)
-                .build();
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
-                .addSubActionView(btn_flexi_expense)
-                .addSubActionView(btn_bank_expense)
-                .attachTo(actionButton)
-                .build();
-
-        btn_flexi_expense.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Toast.makeText(mContainer.getContext(), "New Clicked", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(mContainer.getContext(), Expense_add_window.class);
-                startActivity(i);
-            }
-        });
-*/
         /* first user check */
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String endpoint = sharedPref.getString("Endpoint1", "0");
@@ -224,7 +191,11 @@ public class main extends Fragment {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString("Endpoint1", UUID.randomUUID().toString());
             editor.commit();
-            System.out.println("Created New Endpoint");
+            
+            if (BuildConfig.DEBUG) {
+                Log.e(Constants.TAG, "Created New Endpoint");
+            }
+          
             db.firstUser();
             if(getActivity()!=null) //safe condition while rotating view. This throws null)
                 SMS.syncSMS(getActivity());
@@ -300,11 +271,6 @@ public class main extends Fragment {
         mChart.animateXY(1500, 1500);
         // mChart.spin(2000, 0, 360);
 
-        /*Legend l = mChart.getLegend();
-        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
-        l.setXEntrySpace(7f);
-        l.setYEntrySpace(5f);
-*/
         //setting up remaining amount in cash vault
         //https://github.com/akexorcist/Android-RoundCornerProgressBar
 
@@ -327,45 +293,6 @@ public class main extends Fragment {
         TextView progress_caption =  (TextView)view.findViewById(R.id.txt_progress);
         progress_caption.setText(vault.msg);
 
-        /* Dynamic Progress Bar Creation
-
-        // Define a shape with rounded corners
-        final float[] roundedCorners = new float[] { 5, 5, 5, 5, 5, 5, 5, 5 };
-        ShapeDrawable pgDrawable = new ShapeDrawable(new RoundRectShape(roundedCorners,     null, null));
-
-        // Sets the progressBar color
-        pgDrawable.getPaint().setColor(getActivity().getResources()
-                .getColor(R.color.material_blue_grey_800));
-
-        // Adds the drawable to your progressBar
-        ClipDrawable progress = new ClipDrawable(pgDrawable, Gravity.LEFT, ClipDrawable.HORIZONTAL);
-
-
-        LinearLayout progressLayout = (LinearLayout)view.findViewById(R.id.arrayBills);
-
-
-        TextView txtDyn =new TextView(getActivity());
-        txtDyn.setText("Airtel - Rs 2500");
-        txtDyn.setTextColor(getActivity().getResources()
-                .getColor(R.color.material_deep_teal_500));
-
-        progressLayout.addView(txtDyn);
-
-
-        ProgressBar progressDyn=new ProgressBar(getActivity(), null, android.R.attr.progressBarStyleHorizontal);
-
-        progressDyn.setProgressDrawable(progress);
-
-        // Sets a background to have the 3D effect
-        progressDyn.setBackgroundColor(getActivity().getResources()
-                .getColor(R.color.material_blue_grey_950));
-
-        progressDyn.setVisibility(View.VISIBLE);
-        progressDyn.setIndeterminate(false);
-        progressDyn.setMax(100);
-        progressDyn.setProgress(80);
-        progressLayout.addView(progressDyn);
-        */
 
         hChart = (HorizontalBarChart) view.findViewById(R.id.chart_horz);
 
@@ -459,7 +386,11 @@ public class main extends Fragment {
            
             if(bill_name == null || bill_name.trim().equals(""))
                 bill_name = "<Not Specified>";
-            System.out.println("Retrived Val: "+bill_name+" ,"+cur.getFloat(cur.getColumnIndex(db.MASTER_COLUMN_AMOUNT)));
+            
+            if (BuildConfig.DEBUG) {
+                Log.e(Constants.TAG, "Retrived Val: "+bill_name+" ,"+cur.getFloat(cur.getColumnIndex(db.MASTER_COLUMN_AMOUNT)));
+            }
+         
             xVals.add(bill_name);
             yVals1.add(new BarEntry(cur.getFloat(cur.getColumnIndex(db.MASTER_COLUMN_AMOUNT)), i));
             i++;
@@ -500,11 +431,6 @@ public class main extends Fragment {
         }
 
 
-
-        /*String[] mType = {"Food", "Vehicles", "House", "Travel", "Gifts"};
-        for (int i = 0; i < count + 1; i++)
-            xVals.add(mType[i % mType.length]);
-        */
         PieDataSet set1 = new PieDataSet(yVals1, "");
         set1.setSliceSpace(3f);
 

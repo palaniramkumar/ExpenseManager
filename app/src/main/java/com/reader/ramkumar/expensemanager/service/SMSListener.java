@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.reader.ramkumar.SMSparser.SMS;
@@ -22,17 +23,6 @@ import com.reader.ramkumar.expensemanager.util.TYPES;
  * Created by Ram on 08/01/2015.
  */
 public class SMSListener extends BroadcastReceiver{
-    private long getLstSMSIndex(Context context){
-        Uri uriSms = Uri.parse("content://sms/inbox");
-        //understanding that only one SMS can be recieved at the time and maked the last SMS ID as this SMS id
-        final Cursor cursor =context.getContentResolver().query(uriSms, new String[]{"_id", "address", "date", "body"},null,null,"_id desc");
-
-
-        if(cursor.moveToNext())
-            return cursor.getLong(0);
-        return -1;
-    }
-
     /**
      * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
      */
@@ -66,22 +56,21 @@ public class SMSListener extends BroadcastReceiver{
 
                 note.setLatestEventInfo(context, "New Expense",
                         "Rs." + s.amount + " - " + s.where, i);
-                
-                
-                
-                /*db.insertMaster(s.amount,s.bankName,s.trans_src,s.trans_type,s.expanse_category,s.where,s.id,s.where,s.when,
-                        db.getNow(),s.place,null,null,null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
-                */
-                SMS.syncSMS(context);
-                
+
+                 SMS.syncSMS(context);
+
                 //After uncomment this line you will see number of notification arrived
                 //note.number=2;
                 mgr.notify(678, note);//need to cleanup this hard coded value
             }
+        else{
+                if (BuildConfig.DEBUG) {
+                    Log.e(Constants.TAG, "Invalid SMS: "+s.text);
+                }
+            }
 
-
-        // show first message
-       // Toast toast = Toast.makeText(context, "Received SMS: " + smsMessage[0].getMessageBody(), Toast.LENGTH_LONG);
-       // toast.show();
+    }
+    public interface Constants {
+        String TAG = "app:SMSListener";
     }
 }

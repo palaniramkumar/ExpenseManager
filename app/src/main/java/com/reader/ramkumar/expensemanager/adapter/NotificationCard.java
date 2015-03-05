@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jensdriller.libs.undobar.UndoBar;
+import com.reader.ramkumar.expensemanager.BuildConfig;
 import com.reader.ramkumar.expensemanager.R;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.Common;
@@ -34,6 +36,9 @@ import it.gmariotti.cardslib.library.prototypes.LinearListView;
  */
 public class NotificationCard extends CardWithList {
     DBHelper db;
+    public interface Constants {
+        String TAG = "app:NotificationCard";
+    }
     public NotificationCard(Context context) {
         super(context);
     }
@@ -153,7 +158,10 @@ public class NotificationCard extends CardWithList {
             c.messagegId=cursor.getInt(0)+"";//RECID+"";
             try {
                 c.ts = db.getJavaDate(cursor.getString(cursor.getColumnIndex(db.MASTER_COLUMN_TRANSACTION_TIME)));
-                System.out.println(c.ts);
+                if (BuildConfig.DEBUG) {
+                    Log.e(Constants.TAG, "timestamp: "+c.ts);
+                }
+
             }
             catch (ParseException e){
                 e.printStackTrace();
@@ -241,7 +249,10 @@ public class NotificationCard extends CardWithList {
         }
 
         public void log(String text) {
-            Toast.makeText(getContext(), "Swipe on " + text, Toast.LENGTH_SHORT).show();
+            if (BuildConfig.DEBUG) {
+                Log.e(Constants.TAG, "Swipe on " + text);
+            }
+
 
         }
 
@@ -250,7 +261,9 @@ public class NotificationCard extends CardWithList {
             setOnItemSwipeListener(new OnItemSwipeListener() {
                 @Override
                 public void onItemSwipe(final ListObject object, boolean dismissRight) {
-                    Toast.makeText(getContext(), "Swipe on " + object.getObjectId(), Toast.LENGTH_SHORT).show();
+                    if (BuildConfig.DEBUG) {
+                        Log.e(Constants.TAG, "Swipe on " + object.getObjectId());
+                    }
                     final String objId=object.getObjectId();
                     deletedObject=object;
                     db.updateMasterStatus(Integer.parseInt(objId),TYPES.TRANSACTION_STATUS.DELETED.toString());

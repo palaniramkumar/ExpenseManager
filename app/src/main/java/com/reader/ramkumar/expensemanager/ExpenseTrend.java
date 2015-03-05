@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,9 @@ public class ExpenseTrend extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+    public interface Constants {
+        String TAG = "app:ExpenseTrend";
+    }
 
     public ExpenseTrend() {
         // Required empty public constructor
@@ -109,16 +113,6 @@ public class ExpenseTrend extends Fragment {
         mChart = (BarChart) view.findViewById(R.id.chart_trend);
         // no description text
         mChart.setDescription("");
-
-        // enable value highlighting
-        //mChart.setHighlightEnabled(true);
-
-        // enable touch gestures
-        //mChart.setTouchEnabled(true);
-
-        // enable scaling and dragging
-        //mChart.setDragEnabled(true);
-        //mChart.setScaleEnabled(true);
 
         // if disabled, scaling can be done on x- and y-axis separately
         mChart.setPinchZoom(false);
@@ -175,16 +169,11 @@ public class ExpenseTrend extends Fragment {
         dChart.setDrawBarShadow(false);
         dChart.setDrawValueAboveBar(true);
 
-        // mChart.setDrawValueAboveBar(true);
-
         x = dChart.getXAxis();
         x.setDrawGridLines(false);
         x.setDrawLabels(true);
         x.setDrawAxisLine(false);
         x.setPosition(XAxis.XAxisPosition.BOTTOM);
-
-
-        //x.setTypeface(tf);
 
         leftAxis = dChart.getAxisLeft();
         leftAxis.setLabelCount(6);
@@ -207,6 +196,9 @@ public class ExpenseTrend extends Fragment {
         // dont forget to refresh the drawing
         dChart.invalidate();
         
+        if (BuildConfig.DEBUG) {
+            Log.e(Constants.TAG, "init() completed");
+        }
         
         
     }
@@ -226,13 +218,7 @@ public class ExpenseTrend extends Fragment {
 
         BarDataSet set1 = new BarDataSet(vals1, "Months");
         set1.setBarSpacePercent(35f);
-/*
-        ArrayList<Integer> colors = new ArrayList<Integer>();
-        for (int c : ColorTemplate.COLORFUL_COLORS)
-            colors.add(c);
 
-         set1.setColors(colors);
-*/
         set1.setColor(getResources().getColor(R.color.myAccentColor));
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         dataSets.add(set1);
@@ -257,13 +243,6 @@ public class ExpenseTrend extends Fragment {
 
         BarDataSet set1 = new BarDataSet(vals1, "Day");
         set1.setBarSpacePercent(35f);
-/*
-        ArrayList<Integer> colors = new ArrayList<Integer>();
-        for (int c : ColorTemplate.COLORFUL_COLORS)
-            colors.add(c);
-
-         set1.setColors(colors);
-*/
         set1.setColor(getResources().getColor(R.color.myAccentColor));
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         dataSets.add(set1);

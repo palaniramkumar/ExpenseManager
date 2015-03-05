@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,6 +58,9 @@ public class Expense_add_window extends ListActivity {
     String place;
     String geo_tag;
     ArrayAdapter<ListAdapterRadioModel> adapter;
+    public interface Constants {
+        String TAG = "app:ExpenseAddWindow";
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -250,8 +254,9 @@ public class Expense_add_window extends ListActivity {
                     public String numPadCanceled() {
                         // generate a toast message to inform the user that the pin
                         // capture was canceled
-                        Toast.makeText(getApplicationContext(),
-                                "Amount Cancelled", Toast.LENGTH_LONG).show();
+                        if (BuildConfig.DEBUG) {
+                            Log.e(Constants.TAG, "Clicked Cancel Button");
+                        }
                         return null;
                     }
                 });
@@ -309,7 +314,9 @@ public class Expense_add_window extends ListActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            Toast.makeText(getApplicationContext(),"Clicked Menu",Toast.LENGTH_SHORT);
+            if (BuildConfig.DEBUG) {
+                Log.e(Constants.TAG, "Clicked Menu");
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);

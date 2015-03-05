@@ -2,19 +2,17 @@ package com.reader.ramkumar.expensemanager.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.reader.ramkumar.expensemanager.*;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
@@ -38,7 +36,9 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
     private LayoutInflater inflater;
     DBHelper db;
     Context mContext;
-    
+    public interface Constants {
+        String TAG = "app:StickyAdapter";
+    }
     public StickyHistoryAdapter(Context context,DBHelper db) {
         inflater = LayoutInflater.from(context);
         this.db =db;
@@ -59,9 +59,10 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
             id[i] = cur.getString(4);
             i++;
         }
-        System.out.println("Total Entry: "+i);
+        if (BuildConfig.DEBUG) {
+            Log.e(Constants.TAG,"Total Entry: "+i);
+        }
         mContext = context;
-        //entry_day = context.getResources().getStringArray(R.array.entry_day);
     }
 
     @Override

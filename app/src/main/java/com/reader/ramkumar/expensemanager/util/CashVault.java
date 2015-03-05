@@ -31,7 +31,7 @@ public class CashVault {
             msg = "Your cash is really low. You have just "+Common.CURRENCY+amount_left+" in cash vault";
         else if( amount_left_in_percent < 50)
             msg = "You have "+Common.CURRENCY+amount_left+" in cash vault";
-        else if( amount_left_in_percent < 75)
+        else
             msg = "You have enough money "+Common.CURRENCY+amount_left+" in cash vault";
     }
 }

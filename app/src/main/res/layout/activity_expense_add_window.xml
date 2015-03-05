@@ -103,7 +103,7 @@
                     android:id="@+id/rdo_ATM_WRL"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ATM "
+                    android:text="ATM"
                     android:textColor="#000000"/>
             </RadioGroup>
 
@@ -175,7 +175,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="Cash "
+                    android:text="Cash"
                     android:textColor="#000000" />
 
                 <RadioButton

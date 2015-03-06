@@ -11,7 +11,6 @@ import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -42,7 +41,6 @@ import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.CashVault;
 import com.reader.ramkumar.expensemanager.util.Common;
 import com.reader.ramkumar.expensemanager.util.MonthOperations;
-import com.reader.ramkumar.expensemanager.util.TYPES;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -257,8 +255,6 @@ public class main extends Fragment {
 
         // display percentage values
         mChart.setUsePercentValues(true);
-        // mChart.setUnit(" €");
-        // mChart.setDrawUnitsInChart(true);
 
         // add a selection listener
         //mChart.setOnChartValueSelectedListener(this);//need to uncomment
@@ -328,13 +324,15 @@ public class main extends Fragment {
         yl.setDrawGridLines(false);
         yl.setGridLineWidth(0.3f);
         yl.setDrawLabels(false);
+        yl.setLabelCount(0);
 
         YAxis yr = hChart.getAxisRight();
         yr.setDrawAxisLine(false);
         yr.setDrawGridLines(false);
-        yl.setDrawLabels(false);
+        yr.setDrawLabels(false);
+        yr.setLabelCount(0);
 
-        horizontal_setData();
+        bill_expense_data();
         hChart.animateY(2500);
 
     }
@@ -374,7 +372,7 @@ public class main extends Fragment {
         mListener = null;
     }
 
-    private void horizontal_setData() {
+    private void bill_expense_data() {
         
         Cursor cur = db.getFromMaster(db.MASTER_COLUMN_CATEGORY,db.BILL_PAYMENT,false);
 
@@ -386,6 +384,8 @@ public class main extends Fragment {
            
             if(bill_name == null || bill_name.trim().equals(""))
                 bill_name = "<Not Specified>";
+            else
+                bill_name = bill_name.toUpperCase().replace("PAYMENT","");
             
             if (BuildConfig.DEBUG) {
                 Log.e(Constants.TAG, "Retrived Val: "+bill_name+" ,"+cur.getFloat(cur.getColumnIndex(db.MASTER_COLUMN_AMOUNT)));
@@ -396,7 +396,7 @@ public class main extends Fragment {
             i++;
         }
         
-         BarDataSet set1 = new BarDataSet(yVals1, "DataSet");
+         BarDataSet set1 = new BarDataSet(yVals1, "Paid Bill Amount");
         set1.setBarSpacePercent(35f);
 
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();

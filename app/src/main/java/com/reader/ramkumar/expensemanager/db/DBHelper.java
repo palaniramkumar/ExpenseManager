@@ -287,9 +287,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public Cursor getFromMaster(String field,String value,Boolean all)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "select * from MASTER where "+field+" = '"+value+"' and status='"+TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' order by trans_time desc";
+        String sql = "select * from MASTER where "+field+" = '"+value+"' and status='"+TYPES.TRANSACTION_STATUS.APPROVED+"'  order by trans_time desc";
         if(!all)
-            sql =  "select * from MASTER where "+field+" = '"+value+"' and status='"+TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' and  strftime('%m', `trans_time`) = '"+month+"' and  strftime('%Y', `trans_time`) = '"+year+"' order by trans_time desc";
+            sql =  "select * from MASTER where "+field+" = '"+value+"' and status='"+TYPES.TRANSACTION_STATUS.APPROVED+"' and  strftime('%m', `trans_time`) = '"+month+"' and  strftime('%Y', `trans_time`) = '"+year+"' order by trans_time desc"; //
         Cursor res =  db.rawQuery(sql, null );
         return res;
     }

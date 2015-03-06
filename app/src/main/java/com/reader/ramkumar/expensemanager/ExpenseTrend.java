@@ -143,7 +143,7 @@ public class ExpenseTrend extends Fragment {
         YAxis rightAxis = mChart.getAxisRight();
         rightAxis.setDrawGridLines(false);
         rightAxis.setDrawAxisLine(false);
-        leftAxis.setDrawLabels(false);
+        rightAxis.setDrawLabels(false);
 
         // add data
         monthTrendData();
@@ -184,7 +184,7 @@ public class ExpenseTrend extends Fragment {
         rightAxis = dChart.getAxisRight();
         rightAxis.setDrawGridLines(false);
         rightAxis.setDrawAxisLine(false);
-        leftAxis.setDrawLabels(false);
+        rightAxis.setDrawLabels(false);
 
         // add data
         dayTrendData();

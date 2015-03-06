@@ -15,10 +15,10 @@
 
             <it.gmariotti.cardslib.library.view.CardViewNative
                 android:id="@+id/card_category"
-                style="@style/card_external"
+                style="@style/card.native.header_outer_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                card:card_layout_resourceID="@layout/native_cardwithlist_layout" />
+                card:card_layout_resourceID="@layout/card_native_card_layout" />
         </RelativeLayout>
     </ScrollView>
     <com.melnykov.fab.FloatingActionButton

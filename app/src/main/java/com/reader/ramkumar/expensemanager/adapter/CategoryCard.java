@@ -48,6 +48,7 @@ public class CategoryCard extends CardWithList {
 
     @Override
     protected CardHeader initCardHeader() {
+
         return new CustomHeader(getContext());
     }
     public class CustomHeader extends CardHeader {

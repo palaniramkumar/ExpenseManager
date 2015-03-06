@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.reader.ramkumar.expensemanager.Expense_add_window;
+import com.reader.ramkumar.expensemanager.MainActivity;
 import com.reader.ramkumar.expensemanager.R;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.main;
@@ -30,7 +31,7 @@ public class SummaryReceiver extends BroadcastReceiver
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notification = new Notification(R.drawable.ic_action_send,"Today's Expense Summary", System.currentTimeMillis());
         PendingIntent i = PendingIntent.getActivity(context, 0,
-                new Intent(context, main.class),
+                new Intent(context, MainActivity.class),
                 0);
         DBHelper db=new DBHelper(context);
         notification.setLatestEventInfo(context, "Total Expense", "Amount "+ Common.CURRENCY+" "+db.getExpensebyDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+""), i);

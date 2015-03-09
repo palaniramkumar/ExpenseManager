@@ -1,5 +1,8 @@
 package com.reader.ramkumar.SMSparser;
 
+import android.util.Log;
+
+import com.reader.ramkumar.expensemanager.BuildConfig;
 import com.reader.ramkumar.expensemanager.util.TYPES;
 
 import java.util.regex.Matcher;
@@ -21,11 +24,14 @@ import java.util.regex.Pattern;
  Your BANK a/c xxxx (.*?) will be debited for Rs (.*?) towards (.*?) on 08/JAN/2015 .
 
  01-03-2015: Rs.(.*?) was withdrawn using your HDFC Bank Card ending (.*?) on (.*?) at (.*?). Avl bal: (.*?)
+
  */
 public class HDFC {
     /*this class variables and name needs to be same for all other banks*/
     public SMSParserData parserValue;
-
+    public interface Constants {
+        String TAG = "app:HDFC";
+    }
     public class  SMSParserData{
         public String valueSet[];
         public String trans_type;
@@ -35,6 +41,7 @@ public class HDFC {
     final String [][] template ={
             {"Rs.(.*?) was spent on ur HDFCBank CREDIT Card ending (.*?) on (.*?) at (.*?).Avl", TYPES.TRANSACTION_TYPE.EXPENSE.toString(),TYPES.TRANSACTION_SOURCE.CREDIT_CARD.toString()},
             {"An amount of Rs.(.*?) has been debited from your account number (.*?) for (.*?) done using HDFC Bank NetBanking",TYPES.TRANSACTION_TYPE.EXPENSE.toString(),TYPES.TRANSACTION_SOURCE.NET_BANKING.toString()},
+            {"An amount of Rs.(.*?) has been debited from your account  number (.*?) for (.*?) done using HDFC Bank NetBanking",TYPES.TRANSACTION_TYPE.EXPENSE.toString(),TYPES.TRANSACTION_SOURCE.NET_BANKING.toString()},
             {"INR (.*?) deposited to A/c No (.*?)",TYPES.TRANSACTION_TYPE.INCOME.toString(),TYPES.TRANSACTION_SOURCE.NET_BANKING.toString()},
             {"Thank you for using your HDFC Bank DEBIT/ATM Card ending (.*?) for Rs. (.*?) towards ATM WDL in (.*?) at (.*?) on (.*?)",TYPES.TRANSACTION_TYPE.CASH_VAULT.toString(),TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString()},
             {"Rs.(.*?) was withdrawn using your HDFC Bank Card ending (.*?) on (.*?) at (.*?). Avl bal: (.*?)",TYPES.TRANSACTION_TYPE.CASH_VAULT.toString(),TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString()},
@@ -44,6 +51,7 @@ public class HDFC {
     final int [][] templateMap={ //the numbers are the curresponding values in the template*/
             {0,1,2,3},
             {0,1,3},
+            {0,1,3},
             {0,1},
             {1,0,4,3,2},
             {0,1,2,3,5},
@@ -52,7 +60,12 @@ public class HDFC {
 
     String sms;
     public HDFC(String text){
-        this.sms=text;
+        this.sms=text.replace("/ +/g", " ");
+        if (BuildConfig.DEBUG) {
+            Log.e(Constants.TAG, "Actual SMS: "+text);
+            Log.e(Constants.TAG, "Trimmed SMS: "+this.sms);
+
+        }
     }
 
     /*code for parsing sms. this is generic can be moved to the common class*/

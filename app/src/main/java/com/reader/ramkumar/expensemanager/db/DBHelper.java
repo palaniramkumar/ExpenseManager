@@ -435,8 +435,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return "";
     }
     public static String getDateTime(String dateinactivity) {
-        int day=Integer.parseInt(dateinactivity.split("/")[0]);
-        int month=Integer.parseInt(dateinactivity.split("/")[1])-1;
+        int month=Integer.parseInt(dateinactivity.split("/")[0])-1;
+        int day=Integer.parseInt(dateinactivity.split("/")[1]);
         int year=Integer.parseInt(dateinactivity.split("/")[2]);
         Calendar calendar = new GregorianCalendar(year,month,day);
         SimpleDateFormat dateFormat = new SimpleDateFormat(

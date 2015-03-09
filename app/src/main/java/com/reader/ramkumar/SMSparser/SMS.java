@@ -28,6 +28,7 @@ public class SMS {
     public String expanse_category; 
 
     public boolean isAvailable(String [] array,String val){
+        if(val!=null)
         for(int i=0;i< array.length;i++) {
             if (val.toLowerCase().contains(array[i].toLowerCase()))
                 return true;

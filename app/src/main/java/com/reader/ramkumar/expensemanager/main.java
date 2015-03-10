@@ -37,6 +37,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.melnykov.fab.FloatingActionButton;
 import com.reader.ramkumar.SMSparser.SMS;
 import com.reader.ramkumar.expensemanager.adapter.ExpenseCard;
+import com.reader.ramkumar.expensemanager.db.DBCategoryMap;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.CashVault;
 import com.reader.ramkumar.expensemanager.util.Common;
@@ -195,6 +196,7 @@ public class main extends Fragment {
             }
           
             db.firstUser();
+
             if(getActivity()!=null) //safe condition while rotating view. This throws null)
                 SMS.syncSMS(getActivity());
         }

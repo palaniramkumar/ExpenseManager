@@ -5,10 +5,7 @@ package com.reader.ramkumar.expensemanager.util;
  * custom staus codes in the project
  */
 public class TYPES {
-    public static final String [] KNOWN_BILLS = {"Credit","Airtel","Vodafone","Aircel","acttv"};
-    public static final String [] KNOWN_TRAVEL = {"IRCTC"};
-    public static final String [] KNOWN_SHOP = {"Amazon","Flipkart","Snapdeal","Landmark","textile","Silks"};
-    public static final String [] NEUTRAL = {"Credit"};
+
     
     public enum TRANSACTION_TYPE {
         EXPENSE  ("EXPENSE"),  //calls constructor with value 3

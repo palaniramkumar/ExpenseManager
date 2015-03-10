@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.reader.ramkumar.expensemanager.adapter.StickyHistoryAdapter;
+import com.reader.ramkumar.expensemanager.db.DBCategoryMap;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.MonthOperations;
 import com.reader.ramkumar.expensemanager.util.TYPES;
@@ -253,7 +254,15 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
                 ListView lw = ((AlertDialog) dialog).getListView();
                 if(lw.getCheckedItemPosition()>=0) {
                     Cursor checkedItem =(Cursor) lw.getAdapter().getItem(lw.getCheckedItemPosition());
-                    db.updateMaster(RECID, db.MASTER_COLUMN_CATEGORY, checkedItem.getString(checkedItem.getColumnIndex("category")));
+                    String category = checkedItem.getString(checkedItem.getColumnIndex("category"));
+                    db.updateMaster(RECID, db.MASTER_COLUMN_CATEGORY, category);
+
+                    Cursor cur = db.getFromMasterByID(RECID);
+                    if(cur.moveToNext()) {
+                        DBCategoryMap dbCatMap = new DBCategoryMap(getActivity());
+                        dbCatMap.insertCategoryMap(cur.getString(cur.getColumnIndex(db.DESC)), category, TYPES.TRANSACTION_TYPE.EXPENSE.toString());
+                        dbCatMap.close();
+                    }
                     init();
                 }
                 // TODO Auto-generated method stub

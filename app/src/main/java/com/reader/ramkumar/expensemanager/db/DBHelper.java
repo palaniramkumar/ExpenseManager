@@ -99,6 +99,11 @@ public class DBHelper extends SQLiteOpenHelper {
                         "(id integer primary key, category text,amount text, "+
                         "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,status text)"
         );
+
+        db.execSQL(
+                "create table KNOWN_CATEGORY_LIST " +
+                        "(id integer primary key, place text UNIQUE,category text,trans_type text,trans_time DATETIME DEFAULT CURRENT_TIMESTAMP)"
+        );
     }
 
     @Override

@@ -4,7 +4,10 @@ package com.reader.ramkumar.SMSparser;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
+import com.reader.ramkumar.expensemanager.BuildConfig;
+import com.reader.ramkumar.expensemanager.db.DBCategoryMap;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.TYPES;
 
@@ -25,8 +28,10 @@ public class SMS {
     public String when;
     public String place;
     public String account;
-    public String expanse_category; 
-
+    public String expanse_category;
+    public interface Constants {
+        String TAG = "app:SMS";
+    }
     public boolean isAvailable(String [] array,String val){
         if(val!=null)
         for(int i=0;i< array.length;i++) {
@@ -35,7 +40,7 @@ public class SMS {
         }
         return false;
     }
-    public boolean findSMS(){
+    public boolean findSMS(Context context){
         if(text.contains("HDFC")) {
             bankName="HDFC";
             HDFC bank=new HDFC(text);
@@ -50,14 +55,28 @@ public class SMS {
             trans_src = smsparsedata.trans_src;
             expanse_category = DBHelper.UNCATEGORIZED;
             if(amount==null)return false;
-            if(isAvailable(TYPES.NEUTRAL,where))
+
+            DBCategoryMap c=new DBCategoryMap(context);
+            Cursor cur = c.getCategoryInfo(where);
+            if (BuildConfig.DEBUG) {
+                Log.e(Constants.TAG, where);
+            }
+            if(cur.moveToNext()) {
+                expanse_category = cur.getString(2);
+                trans_type = cur.getString(3);
+                if (BuildConfig.DEBUG) {
+                    Log.e(Constants.TAG, trans_type+"="+expanse_category);
+                }
+            }
+
+            /*if(isAvailable(TYPES.NEUTRAL,where))
                 trans_type = TYPES.TRANSACTION_TYPE.NEUTRAL.toString();
             if(isAvailable(TYPES.KNOWN_BILLS,where))
                 expanse_category = DBHelper.BILL_PAYMENT;
             if(isAvailable(TYPES.KNOWN_SHOP,where))
                 expanse_category = DBHelper.SHOPPING;
             if(isAvailable(TYPES.KNOWN_TRAVEL,where))
-                expanse_category = DBHelper.TRAVEL;
+                expanse_category = DBHelper.TRAVEL;*/
 
             return true;
         }
@@ -101,9 +120,11 @@ public class SMS {
             s.when=db.getDroidDate(cursor.getLong(2) /1000);
 
              /* this may need to tune further for better accurecy */
-            if(s.findSMS() && s.amount!=null) {
+            if(s.findSMS(context) && s.amount!=null) {
                 //Add an object to the list
-                System.out.println("when = "+s.when);
+                if (BuildConfig.DEBUG) {
+                    Log.e(Constants.TAG, "SYNC "+s.trans_type+"="+s.expanse_category);
+                }
                 db.insertMaster(s.amount.replace(",",""), s.bankName, s.trans_src, s.trans_type,s.expanse_category, s.where, s.id, s.where, s.when,
                         db.getNow(), s.place, null, null, null,TYPES.TRANSACTION_STATUS.APPROVED.toString());
             }

@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 //import com.melnykov.fab.FloatingActionButton;
 import com.reader.ramkumar.SMSparser.SMS;
+import com.reader.ramkumar.expensemanager.db.DBCategoryMap;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.service.SMSListener;
 import com.reader.ramkumar.expensemanager.service.SummaryReceiver;
@@ -168,6 +169,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             protected Integer doInBackground(Void... params) {
                 DBHelper db = new DBHelper(getApplicationContext());
                 if(item!=null || db.getLastSMSID()==0) {
+                    new DBCategoryMap(getApplicationContext()).firstTime();
                     SMS.syncSMS(getApplicationContext(), true);
                 }
                 db.close();
@@ -219,6 +221,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                         .commit();
                 setTitle("Category List");
                 break;
+            case 5:
+                new DBCategoryMap(getApplicationContext()).getCategoryInfo();
             case 6:
                 try {
 

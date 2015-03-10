@@ -39,9 +39,9 @@ public class SMSListener extends BroadcastReceiver{
 
         SMS s= new SMS();
         s.text = smsMessage[0].getMessageBody();
-        s.findSMS();
+        s.findSMS(context);
 
-            if(s.findSMS() &&  s.amount !=null) {
+            if(s.findSMS(context) &&  s.amount !=null) {
 
                 final NotificationManager mgr =
                         (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

@@ -2,6 +2,7 @@ package com.reader.ramkumar.expensemanager;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -201,7 +202,28 @@ public class main extends Fragment {
                 SMS.syncSMS(getActivity());
         }
 
+        TextView t = (TextView)view.findViewById(R.id.txt_progress);
+        
+        t.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View viewIn) {
+                view_atm_trans(viewIn);
+            }
+        });
+
         return view;
+    }
+
+    public void view_atm_trans(View v){
+        FragmentHistory secFrag = new FragmentHistory(DBHelper.ATM);
+        FragmentTransaction fragTransaction = (getActivity()).getFragmentManager().beginTransaction();
+        fragTransaction.replace(R.id.frame_container,secFrag );
+        fragTransaction.addToBackStack(null);
+        fragTransaction.commit();
+
+        if (BuildConfig.DEBUG) {
+            Log.e(Constants.TAG, "Clicked on " + DBHelper.ATM);
+        }
     }
 
     void init(){

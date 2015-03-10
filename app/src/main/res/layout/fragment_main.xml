@@ -114,12 +114,14 @@
                 >
                 <TextView
                     android:layout_width="match_parent"
+                    android:id="@+id/txt_progress_head"
                     android:layout_height="40dp"
                     android:background="@color/myPrimaryDarkColor"
                     android:textColor="@color/myLightPrimaryColor"
                     android:textAlignment="center"
                     android:padding="8dp"
                     android:text="Cash Vault"
+                    android:clickable="true"
                     android:textSize="@dimen/card_header_native_simple_title_text_size"
                     />
                 <TextView
@@ -128,6 +130,7 @@
                     android:layout_height="wrap_content"
                     android:padding="16dp"
                     android:textColor="@color/myTextSecondaryColor"
+                    android:clickable="true"
                     android:text="You have Rs 2,600 left in your Cash Vault"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 

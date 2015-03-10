@@ -56,6 +56,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String BILL_PAYMENT = "Bill";
     public static final String SHOPPING = "Shopping";
     public static final String TRAVEL = "Travel";
+    public static final String ATM = "ATM Withdrawal";
 
     public String month = "";
     public String year = "";

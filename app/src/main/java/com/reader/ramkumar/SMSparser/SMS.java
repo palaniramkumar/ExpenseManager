@@ -68,6 +68,8 @@ public class SMS {
                     Log.e(Constants.TAG, trans_type+"="+expanse_category);
                 }
             }
+            if(trans_type.equals( TYPES.TRANSACTION_TYPE.CASH_VAULT.toString()))
+                expanse_category =DBHelper.ATM;
 
             /*if(isAvailable(TYPES.NEUTRAL,where))
                 trans_type = TYPES.TRANSACTION_TYPE.NEUTRAL.toString();

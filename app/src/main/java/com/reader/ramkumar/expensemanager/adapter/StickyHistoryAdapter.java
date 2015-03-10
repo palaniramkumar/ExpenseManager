@@ -33,6 +33,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
     private String[] place;
     private String[] id;
     private String month;
+    private String category_filter;
     private LayoutInflater inflater;
     DBHelper db;
     Context mContext;
@@ -48,6 +49,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
         amount = new String[cur.getCount()];
         place = new String[cur.getCount()];
         id = new String[cur.getCount()];
+        category_filter=filter;
         int i=0;
         while(cur.moveToNext()){
 
@@ -151,7 +153,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
         }
         //set header text as first char in name
         String headerText = month +", " + entry_day[position]; //code for showing header
-        String headerAmount = Common.CURRENCY+" "+db.getExpensebyDay(entry_day[position]);
+        String headerAmount = Common.CURRENCY+" "+db.getExpensebyDay(entry_day[position],category_filter);
         holder.text.setText(headerText);
         holder.amount.setText(headerAmount);
         

@@ -34,7 +34,7 @@ public class SummaryReceiver extends BroadcastReceiver
                 new Intent(context, MainActivity.class),
                 0);
         DBHelper db=new DBHelper(context);
-        notification.setLatestEventInfo(context, "Total Expense", "Amount "+ Common.CURRENCY+" "+db.getExpensebyDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+""), i);
+        notification.setLatestEventInfo(context, "Total Expense", "Amount "+ Common.CURRENCY+" "+db.getExpensebyDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+"","%"), i);
         mgr.notify(0, notification);
 
     }

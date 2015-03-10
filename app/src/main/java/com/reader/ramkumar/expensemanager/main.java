@@ -203,7 +203,7 @@ public class main extends Fragment {
         }
 
         TextView t = (TextView)view.findViewById(R.id.txt_progress);
-        
+
         t.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View viewIn) {
@@ -235,7 +235,7 @@ public class main extends Fragment {
         amountHdr.setText(Common.CURRENCY+" "+db.getMyTotalExpense());
 
         TextView amt_today = (TextView) view.findViewById(R.id.txt_today_amount);
-        amt_today.setText("( Today's Expense "+Common.CURRENCY+" "+db.getExpensebyDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+"")+" )");
+        amt_today.setText("( Today's Expense "+Common.CURRENCY+" "+db.getExpensebyDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+"","%")+" )");
 
         btn_month = (Button) view.findViewById(R.id.btn_month);
         btn_year = (Button) view.findViewById(R.id.btn_year);

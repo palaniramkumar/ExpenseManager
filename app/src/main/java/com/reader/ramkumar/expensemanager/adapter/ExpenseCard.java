@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +21,10 @@ import com.reader.ramkumar.expensemanager.R;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.Common;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
@@ -91,6 +95,23 @@ public class ExpenseCard extends CardWithList {
             c.amount = cursor.getFloat(1);
             c.trendIcon = R.drawable.ic_action_expand;
             c.setObjectId(c.type); //It can be important to set tyoe id, In future we shall show all the curresponding ID expense in history fragment
+            /*** current -1 month**/
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            cal.add(Calendar.MONTH, -1);
+
+            Calendar cal1 = Calendar.getInstance();
+            cal1.setTime(date);
+            cal1.add(Calendar.MONTH, -1);
+            cal1.set(Calendar.DAY_OF_MONTH, 1);
+
+            //System.out.println(dateFormat.format(date)); //2013/10/15 16:16:39
+            cal.get(Calendar.DATE);
+            int prev_month_amt = db.getMyExpenseByCategory(c.type, dateFormat.format(cal1.getTime()), dateFormat.format(cal.getTime()));
+            c.progress = (prev_month_amt-c.amount)>0 ? "▼": "▲" ;
+           // c.progress+=Math.abs(prev_month_amt-c.amount);
             mObjects.add(c);
         }
 
@@ -106,11 +127,20 @@ public class ExpenseCard extends CardWithList {
         TextView amount = (TextView) convertView.findViewById(R.id.table_txt_amount);
         TextView currency = (TextView) convertView.findViewById(R.id.txt_currency);
 
+
         //Retrieve the values from the object
         CostObject costObject = (CostObject) object;
-        icon.setImageResource(costObject.trendIcon);
+        //icon.setImageResource(costObject.trendIcon); //future impl for image icon for better representation
         category.setText(costObject.type);
-        amount.setText(costObject.currencyUnit+" "+costObject.amount);
+        amount.setText(costObject.currencyUnit + " " + costObject.amount);
+
+        currency.setText(costObject.progress);
+
+        if(costObject.progress .contains("▼"))
+            currency.setTextColor(Color.RED);
+        else
+            currency.setTextColor(getContext().getResources().getColor(R.color.material_deep_teal_500));
+
         //currency.setText(costObject.currencyUnit); //can extend later like minified the size etc
 
         return convertView;
@@ -131,6 +161,7 @@ public class ExpenseCard extends CardWithList {
         public int trendIcon;
         public float amount;
         public String currencyUnit = Common.CURRENCY;//"₹"
+        public String progress;
 
         public CostObject(Card parentCard) {
             super(parentCard);

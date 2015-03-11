@@ -380,6 +380,19 @@ public class DBHelper extends SQLiteOpenHelper {
                 " and strftime('%m', `trans_time`) = '"+month+"' and  strftime('%Y', `trans_time`) = '"+year+"' group by category", null );
         return res;
     }
+    public int getMyExpenseByCategory(String category,String from, String to ){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "select sum(amount) from MASTER  where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' " +
+                " and trans_time between  '"+from+"' and '"+to+"'  and category = '"+category+"'";
+        if (BuildConfig.DEBUG) {
+            Log.e(Constants.TAG, "SQL: " + sql);
+        }
+        Cursor res =  db.rawQuery( sql  , null );
+        if(res.moveToNext()){
+            return res.getInt(0);
+        }
+        return 0;
+    }
 
     /*Budget Related Methods */
 

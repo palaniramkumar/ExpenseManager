@@ -64,7 +64,7 @@
                     android:layout_height="12dp"
                     android:gravity="left"
                     android:layout_marginRight="2dp"
-                    tools:background="@drawable/ic_action_done" />
+                    />
                 </FrameLayout>
             <FrameLayout
                 android:layout_width="0dp"

@@ -60,7 +60,7 @@ public class NotificationCard extends CardWithList {
             if (view != null) {
                 TextView t1 = (TextView) view.findViewById(R.id.text_exmple_card1);
                 if (t1 != null)
-                    t1.setText("You have few Pending Approvals");
+                    t1.setText("You have "+ db.getCountMaster(db.MASTER_COLUMN_CATEGORY,db.UNCATEGORIZED,true)+" Pending Approvals");
 
             }
         }

@@ -180,7 +180,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("SharedMembers", SharedMembers);
         contentValues.put("status", status);
         contentValues.put("place", place);
-        db.update("MASTER", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
+        db.update("MASTER", contentValues, "id = ? ", new String[]{Integer.toString(id)});
         return true;
     }
 
@@ -208,13 +208,13 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(field, value);
-        int count = db.update("Category", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
+        int count = db.update("Category", contentValues, "id = ? ", new String[]{Integer.toString(id)});
         return count;
 
     }
     public  Cursor getCategory(Integer id){
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery( "select * from CATEGORY where id = "+id, null );
+        Cursor res = db.rawQuery("select * from CATEGORY where id = " + id, null);
         return res;
 
     }
@@ -301,6 +301,19 @@ public class DBHelper extends SQLiteOpenHelper {
                 new String[] { Integer.toString(id) });
     }
 
+
+    public int getCountMaster(String field,String value,Boolean all)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "select count(*) from MASTER where "+field+" = '"+value+"' and status='"+TYPES.TRANSACTION_STATUS.APPROVED+"'  order by trans_time desc";
+        if(!all)
+            sql =  "select count(*) from MASTER where "+field+" = '"+value+"' and status='"+TYPES.TRANSACTION_STATUS.APPROVED+"' and  strftime('%m', `trans_time`) = '"+month+"' and  strftime('%Y', `trans_time`) = '"+year+"' order by trans_time desc"; //
+        Cursor res =  db.rawQuery(sql, null);
+        if(res.moveToNext()){
+            return res.getInt(0);
+        }
+        return 0;
+    }
 
     public Cursor getFromMaster(String field,String value,Boolean all)
     {

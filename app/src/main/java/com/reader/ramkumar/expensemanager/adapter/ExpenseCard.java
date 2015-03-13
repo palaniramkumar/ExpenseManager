@@ -110,7 +110,7 @@ public class ExpenseCard extends CardWithList {
             //System.out.println(dateFormat.format(date)); //2013/10/15 16:16:39
             cal.get(Calendar.DATE);
             int prev_month_amt = db.getMyExpenseByCategory(c.type, dateFormat.format(cal1.getTime()), dateFormat.format(cal.getTime()));
-            c.progress = (prev_month_amt-c.amount)>0 ? "▼": "▲" ;
+            c.progress = prev_month_amt-c.amount>0 ?  "▲" :"▼" ;
            // c.progress+=Math.abs(prev_month_amt-c.amount);
             mObjects.add(c);
         }

@@ -17,6 +17,7 @@ import com.reader.ramkumar.SMSparser.SMS;
 import com.reader.ramkumar.expensemanager.*;
 import com.reader.ramkumar.SMSparser.HDFC;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
+import com.reader.ramkumar.expensemanager.util.Common;
 import com.reader.ramkumar.expensemanager.util.TYPES;
 
 /**
@@ -54,8 +55,9 @@ public class SMSListener extends BroadcastReceiver{
                         new Intent(context, MainActivity.class),
                         0);
 
-                note.setLatestEventInfo(context, "New Expense",
-                        "Rs." + s.amount + " - " + s.where, i);
+                DBHelper db= new DBHelper(context);
+                note.setLatestEventInfo(context,  Common.CURRENCY + s.amount + " at " + s.where,
+                        "This month expense "+Common.CURRENCY +db.getMyTotalExpense(),i);
 
                  SMS.syncSMS(context);
 

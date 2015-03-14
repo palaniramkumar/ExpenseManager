@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,23 +15,22 @@ import android.os.Environment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import com.melnykov.fab.FloatingActionButton;
 import com.reader.ramkumar.SMSparser.SMS;
 import com.reader.ramkumar.expensemanager.db.DBCategoryMap;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.service.SMSListener;
 import com.reader.ramkumar.expensemanager.service.SummaryReceiver;
+import com.reader.ramkumar.expensemanager.util.AboutBox;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,8 +39,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.channels.FileChannel;
 import java.util.Calendar;
+import java.util.UUID;
 
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks,
@@ -54,7 +54,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     Fragment newFragment = null;
     ViewGroup mContainer;
     FragmentManager fragmentManager;
-
+    public interface Constants {
+        String TAG = "app:MainActivity";
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -67,6 +69,24 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         catch (Exception e){
             e.printStackTrace();
         }
+
+
+        /** New User -  display demo page **/
+        /* first user check */
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        String endpoint = sharedPref.getString("Endpoint1", "0");
+        if(endpoint.equalsIgnoreCase("0")) {
+            if (BuildConfig.DEBUG) {
+                Log.e(Constants.TAG, "Launching demo page");
+                Intent i = new Intent(MainActivity.this, demo.class);
+                startActivityForResult(i, 301);
+            }
+
+        }
+        else{
+            //else code
+        }
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_topdrawer);
@@ -125,7 +145,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
 
     public void aboutApp(MenuItem item){
-        Toast.makeText(this, "Hello World", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Hello World", Toast.LENGTH_LONG).show();
+        AboutBox.Show(MainActivity.this);
+
     }
     public void refreshSMS(final MenuItem item){
 
@@ -223,6 +245,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 break;
             case 5:
                 new DBCategoryMap(getApplicationContext()).getCategoryInfo();
+                break;
             case 6:
                 try {
 
@@ -251,7 +274,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         }
 
 
-
+        if (BuildConfig.DEBUG) {
+            Log.e(Constants.TAG, "Clicked "+position);
+        }
 
         //DrawerList.setItemChecked(position, true);
 

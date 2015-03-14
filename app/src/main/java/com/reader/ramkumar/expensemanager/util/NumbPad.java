@@ -64,7 +64,7 @@ public class NumbPad {
         flag_hideInput = inFlags % 2;
         flag_hidePrompt = (inFlags / 2) % 2;
 
-        Builder dlg = new AlertDialog.Builder(a, AlertDialog.THEME_HOLO_LIGHT);
+        Builder dlg = new AlertDialog.Builder(a, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
 
         // Inflate the dialog layout
         LayoutInflater inflater = a.getLayoutInflater();

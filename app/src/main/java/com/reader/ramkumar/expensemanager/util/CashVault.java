@@ -13,8 +13,7 @@ public class CashVault {
     public int amount_left;
     public int amount_left_in_percent;
     public String msg;
-    public  CashVault(Context context){
-        DBHelper db= new DBHelper(context);
+    public  CashVault(DBHelper db){
         vault_amount = db.getCashVault();
         spent_amount = db.getCashExpense();
        

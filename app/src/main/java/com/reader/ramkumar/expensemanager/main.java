@@ -151,7 +151,7 @@ public class main extends Fragment {
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(mContainer.getContext(), "New Clicked", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContainer.getContext(), "New Clicked", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(mContainer.getContext(), Expense_add_window.class);
                 startActivityForResult(i,201); //201 -Create: assume HTTP 201 for create request :). It can be any value
             }
@@ -306,7 +306,7 @@ public class main extends Fragment {
         progress_bar.setBackgroundColor(getActivity().getResources()
                 .getColor(R.color.myLightPrimaryColor));
 
-        CashVault vault = new CashVault(view.getContext());
+        CashVault vault = new CashVault(db);
         
         progress_bar.setMax(vault.vault_amount);
         progress_bar.setProgress(vault.amount_left);

@@ -36,6 +36,5 @@
         android:enabled="false"
         android:layout_marginLeft="4px"
         android:gravity="center_vertical|center_horizontal"
-        android:background="@drawable/abc_ab_share_pack_holo_dark"
         android:layout_marginRight="10px"/>
 </LinearLayout>

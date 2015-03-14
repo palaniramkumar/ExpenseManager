@@ -64,7 +64,7 @@ public class CategoryCard extends CardWithList {
             if (view != null) {
                 TextView t1 = (TextView) view.findViewById(R.id.text_exmple_card1);
                 if (t1 != null)
-                    t1.setText("Total Budget: "+totalBudget);
+                    t1.setText("Total Budget "+Common.CURRENCY+totalBudget);
 
             }
         }
@@ -98,7 +98,7 @@ public class CategoryCard extends CardWithList {
             c.setOnItemClickListener(new OnItemClickListener() {
                  @Override
                  public void onItemClick(final LinearListView parent, View view, final int position, final ListObject object) {
-                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
                      Cursor c = db.getCategory(id);
                      if(c.moveToNext()) {
                          //you should edit this to fit your needs

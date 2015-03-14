@@ -236,7 +236,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
     }
     
     void showDialogCatogories(final Context context, final int RECID){
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT);
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
 
         //final CharSequence myList[] = db.getDefaultCategory();
         Cursor myList =db.getMyBudgetByCategory();
@@ -286,7 +286,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
     }
     //we may need to remove this code. No options for cash vault for now
     void showDialogConfirm(final Context context, final int RECID){
-        new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT)
+        new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                 .setTitle("Delete entry")
                 .setMessage("Remove from Cash Vault ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {

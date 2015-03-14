@@ -273,7 +273,7 @@ public class Expense_add_window extends ListActivity {
             @Override
             public void onClick(View arg0) {
 
-                final  AlertDialog.Builder dialog = new  AlertDialog.Builder(Expense_add_window.this, AlertDialog.THEME_HOLO_LIGHT);
+                final  AlertDialog.Builder dialog = new  AlertDialog.Builder(Expense_add_window.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
                 LayoutInflater inflater = getLayoutInflater();
                 View iView = inflater.inflate(R.layout.calender, null, false);
                 dialog.setView(iView);

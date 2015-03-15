@@ -31,17 +31,22 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.listener.OnDrawListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.Highlight;
+import com.github.mikephil.charting.utils.PercentFormatter;
 import com.melnykov.fab.FloatingActionButton;
 import com.reader.ramkumar.SMSparser.SMS;
 import com.reader.ramkumar.expensemanager.adapter.ExpenseCard;
-import com.reader.ramkumar.expensemanager.db.DBCategoryMap;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.CashVault;
 import com.reader.ramkumar.expensemanager.util.Common;
+import com.reader.ramkumar.expensemanager.util.CurrencyFormatter;
 import com.reader.ramkumar.expensemanager.util.MonthOperations;
 
 import java.util.ArrayList;
@@ -64,7 +69,7 @@ import it.gmariotti.cardslib.library.view.CardViewNative;
  * Use the {@link main#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class main extends Fragment {
+public class main extends Fragment implements OnChartValueSelectedListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -84,6 +89,7 @@ public class main extends Fragment {
     private ExpenseCard card;
     Button btn_month;
     Button btn_year;
+    ArrayList<String> xVals;
     public main() {
         // Required empty public constructor
     }
@@ -264,15 +270,11 @@ public class main extends Fragment {
 
         mChart.setDescription("");
 
-        //mChart.setDrawYValues(true);
         mChart.setDrawCenterText(true);
 
         mChart.setDrawHoleEnabled(true);
 
         mChart.setRotationAngle(0);
-
-        // draws the corresponding description value into the slice
-        //mChart.setDrawXValues(true);
 
         // enable rotation of the chart by touch
         mChart.setRotationEnabled(true);
@@ -280,15 +282,22 @@ public class main extends Fragment {
         // display percentage values
         mChart.setUsePercentValues(true);
 
+        mChart.setDrawSliceText(false);
+
+
         // add a selection listener
-        //mChart.setOnChartValueSelectedListener(this);//need to uncomment
-        // mChart.setTouchEnabled(false);
+        mChart.setOnChartValueSelectedListener(this);
+         mChart.setTouchEnabled(true);
 
-        mChart.setCenterText(Calendar.getInstance().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())+"\n"+Calendar.getInstance().get(Calendar.YEAR));
 
-        setData(3, 100);
+
+        setData();
 
         mChart.animateXY(1500, 1500);
+
+        if(mChart.getChildAt(0)!=null)
+            mChart.getChildAt(0).callOnClick();
+
         // mChart.spin(2000, 0, 360);
 
         //setting up remaining amount in cash vault
@@ -299,7 +308,7 @@ public class main extends Fragment {
 
         // Sets the progressBar color
         pgDrawable.getPaint().setColor(getActivity().getResources()
-                .getColor(R.color.myAccentColor));
+                .getColor(R.color.myProgressColor));
         ProgressBar progress_bar = (ProgressBar) view.findViewById(R.id.progress_1);
         ClipDrawable progress = new ClipDrawable(pgDrawable, Gravity.LEFT, ClipDrawable.HORIZONTAL);
         progress_bar.setProgressDrawable(progress);
@@ -337,16 +346,19 @@ public class main extends Fragment {
         hChart.setDrawGridBackground(false);
 
         XAxis xl = hChart.getXAxis();
-        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xl.setPosition(XAxis.XAxisPosition.TOP);
         xl.setDrawAxisLine(false);
         xl.setDrawGridLines(false);
-        xl.setGridLineWidth(0.3f);
+        //xl.setGridLineWidth(0.3f);
         // xl.setEnabled(false);
+
+        xl.setAdjustXLabels(true);
+        hChart.setScaleXEnabled(true);
 
         YAxis yl = hChart.getAxisLeft();
         yl.setDrawAxisLine(false);
         yl.setDrawGridLines(false);
-        yl.setGridLineWidth(0.3f);
+        //yl.setGridLineWidth(0.3f);
         yl.setDrawLabels(false);
         yl.setLabelCount(0);
 
@@ -358,6 +370,7 @@ public class main extends Fragment {
 
         bill_expense_data();
         hChart.animateY(2500);
+
 
     }
 
@@ -396,6 +409,23 @@ public class main extends Fragment {
         mListener = null;
     }
 
+    //graph related methods
+    @Override
+    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+        if (BuildConfig.DEBUG) {
+            Log.e(Constants.TAG, "Value: " + e.getVal() + ", xIndex: " + e.getXIndex()
+                    + ", DataSet index: " + dataSetIndex);
+            Log.e(Constants.TAG, "data: " + xVals.get(e.getXIndex()));
+
+        }
+        mChart.setCenterText(xVals.get(e.getXIndex())+"\n"+Common.CURRENCY+" "+e.getVal());
+    }
+
+    @Override
+    public void onNothingSelected() {
+    }
+
+
     private void bill_expense_data() {
         
         Cursor cur = db.getFromMaster(db.MASTER_COLUMN_CATEGORY,db.BILL_PAYMENT,false);
@@ -421,7 +451,7 @@ public class main extends Fragment {
         }
         
          BarDataSet set1 = new BarDataSet(yVals1, "Paid Bill Amount");
-        set1.setBarSpacePercent(35f);
+        set1.setBarSpacePercent(25f);
 
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         ArrayList<Integer> colors = new ArrayList<Integer>();
@@ -432,18 +462,17 @@ public class main extends Fragment {
 
         BarData data = new BarData(xVals, dataSets);
         data.setValueTextSize(10f);
-
+        data.setValueFormatter(new CurrencyFormatter());
 
         hChart.setData(data);
         hChart.invalidate();
+
     }
 
-    private void setData(int count, float range) {
-
-        float mult = range;
+    private void setData() {
         Cursor cursor = db.getMyExpenseByCategory();
         ArrayList<Entry> yVals1 = new ArrayList<Entry>();
-        ArrayList<String> xVals = new ArrayList<String>();
+        xVals = new ArrayList<String>();
 
         // IMPORTANT: In a PieChart, no values (Entry) should have the same
         // xIndex (even if from different DataSets), since no values can be
@@ -480,18 +509,22 @@ public class main extends Fragment {
             colors.add(c);
 */
 
-            colors.add(ColorTemplate.getHoloBlue());
+        colors.add(ColorTemplate.getHoloBlue());
 
-            set1.setColors(colors);
+        set1.setColors(colors);
 
-            PieData data = new PieData(xVals, set1);
-            mChart.setData(data);
+        PieData data = new PieData(xVals, set1);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextColor(Color.TRANSPARENT);
 
-            // undo all highlights
-            mChart.highlightValues(null);
+        mChart.setData(data);
 
-            mChart.invalidate();
+        // undo all highlights
+        mChart.highlightValue(0, 0);
 
+        mChart.invalidate();
+
+        mChart.setCenterText(xVals.get(0) + "\n" + Common.CURRENCY+" " + ((Entry) yVals1.get(0)).getVal());
 
     }
 

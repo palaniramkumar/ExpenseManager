@@ -26,6 +26,7 @@ import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
 import it.gmariotti.cardslib.library.view.CardViewNative;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.reader.ramkumar.expensemanager.util.CurrencyFormatter;
 import com.reader.ramkumar.expensemanager.util.MonthOperations;
 
 /**
@@ -225,6 +226,7 @@ public class ExpenseTrend extends Fragment {
 
         BarData data = new BarData(xVals, dataSets);
         data.setValueTextSize(10f);
+        data.setValueFormatter(new CurrencyFormatter());
         mChart.setData(data);
     }
     private void dayTrendData() {
@@ -249,6 +251,7 @@ public class ExpenseTrend extends Fragment {
 
         BarData data = new BarData(xVals, dataSets);
         data.setValueTextSize(10f);
+        data.setValueFormatter(new CurrencyFormatter());
         dChart.setData(data);
     }
 

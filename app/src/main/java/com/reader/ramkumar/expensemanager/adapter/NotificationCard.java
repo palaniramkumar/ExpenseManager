@@ -153,7 +153,7 @@ public class NotificationCard extends CardWithList {
             //Add an object to the list
             CostObject c = new CostObject(this);
             c.message = cursor.getString(8);
-            c.amount = Common.CURRENCY+". " + amount;
+            c.amount = Common.CURRENCY+" " + amount;
             c.trans_src = cursor.getString(cursor.getColumnIndex(db.MASTER_COLUMN_TRANS_SOURCE));
             c.messagegId=cursor.getInt(0)+"";//RECID+"";
             try {

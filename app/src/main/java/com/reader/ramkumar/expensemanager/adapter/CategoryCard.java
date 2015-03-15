@@ -165,9 +165,9 @@ public class CategoryCard extends CardWithList {
 
         //Retrieve the values from the object
         CategoryObject categoryObject = (CategoryObject) object;
-        icon.setImageResource(categoryObject.trendIcon);
+        //icon.setImageResource(categoryObject.trendIcon);
         category.setText(categoryObject.type);
-        amount.setText(categoryObject.amount+"");
+        amount.setText(categoryObject.currencyUnit+categoryObject.amount);
         currency.setText(categoryObject.currencyUnit);
 
         return convertView;

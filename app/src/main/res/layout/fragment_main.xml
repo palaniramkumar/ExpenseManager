@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:text="&lt;"
-                    android:textColor="@color/myLightPrimaryColor" />
+                    android:textColor="@color/myDrawerBackground" />
 
 
                 <Button
@@ -72,7 +72,7 @@
                     android:background="@android:color/transparent"
                     android:gravity="right|center_vertical"
                     android:text="January"
-                    android:textColor="@android:color/holo_orange_dark" />
+                    android:textColor="@color/myDrawerBackground" />
 
                 <Button
                     android:id="@+id/btn_year"
@@ -82,7 +82,7 @@
                     android:gravity="left|center_vertical"
                     android:paddingLeft="5dp"
                     android:text="2014"
-                    android:textColor="@android:color/holo_orange_dark" />
+                    android:textColor="@color/myDrawerBackground" />
 
                 <Button
                     android:id="@+id/btn_next"
@@ -170,8 +170,8 @@
                     android:id="@+id/chart_horz"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:minHeight="100dp"
-                    android:layout_margin="10dp" />
+                    android:minHeight="150dp"
+                   />
 
             </LinearLayout>
 

@@ -2,6 +2,7 @@ package com.reader.ramkumar.expensemanager.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +55,7 @@ public class BudgetCard extends CardWithList {
             if (view != null) {
                 TextView t1 = (TextView) view.findViewById(R.id.text_exmple_card1);
                 if (t1 != null)
-                    t1.setText("You have remaining "+remainingAmount+" Left");
+                    t1.setText("You have "+Common.CURRENCY+" "+remainingAmount+" (Based on your budget)");
 
             }
         }
@@ -84,6 +85,7 @@ public class BudgetCard extends CardWithList {
             c.amount = cursor.getInt(1)-cursor.getInt(2);
             c.trendIcon = R.drawable.ic_action_expand;
             c.setObjectId(c.type); //It can be important to set tyoe id, In future we shall show all the curresponding ID expense in history fragment
+            c.progress = c.amount >=0 ? "▲" :"▼" ;
             mObjects.add(c);
         }
 
@@ -101,10 +103,23 @@ public class BudgetCard extends CardWithList {
 
         //Retrieve the values from the object
         CostObject costObject = (CostObject) object;
-        icon.setImageResource(costObject.trendIcon);
+        //icon.setImageResource(costObject.trendIcon);
         category.setText(costObject.type);
-        amount.setText(costObject.amount+"");
-        currency.setText(costObject.currencyUnit);
+
+        if(costObject.progress .contains("▼")) {
+            currency.setTextColor(Color.RED);
+            amount.setText("- " + Common.CURRENCY + " " +Math.abs(costObject.amount));
+        }
+        else {
+            currency.setTextColor(getContext().getResources().getColor(R.color.material_deep_teal_500));
+            amount.setText(Common.CURRENCY + costObject.amount);
+        }
+
+        currency.setText(costObject.progress);
+
+        //formatting amount
+
+
 
         return convertView;
     }
@@ -123,7 +138,7 @@ public class BudgetCard extends CardWithList {
         public String type;
         public int trendIcon;
         public int amount;
-        public String currencyUnit = Common.CURRENCY;//"₹"
+        public String progress;// = Common.CURRENCY;//"₹"
 
         public CostObject(Card parentCard) {
             super(parentCard);

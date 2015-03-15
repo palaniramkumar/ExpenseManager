@@ -88,7 +88,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
             android:textColor="@color/card_undobar_material_text_color"
-            android:textSize="10sp"
+            android:textSize="13sp"
             tools:text="Rs. 2100" />
 
 

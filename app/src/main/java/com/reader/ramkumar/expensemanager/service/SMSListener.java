@@ -7,6 +7,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
@@ -29,6 +31,23 @@ public class SMSListener extends BroadcastReceiver{
      */
     @Override
     public void onReceive(Context context, Intent intent) {
+        String latitude="",longitude="";
+
+        LocationManager locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (location != null) {
+
+            latitude=location.getLatitude()+"";
+            longitude=location.getLongitude()+"";
+            Log.d("gps","lat :  "+latitude);
+            Log.d("gps","long :  "+longitude);
+
+        }
+
+
+
+
         Bundle bundle = intent.getExtras();
 
         /** getting latest SMS **/
@@ -56,10 +75,12 @@ public class SMSListener extends BroadcastReceiver{
                         0);
 
                 DBHelper db= new DBHelper(context);
-                note.setLatestEventInfo(context,  Common.CURRENCY + s.amount + " at " + s.where,
-                        "This month expense "+Common.CURRENCY +db.getMyTotalExpense(),i);
-
-                 SMS.syncSMS(context);
+                note.setLatestEventInfo(context, Common.CURRENCY + s.amount + " at " + s.where,
+                        "This month expense " + Common.CURRENCY + db.getMyTotalExpense(), i);
+                if(location!=null)
+                    SMS.syncSMS(context,latitude+","+longitude);
+                else
+                    SMS.syncSMS(context);
 
                 //After uncomment this line you will see number of notification arrived
                 //note.number=2;

@@ -190,24 +190,6 @@ public class main extends Fragment implements OnChartValueSelectedListener{
             }
         });
 
-        /* first user check */
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        String endpoint = sharedPref.getString("Endpoint1", "0");
-        if(endpoint.equalsIgnoreCase("0")) {
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("Endpoint1", UUID.randomUUID().toString());
-            editor.commit();
-            
-            if (BuildConfig.DEBUG) {
-                Log.e(Constants.TAG, "Created New Endpoint");
-            }
-          
-            db.firstUser();
-
-            if(getActivity()!=null) //safe condition while rotating view. This throws null)
-                SMS.syncSMS(getActivity());
-        }
-
         TextView t = (TextView)view.findViewById(R.id.txt_progress);
 
         t.setOnClickListener(new View.OnClickListener() {

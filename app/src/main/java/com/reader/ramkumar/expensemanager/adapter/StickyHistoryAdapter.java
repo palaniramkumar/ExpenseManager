@@ -2,7 +2,9 @@ package com.reader.ramkumar.expensemanager.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -19,6 +21,8 @@ import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.Common;
 import com.reader.ramkumar.expensemanager.util.TYPES;
 
+import java.util.Locale;
+
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
@@ -32,6 +36,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
     private String[] amount;
     private String[] place;
     private String[] id;
+    private String[] gps;
     private String month;
     private String category_filter;
     private LayoutInflater inflater;
@@ -49,6 +54,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
         amount = new String[cur.getCount()];
         place = new String[cur.getCount()];
         id = new String[cur.getCount()];
+        gps = new String[cur.getCount()];
         category_filter=filter;
         int i=0;
         while(cur.moveToNext()){
@@ -59,6 +65,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
             category[i] = cur.getString(2);
             place[i] = cur.getString(5);
             id[i] = cur.getString(4);
+            gps[i] = cur.getString(cur.getColumnIndex(db.MASTER_COLUMN_GEO_TAG));
             i++;
         }
         if (BuildConfig.DEBUG) {
@@ -105,6 +112,8 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
         holder.txt_desc.setText(place[position]);
         holder.txt_category.setText(category[position]);
         holder.txt_id.setText(id[position]);
+        holder.gps = gps[position];
+
         final View view = convertView;
         holder.popupMenu.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -115,6 +124,8 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
 
                 /** Adding menu items to the popumenu */
                 popup.getMenuInflater().inflate(R.menu.history_popup, popup.getMenu());
+                if(holder.gps!=null)
+                    popup.getMenu().add("Locate");
 
                 /** Defining menu item click listener for the popup menu */
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -124,6 +135,14 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
                             db.updateMaster(Integer.parseInt(holder.txt_id.getText().toString()),db.MASTER_COLUMN_STATUS, TYPES.TRANSACTION_STATUS.DELETED+"");
                             view.findViewById(R.id.itm_layout).setVisibility(View.GONE);
 
+                        }
+                        else if(item.getTitle().toString().equalsIgnoreCase("Locate")){
+                            String gps_loc = holder.gps;
+                            String latitude = gps_loc.split(",")[0];
+                            String longitude = gps_loc.split(",")[1];
+                            String uri = String.format(Locale.ENGLISH, "geo:%s,%s", latitude, longitude);
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                            mContext.startActivity(intent);
                         }
                         return true;
                     }
@@ -177,6 +196,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
         TextView txt_desc;
         TextView txt_id;
         TextView txt_category;
+        String gps;
         ImageView popupMenu;
     }
 

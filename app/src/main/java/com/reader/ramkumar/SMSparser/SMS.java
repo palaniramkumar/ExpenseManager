@@ -87,11 +87,14 @@ public class SMS {
     }
 
     public static boolean syncSMS(Context context){
-        return syncSMS(context,false);
+        return syncSMS(context,false,null);
         
     }
-    
-    public static boolean syncSMS(Context context,boolean force) {
+    public static boolean syncSMS(Context context,String gps){
+        return syncSMS(context,false,gps);
+
+    }
+    public static boolean syncSMS(Context context,boolean force,String gps) {
 
       
 
@@ -128,7 +131,7 @@ public class SMS {
                     Log.e(Constants.TAG, "SYNC "+s.trans_type+"="+s.expanse_category);
                 }
                 db.insertMaster(s.amount.replace(",",""), s.bankName, s.trans_src, s.trans_type,s.expanse_category, s.where, s.id, s.where, s.when,
-                        db.getNow(), s.place, null, null, null,TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                        db.getNow(), s.place, gps, null, null,TYPES.TRANSACTION_STATUS.APPROVED.toString());
             }
         }
         db.close();

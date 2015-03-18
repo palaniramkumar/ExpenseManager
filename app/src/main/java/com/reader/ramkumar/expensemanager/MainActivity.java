@@ -186,8 +186,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             protected Integer doInBackground(Void... params) {
                 DBHelper db = new DBHelper(getApplicationContext());
                 if(item!=null || db.getLastSMSID()==0) {
-                    new DBCategoryMap(getApplicationContext()).firstTime();
-                    SMS.syncSMS(getApplicationContext(), true);
+                    SMS.syncSMS(getApplicationContext(), true,null);
                 }
                 db.close();
                 return 0;

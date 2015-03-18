@@ -1,6 +1,8 @@
 package com.reader.ramkumar.expensemanager;
 
 import com.reader.ramkumar.expensemanager.adapter.SlideAdapter;
+import com.reader.ramkumar.expensemanager.db.DBCategoryMap;
+import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.SystemUiHider;
 
 import android.annotation.TargetApi;
@@ -15,7 +17,8 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import com.reader.ramkumar.expensemanager.R;
+
+import java.util.UUID;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -23,7 +26,7 @@ import com.reader.ramkumar.expensemanager.R;
  *
  * @see SystemUiHider
  */
-public class demo extends Activity {
+public class demo extends Activity{
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -63,15 +66,25 @@ public class demo extends Activity {
         if (BuildConfig.DEBUG) {
             Log.e(Constants.TAG,"In Demo Page");
         }
+
+
         /** New User -  display demo page **/
         /* first user check */
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        String endpoint = sharedPref.getString("Endpoint1", "0");
+        String endpoint = sharedPref.getString("Endpoint", "0");
         if(endpoint.equalsIgnoreCase("0")) {
+            DBHelper db=new DBHelper(this);
+            DBCategoryMap dbCatMap=new DBCategoryMap(getApplicationContext());
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("Endpoint", UUID.randomUUID().toString());
+            editor.commit();
             if (BuildConfig.DEBUG) {
                 Log.e(Constants.TAG,"New User");
             }
-
+            db.firstUser();
+            dbCatMap.firstTime();
+            db.close();
+            dbCatMap.close();
         }
         else{
             if (BuildConfig.DEBUG) {

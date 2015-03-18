@@ -30,7 +30,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".PrefsActivity"
+            android:theme="@android:style/Theme.DeviceDefault.Light" >
+        </activity>
         <receiver
             android:name=".service.SMSListener"
             android:label="@string/app_name" >

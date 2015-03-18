@@ -238,8 +238,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 setTitle("Category List");
                 break;
             case 5:
-                new DBCategoryMap(getApplicationContext()).getCategoryInfo();
-                break;
+                Intent intent = new Intent(MainActivity.this,
+                        PrefsActivity.class);
+                startActivity(intent);
             case 6:
                 try {
 

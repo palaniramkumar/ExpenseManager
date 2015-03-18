@@ -2,30 +2,41 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <PreferenceCategory
         android:summary="Username and password information"
-        android:title="Login information" >
+        android:title="User information" >
         <EditTextPreference
             android:key="username"
-            android:summary="Please enter your login username"
+            android:summary="Please enter your username"
             android:title="Username" />
-        <EditTextPreference
-            android:key="password"
-            android:summary="Enter your password"
-            android:title="Password" />
+        <ListPreference
+            android:entries="@array/gender"
+            android:entryValues="@array/gender"
+            android:key="sex"
+            android:summary="Please select your sex"
+            android:title="Gender" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:summary="Username and password information"
+        android:summary="Privacy"
         android:title="Settings" >
         <CheckBoxPreference
-            android:key="checkBox"
-            android:summary="On/Off"
-            android:title="Keep me logged in" />
+            android:key="gps"
+            android:summary="Application will use your current location"
+            android:title="Use GPS" />
+
+        <SwitchPreference android:key="budget"
+            android:summary="Do you want to enable the budget tracker"
+            android:title="Budget Tracker" />
+
+
+        <SwitchPreference android:key="recurring"
+            android:summary="Do you want to enable the recurring feature"
+            android:title="Recurring income/expense" />
 
         <ListPreference
             android:entries="@array/listOptions"
             android:entryValues="@array/listValues"
-            android:key="listpref"
-            android:summary="List preference example"
-            android:title="List preference" />
+            android:key="cycle_startday"
+            android:summary="Expense Cycle start date"
+            android:title="Start Date" />
     </PreferenceCategory>
 </PreferenceScreen>

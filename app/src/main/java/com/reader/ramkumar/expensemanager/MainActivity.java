@@ -153,19 +153,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.frame_container, newFragment)
-                        .commit(); /*java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
-            at android.app.FragmentManagerImpl.checkStateLoss(FragmentManager.java:1330)
-            at android.app.FragmentManagerImpl.enqueueAction(FragmentManager.java:1348)
-            at android.app.BackStackRecord.commitInternal(BackStackRecord.java:728)
-            at android.app.BackStackRecord.commit(BackStackRecord.java:704)
-            at com.reader.ramkumar.expensemanager.MainActivity$1MyAsyncTask.onPostExecute(MainActivity.java:173)
-            at com.reader.ramkumar.expensemanager.MainActivity$1MyAsyncTask.onPostExecute(MainActivity.java:154)
-            at android.os.AsyncTask.finish(AsyncTask.java:632)
-            at android.os.AsyncTask.access$600(AsyncTask.java:177)
-            at android.os.AsyncTask$InternalHandler.handleMessage(AsyncTask.java:645)
-            at android.os.Handler.dispatchMessage(Handler.java:102)
-            at android.os.Looper.loop(Looper.java:135)
-            */
+                        .commit();
                 setTitle("Summary");
                 
                 //invalidate all UI object
@@ -241,6 +229,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 Intent intent = new Intent(MainActivity.this,
                         PrefsActivity.class);
                 startActivity(intent);
+                break;
             case 6:
                 try {
 

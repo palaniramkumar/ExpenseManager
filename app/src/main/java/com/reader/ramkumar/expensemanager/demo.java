@@ -5,10 +5,14 @@ import com.reader.ramkumar.expensemanager.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import com.reader.ramkumar.expensemanager.R;
@@ -48,8 +52,38 @@ public class demo extends Activity {
      */
     private SystemUiHider mSystemUiHider;
 
+    public interface Constants {
+        String TAG = "app:Demo Page";
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+        if (BuildConfig.DEBUG) {
+            Log.e(Constants.TAG,"In Demo Page");
+        }
+        /** New User -  display demo page **/
+        /* first user check */
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        String endpoint = sharedPref.getString("Endpoint1", "0");
+        if(endpoint.equalsIgnoreCase("0")) {
+            if (BuildConfig.DEBUG) {
+                Log.e(Constants.TAG,"New User");
+            }
+
+        }
+        else{
+            if (BuildConfig.DEBUG) {
+                Log.e(Constants.TAG,"Existing user");
+            }
+            Intent i = new Intent(demo.this, MainActivity.class);
+            startActivity(i);
+            finish();
+            //else code
+        }
+
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_demo);
@@ -119,6 +153,8 @@ public class demo extends Activity {
 
             @Override
             public void onClick(View view) {
+                Intent i = new Intent(demo.this, MainActivity.class);
+                startActivity(i);
                 finish();
             }
 

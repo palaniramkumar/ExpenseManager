@@ -71,23 +71,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         }
 
 
-        /** New User -  display demo page **/
-        /* first user check */
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        String endpoint = sharedPref.getString("Endpoint1", "0");
-        if(endpoint.equalsIgnoreCase("0")) {
-            if (BuildConfig.DEBUG) {
-                Log.e(Constants.TAG, "Launching demo page");
-                Intent i = new Intent(MainActivity.this, demo.class);
-                startActivityForResult(i, 301);
-            }
-
-        }
-        else{
-            //else code
-        }
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_topdrawer);
         mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);

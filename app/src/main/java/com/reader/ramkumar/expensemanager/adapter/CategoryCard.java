@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -63,8 +65,15 @@ public class CategoryCard extends CardWithList {
             int totalBudget = db.getBudget();
             if (view != null) {
                 TextView t1 = (TextView) view.findViewById(R.id.text_exmple_card1);
-                if (t1 != null)
-                    t1.setText("Total Budget "+Common.CURRENCY+totalBudget);
+                if (t1 != null) {
+                    SharedPreferences prefs = PreferenceManager
+                            .getDefaultSharedPreferences(getContext());
+                    final boolean isBudget=prefs.getBoolean("budget", false);
+                    if(isBudget)
+                        t1.setText("Total Budget " + Common.CURRENCY + totalBudget);
+                    else
+                        t1.setText("List Of Categories");
+                }
 
             }
         }
@@ -86,6 +95,14 @@ public class CategoryCard extends CardWithList {
         final Cursor cursor = db.getMyBudgetByCategory();
         //Add an object to the list
 
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(getContext());
+        final boolean isBudget=prefs.getBoolean("budget", false);
+
+        if (BuildConfig.DEBUG) {
+            Log.e(Constants.TAG,"need budget ? "+isBudget);
+        }
+
         while(cursor.moveToNext()){
             CategoryObject c = new CategoryObject(this);
             int tmp_amount =cursor.getInt(2);
@@ -95,59 +112,65 @@ public class CategoryCard extends CardWithList {
             c.amount = tmp_amount;
             c.trendIcon = R.drawable.ic_action_expand; //need to implement with Dynamic icons by comparing with last month expense
             c.setObjectId(cursor.getInt(0)+"");
-            c.setOnItemClickListener(new OnItemClickListener() {
-                 @Override
-                 public void onItemClick(final LinearListView parent, View view, final int position, final ListObject object) {
-                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
-                     Cursor c = db.getCategory(id);
-                     if(c.moveToNext()) {
-                         //you should edit this to fit your needs
-                         builder.setTitle("Edit Category");
+            //disable budget details
 
-                         final EditText txt_category = new EditText(getContext());
-                         txt_category.setHint("Category");//optional
-                         txt_category.setText(c.getString(c.getColumnIndex(DBHelper.MASTER_COLUMN_CATEGORY)));
-                         final EditText txt_amount = new EditText(getContext());
-                         txt_amount.setHint("Amount");//optional
-                         txt_amount.setText(c.getString(c.getColumnIndex(DBHelper.MASTER_COLUMN_AMOUNT)));;
+                c.setOnItemClickListener(new OnItemClickListener() {
+                     @Override
+                     public void onItemClick(final LinearListView parent, View view, final int position, final ListObject object) {
+                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+                         Cursor c = db.getCategory(id);
+                         if(c.moveToNext()) {
+                             //you should edit this to fit your needs
+                             builder.setTitle("Edit Category");
 
-                         // use TYPE_CLASS_NUMBER for input only numbers
-                         txt_category.setInputType(InputType.TYPE_CLASS_TEXT);
-                         txt_amount.setInputType(InputType.TYPE_CLASS_NUMBER);
-                         //Setting up dynamic dialog
-                         LinearLayout lay = new LinearLayout(getContext());
-                         lay.setOrientation(LinearLayout.VERTICAL);
-                         lay.addView(txt_category);
-                         lay.addView(txt_amount);
-                         builder.setView(lay);
+                             final EditText txt_category = new EditText(getContext());
+                             txt_category.setHint("Category");//optional
+                             txt_category.setText(c.getString(c.getColumnIndex(DBHelper.MASTER_COLUMN_CATEGORY)));
+                             final EditText txt_amount = new EditText(getContext());
+                             txt_amount.setHint("Amount");//optional
+                             txt_amount.setText(c.getString(c.getColumnIndex(DBHelper.MASTER_COLUMN_AMOUNT)));;
 
-                         // Set up the buttons
-                         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                             public void onClick(DialogInterface dialog, int whichButton) {
-                                 //get the two inputs
-                                 String category = txt_category.getText().toString();
-                                 String budget = txt_amount.getText().toString();
-                                 db.updateCategory(Integer.parseInt(object.getObjectId()), "category", category);
-                                 db.updateCategory(Integer.parseInt(object.getObjectId()), "amount", budget);
+                             // use TYPE_CLASS_NUMBER for input only numbers
+                             txt_category.setInputType(InputType.TYPE_CLASS_TEXT);
+                             txt_amount.setInputType(InputType.TYPE_CLASS_NUMBER);
+                             //Setting up dynamic dialog
+                             LinearLayout lay = new LinearLayout(getContext());
+                             lay.setOrientation(LinearLayout.VERTICAL);
+                             lay.addView(txt_category);
+                             lay.addView(txt_amount);
+                             builder.setView(lay);
 
-                                 //realtime update at table
-                                 TextView txt_amount = (TextView) parent.getChildAt(position).findViewById(R.id.table_txt_amount);
-                                 txt_amount.setText(budget);
-                                 ((CategoryObject) object).amount = Integer.parseInt(budget);// This code is not updating in real time, need a page refresh
-                                 parent.refreshDrawableState();
-                             }
-                         });
 
-                         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                             public void onClick(DialogInterface dialog, int whichButton) {
-                                 dialog.cancel();
-                             }
-                         });
-                         builder.show();
+
+
+                             // Set up the buttons
+                             builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                 public void onClick(DialogInterface dialog, int whichButton) {
+                                     //get the two inputs
+                                     String category = txt_category.getText().toString();
+                                     String budget = txt_amount.getText().toString();
+                                     db.updateCategory(Integer.parseInt(object.getObjectId()), "category", category);
+                                     db.updateCategory(Integer.parseInt(object.getObjectId()), "amount", budget);
+
+                                     //realtime update at table
+                                     TextView txt_amount = (TextView) parent.getChildAt(position).findViewById(R.id.table_txt_amount);
+                                     txt_amount.setText(budget);
+                                     ((CategoryObject) object).amount = Integer.parseInt(budget);// This code is not updating in real time, need a page refresh
+                                     parent.refreshDrawableState();
+                                 }
+                             });
+
+                             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                 public void onClick(DialogInterface dialog, int whichButton) {
+                                     dialog.cancel();
+                                 }
+                             });
+                             if(isBudget)
+                                builder.show();
+                         }
+
                      }
-
-                 }
-             });
+                 });
             mObjects.add(c);
             try {
                 Thread.sleep(1);
@@ -162,6 +185,12 @@ public class CategoryCard extends CardWithList {
 
     @Override
     public View setupChildView(int childPosition, ListObject object, View convertView, ViewGroup parent) {
+
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(getContext());
+        final boolean isBudget=prefs.getBoolean("budget", false);
+        if(!isBudget)
+            convertView.findViewById(R.id.table_txt_amount).setVisibility(View.GONE);
 
         //Setup the ui elements inside the item
         TextView category = (TextView) convertView.findViewById(R.id.txt_category);

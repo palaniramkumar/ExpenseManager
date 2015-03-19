@@ -2,11 +2,13 @@ package com.reader.ramkumar.expensemanager;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -104,17 +106,24 @@ public class ExpenseTrend extends Fragment {
     }
     
     void init(){
-        BudgetCard card = new BudgetCard(getActivity(),db);
-        ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
-        card.setViewToClickToExpand(viewToClickToExpand);
-        card.init();
-        CardViewNative cardView  = (CardViewNative) view.findViewById(R.id.cardbudget);
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(getActivity());
+        final boolean isBudget=prefs.getBoolean("budget", false);
+        if(isBudget) {
+            BudgetCard card = new BudgetCard(getActivity(), db);
+            ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
+            card.setViewToClickToExpand(viewToClickToExpand);
+            card.init();
+            CardViewNative cardView = (CardViewNative) view.findViewById(R.id.cardbudget);
         /*code to update the card value without overlaping the previous text Defect #11*/
-        if(cardView.getCard()==null)
-            cardView.setCard(card);
-        else
-            cardView.replaceCard(card);
-        
+            if (cardView.getCard() == null)
+                cardView.setCard(card);
+            else
+                cardView.replaceCard(card);
+        }
+        else {
+            view.findViewById(R.id.cardbudget).setVisibility(View.GONE);
+        }
         //month chart creation
         mChart = (BarChart) view.findViewById(R.id.chart_trend);
         // no description text

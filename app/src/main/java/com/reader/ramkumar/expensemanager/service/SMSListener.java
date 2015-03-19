@@ -6,11 +6,13 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
@@ -33,19 +35,23 @@ public class SMSListener extends BroadcastReceiver{
     public void onReceive(Context context, Intent intent) {
         String latitude="",longitude="";
 
-        LocationManager locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        final boolean isGPS=prefs.getBoolean("gps", false);
+        Location location=null;
+        if(isGPS) {
+            LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (location != null) {
+            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location != null) {
 
-            latitude=location.getLatitude()+"";
-            longitude=location.getLongitude()+"";
-            Log.d("gps","lat :  "+latitude);
-            Log.d("gps","long :  "+longitude);
+                latitude = location.getLatitude() + "";
+                longitude = location.getLongitude() + "";
+                Log.d("gps", "lat :  " + latitude);
+                Log.d("gps", "long :  " + longitude);
 
+            }
         }
-
-
 
 
         Bundle bundle = intent.getExtras();

@@ -94,7 +94,12 @@ public class ExpenseTrend extends Fragment {
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = mInflater.inflate(R.layout.fragment_expense_trend, mContainer, false);
         db=new DBHelper(getActivity());
-        init();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                init();
+            }
+        });
         return view;
     }
     

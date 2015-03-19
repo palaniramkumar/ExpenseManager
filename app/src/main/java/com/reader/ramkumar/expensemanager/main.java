@@ -151,7 +151,12 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         //Set card in the cardView
         cardView = (CardViewNative) view.findViewById(R.id.carddemo); //if you want list, pls change the xml to "CardListView"
 
-        init();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                init();
+            }
+        });
 
         //fab
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
@@ -430,6 +435,12 @@ public class main extends Fragment implements OnChartValueSelectedListener{
             xVals.add(bill_name);
             yVals1.add(new BarEntry(cur.getFloat(cur.getColumnIndex(db.MASTER_COLUMN_AMOUNT)), i));
             i++;
+            try {
+                Thread.sleep(1);
+            }
+            catch (InterruptedException e){
+                e.printStackTrace();
+            }
         }
         
          BarDataSet set1 = new BarDataSet(yVals1, "Paid Bill Amount");
@@ -463,6 +474,12 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         while(cursor.moveToNext()){
             yVals1.add(new Entry(cursor.getInt(1), i++));
             xVals.add(cursor.getString(0).toUpperCase());
+            try {
+                Thread.sleep(1);
+            }
+            catch (InterruptedException e){
+                e.printStackTrace();
+            }
         }
 
 

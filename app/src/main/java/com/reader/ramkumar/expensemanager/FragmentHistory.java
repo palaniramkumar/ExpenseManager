@@ -108,7 +108,12 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = mInflater.inflate(R.layout.fragment_fragment_history, mContainer, false);
         db=new DBHelper(getActivity());
-        init();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                init();
+            }
+        });
 
 
         //month navigation
@@ -133,7 +138,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
                 int next_month = date.getMonth();
                 db.month = MonthOperations.getMonthin2Digit(next_month+1);
                 db.year = date.getYear()+"";
-      init();
+                init();
             }
         });
 

@@ -113,6 +113,12 @@ public class ExpenseCard extends CardWithList {
             c.progress = prev_month_amt-c.amount>0 ? "▲" :"▼" ;
            // c.progress+=Math.abs(prev_month_amt-c.amount);
             mObjects.add(c);
+            try {
+                Thread.sleep(1);
+            }
+            catch (InterruptedException e){
+                e.printStackTrace();
+            }
         }
 
         return mObjects;

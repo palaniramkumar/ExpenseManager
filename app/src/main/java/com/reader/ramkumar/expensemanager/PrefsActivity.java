@@ -14,6 +14,7 @@ public class PrefsActivity extends PreferenceActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref);
+        displaySharedPreferences();
     }
 
     private void displaySharedPreferences() {
@@ -31,6 +32,6 @@ public class PrefsActivity extends PreferenceActivity{
         builder.append("Keep me logged in: " + String.valueOf(checkBox) + "\n");
         builder.append("List preference: " + listPrefs);
 
-        //textView.setText(builder.toString());
+        System.out.println(builder.toString());
     }
 }

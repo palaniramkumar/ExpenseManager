@@ -67,6 +67,12 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
             id[i] = cur.getString(4);
             gps[i] = cur.getString(cur.getColumnIndex(db.MASTER_COLUMN_GEO_TAG));
             i++;
+            try {
+                Thread.sleep(1);
+            }
+            catch (InterruptedException e){
+                e.printStackTrace();
+            }
         }
         if (BuildConfig.DEBUG) {
             Log.e(Constants.TAG,"Total Entry: "+i);

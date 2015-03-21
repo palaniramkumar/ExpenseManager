@@ -102,7 +102,7 @@ public class SMS {
         int last_sms_id = db.getLastSMSID();
         
         String filter = null;
-        if(force)
+        if(!force)
             filter = "_id > "+last_sms_id;
         
         Uri uriSms = Uri.parse("content://sms/inbox");

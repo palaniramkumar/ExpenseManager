@@ -1,5 +1,6 @@
 package com.reader.ramkumar.expensemanager;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,11 +10,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -96,126 +99,130 @@ public class ExpenseTrend extends Fragment {
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = mInflater.inflate(R.layout.fragment_expense_trend, mContainer, false);
         db=new DBHelper(getActivity());
-        getActivity().runOnUiThread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() { //throws array index out of bound exception if the transaction is null
             @Override
             public void run() {
                 init();
             }
         });
+
         return view;
     }
-    
+
     void init(){
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(getActivity());
-        final boolean isBudget=prefs.getBoolean("budget", false);
-        if(isBudget) {
-            BudgetCard card = new BudgetCard(getActivity(), db);
-            ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
-            card.setViewToClickToExpand(viewToClickToExpand);
-            card.init();
-            CardViewNative cardView = (CardViewNative) view.findViewById(R.id.cardbudget);
+        try {
+            SharedPreferences prefs = PreferenceManager
+                    .getDefaultSharedPreferences(getActivity());
+            final boolean isBudget = prefs.getBoolean("budget", false);
+            if (isBudget) {
+                BudgetCard card = new BudgetCard(getActivity(), db);
+                ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
+                card.setViewToClickToExpand(viewToClickToExpand);
+                card.init();
+                CardViewNative cardView = (CardViewNative) view.findViewById(R.id.cardbudget);
         /*code to update the card value without overlaping the previous text Defect #11*/
-            if (cardView.getCard() == null)
-                cardView.setCard(card);
-            else
-                cardView.replaceCard(card);
+                if (cardView.getCard() == null)
+                    cardView.setCard(card);
+                else
+                    cardView.replaceCard(card);
+            } else {
+                view.findViewById(R.id.cardbudget).setVisibility(View.GONE);
+            }
+            //month chart creation
+            mChart = (BarChart) view.findViewById(R.id.chart_trend);
+            // no description text
+            mChart.setDescription("");
+
+            // if disabled, scaling can be done on x- and y-axis separately
+            mChart.setPinchZoom(false);
+
+            mChart.setDrawGridBackground(false);
+            mChart.setBackgroundColor(Color.WHITE);
+
+            mChart.setDrawBarShadow(false);
+            mChart.setDrawValueAboveBar(false);
+
+            // mChart.setDrawValueAboveBar(true);
+
+            XAxis x = mChart.getXAxis();
+            x.setDrawGridLines(false);
+            x.setDrawLabels(true);
+            x.setDrawAxisLine(false);
+            x.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+
+            //x.setTypeface(tf);
+
+            YAxis leftAxis = mChart.getAxisLeft();
+            leftAxis.setLabelCount(6);
+            leftAxis.setDrawLabels(false);
+            leftAxis.setDrawGridLines(false);
+            leftAxis.setDrawAxisLine(false);
+
+            YAxis rightAxis = mChart.getAxisRight();
+            rightAxis.setDrawGridLines(false);
+            rightAxis.setDrawAxisLine(false);
+            rightAxis.setDrawLabels(false);
+
+            // add data
+            monthTrendData();
+
+            //mChart.getLegend().setEnabled(true);
+
+            mChart.animateXY(2000, 2000);
+
+            // dont forget to refresh the drawing
+            mChart.invalidate();
+
+
+            //day trend graph started here
+            dChart = (BarChart) view.findViewById(R.id.chart_monthTrend);
+            // no description text
+            dChart.setDescription("");
+
+            dChart.setPinchZoom(false);
+
+            dChart.setDrawGridBackground(false);
+            dChart.setBackgroundColor(Color.WHITE);
+
+            dChart.setDrawBarShadow(false);
+            dChart.setDrawValueAboveBar(true);
+
+            x = dChart.getXAxis();
+            x.setDrawGridLines(false);
+            x.setDrawLabels(true);
+            x.setDrawAxisLine(false);
+            x.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+            leftAxis = dChart.getAxisLeft();
+            leftAxis.setLabelCount(6);
+            leftAxis.setDrawLabels(false);
+            leftAxis.setDrawGridLines(false);
+            leftAxis.setDrawAxisLine(false);
+
+            rightAxis = dChart.getAxisRight();
+            rightAxis.setDrawGridLines(false);
+            rightAxis.setDrawAxisLine(false);
+            rightAxis.setDrawLabels(false);
+
+            // add data
+            dayTrendData();
+
+            //dChart.getLegend().setEnabled(true);
+
+            dChart.animateXY(2000, 2000);
+
+            // dont forget to refresh the drawing
+            dChart.invalidate();
+
+            if (BuildConfig.DEBUG) {
+                Log.e(Constants.TAG, "init() completed");
+            }
+
         }
-        else {
-            view.findViewById(R.id.cardbudget).setVisibility(View.GONE);
+        catch (Exception e){
+            e.printStackTrace();
         }
-        //month chart creation
-        mChart = (BarChart) view.findViewById(R.id.chart_trend);
-        // no description text
-        mChart.setDescription("");
-
-        // if disabled, scaling can be done on x- and y-axis separately
-        mChart.setPinchZoom(false);
-
-        mChart.setDrawGridBackground(false);
-        mChart.setBackgroundColor(Color.WHITE);
-
-        mChart.setDrawBarShadow(false);
-        mChart.setDrawValueAboveBar(false);
-
-       // mChart.setDrawValueAboveBar(true);
-        
-        XAxis x = mChart.getXAxis();
-        x.setDrawGridLines(false);
-        x.setDrawLabels(true);
-        x.setDrawAxisLine(false);
-        x.setPosition(XAxis.XAxisPosition.BOTTOM);
-       
-
-        //x.setTypeface(tf);
-
-        YAxis leftAxis = mChart.getAxisLeft();
-        leftAxis.setLabelCount(6);
-        leftAxis.setDrawLabels(false);
-        leftAxis.setDrawGridLines(false);
-        leftAxis.setDrawAxisLine(false);
-
-        YAxis rightAxis = mChart.getAxisRight();
-        rightAxis.setDrawGridLines(false);
-        rightAxis.setDrawAxisLine(false);
-        rightAxis.setDrawLabels(false);
-
-        // add data
-        monthTrendData();
-
-        mChart.getLegend().setEnabled(true);
-
-        mChart.animateXY(2000, 2000);
-     
-        // dont forget to refresh the drawing
-        mChart.invalidate();
-        
-        
-        //day trend graph started here
-        dChart = (BarChart) view.findViewById(R.id.chart_monthTrend);
-        // no description text
-        dChart.setDescription("");
-
-        dChart.setPinchZoom(false);
-
-        dChart.setDrawGridBackground(false);
-        dChart.setBackgroundColor(Color.WHITE);
-
-        dChart.setDrawBarShadow(false);
-        dChart.setDrawValueAboveBar(true);
-
-        x = dChart.getXAxis();
-        x.setDrawGridLines(false);
-        x.setDrawLabels(true);
-        x.setDrawAxisLine(false);
-        x.setPosition(XAxis.XAxisPosition.BOTTOM);
-
-        leftAxis = dChart.getAxisLeft();
-        leftAxis.setLabelCount(6);
-        leftAxis.setDrawLabels(false);
-        leftAxis.setDrawGridLines(false);
-        leftAxis.setDrawAxisLine(false);
-
-        rightAxis = dChart.getAxisRight();
-        rightAxis.setDrawGridLines(false);
-        rightAxis.setDrawAxisLine(false);
-        rightAxis.setDrawLabels(false);
-
-        // add data
-        dayTrendData();
-
-        dChart.getLegend().setEnabled(true);
-
-        dChart.animateXY(2000, 2000);
-
-        // dont forget to refresh the drawing
-        dChart.invalidate();
-        
-        if (BuildConfig.DEBUG) {
-            Log.e(Constants.TAG, "init() completed");
-        }
-        
-        
     }
     private void monthTrendData() {
 
@@ -241,7 +248,8 @@ public class ExpenseTrend extends Fragment {
         BarData data = new BarData(xVals, dataSets);
         data.setValueTextSize(10f);
         data.setValueFormatter(new CurrencyFormatter());
-        mChart.setData(data);
+        if(i!=0)
+            mChart.setData(data);
     }
     private void dayTrendData() {
 
@@ -266,7 +274,8 @@ public class ExpenseTrend extends Fragment {
         BarData data = new BarData(xVals, dataSets);
         data.setValueTextSize(10f);
         data.setValueFormatter(new CurrencyFormatter());
-        dChart.setData(data);
+        if(i!=0)
+            dChart.setData(data);
     }
 
 
@@ -294,7 +303,11 @@ public class ExpenseTrend extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        init();
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

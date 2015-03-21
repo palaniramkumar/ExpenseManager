@@ -157,6 +157,17 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         listView = (StickyListHeadersListView) view.findViewById(R.id.sticky_list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+        if(adapter.getCount()==0){
+            if (BuildConfig.DEBUG) {
+                view.findViewById(R.id.info_layout).setVisibility(View.VISIBLE);
+                Log.e(Constants.TAG, "No record found");
+            }
+        }
+        else
+        if (BuildConfig.DEBUG) {
+            view.findViewById(R.id.info_layout).setVisibility(View.GONE);
+            Log.e(Constants.TAG, adapter.getCount()+" record found");
+        }
 
     }
 

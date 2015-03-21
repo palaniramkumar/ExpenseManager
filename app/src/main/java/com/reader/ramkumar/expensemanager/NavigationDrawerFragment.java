@@ -169,6 +169,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         if (mCallbacks != null) {
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
+        if(position!=5)
         ((NavigationDrawerAdapter) mDrawerList.getAdapter()).selectPosition(position);
     }
 

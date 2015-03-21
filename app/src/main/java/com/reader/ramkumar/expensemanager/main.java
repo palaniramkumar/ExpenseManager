@@ -3,6 +3,8 @@ package com.reader.ramkumar.expensemanager;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +16,8 @@ import android.graphics.drawable.shapes.RoundRectShape;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -144,6 +148,47 @@ public class main extends Fragment implements OnChartValueSelectedListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        /*{
+            final NotificationManager mgr =
+                    (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity());
+
+            DBHelper db = new DBHelper(getActivity());
+            int todayExpense = Integer.parseInt(db.getExpensebyDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "", "%"));
+
+            mBuilder.setContentTitle("MyWallet Summary")
+                    .setSmallIcon(R.drawable.ic_action_send)
+                    .setContentText("Total Spends today" + Common.CURRENCY + " " + todayExpense);
+
+            NotificationCompat.InboxStyle inboxStyle =
+                    new NotificationCompat.InboxStyle();
+
+
+            Cursor cur = db.getMyExpenseByDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)-1);
+            while(cur.moveToNext()) {
+                inboxStyle.addLine(cur.getString(0) +" "+Common.CURRENCY+" "+cur.getString(1));
+            }
+            mBuilder.setStyle(inboxStyle);
+
+
+
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            final boolean isBudget = prefs.getBoolean("budget", false);
+            mBuilder.setProgress(db.getBudget(), (int) db.getMyTotalExpense(), false);
+
+            //Log.e(Constants.TAG, "Budget" + DBHelper.ATM);
+
+            PendingIntent i = PendingIntent.getActivity(getActivity(), 0,
+                    new Intent(getActivity(), MainActivity.class),
+                    0);
+            mBuilder.setContentIntent(i);
+
+            mBuilder.addAction(R.drawable.ic_action_add, "Previous", i);
+
+            mgr.notify(0, mBuilder.build());
+        }*/
 
         mContainer = container;
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -210,12 +255,14 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         return view;
     }
 
+
     public void view_atm_trans(View v){
         FragmentHistory secFrag = new FragmentHistory(DBHelper.ATM);
         FragmentTransaction fragTransaction = (getActivity()).getFragmentManager().beginTransaction();
         fragTransaction.replace(R.id.frame_container,secFrag );
         fragTransaction.addToBackStack(null);
         fragTransaction.commit();
+
 
         if (BuildConfig.DEBUG) {
             Log.e(Constants.TAG, "Clicked on " + DBHelper.ATM);
@@ -224,6 +271,7 @@ public class main extends Fragment implements OnChartValueSelectedListener{
 
     void init(){
 
+        SMS.syncSMS(getActivity());
 
         card = new ExpenseCard(getActivity(),db);
 
@@ -248,6 +296,18 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         else
             cardView.replaceCard(card);
 
+        if(db.getMyTotalExpense()==0){ //check whether the child is exist or not. if no child inside the card pls hide it.
+            cardView.setVisibility(View.GONE);
+            view.findViewById(R.id.info_layout).setVisibility(View.VISIBLE);
+            if (BuildConfig.DEBUG) {
+                Log.e(Constants.TAG, "Child is empty");
+            }
+        } else {
+            cardView.setVisibility(View.VISIBLE);
+            view.findViewById(R.id.info_layout).setVisibility(View.GONE);
+        }
+
+
         /*generate the expense distribution pie chart*/
 
         mChart = (PieChart) view.findViewById(R.id.chart);
@@ -264,10 +324,10 @@ public class main extends Fragment implements OnChartValueSelectedListener{
 
         mChart.setDrawHoleEnabled(true);
 
-        mChart.setRotationAngle(0);
+        //mChart.setRotationAngle(0);
 
         // enable rotation of the chart by touch
-        mChart.setRotationEnabled(true);
+        mChart.setRotationEnabled(false);
 
         // display percentage values
         mChart.setUsePercentValues(true);
@@ -306,6 +366,12 @@ public class main extends Fragment implements OnChartValueSelectedListener{
                 .getColor(R.color.myLightPrimaryColor));
 
         CashVault vault = new CashVault(db);
+        if(vault.spent_amount == 0){
+            view.findViewById(R.id.cash_holder).setVisibility(View.GONE);
+            //cash_holder
+        }
+        else
+            view.findViewById(R.id.cash_holder).setVisibility(View.VISIBLE);
         
         progress_bar.setMax(vault.vault_amount);
         progress_bar.setProgress(vault.amount_left);
@@ -466,6 +532,9 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         // condition for hiding the graph: if data is null pls hide
         if(yVals1.size() == 0)
             view.findViewById(R.id.arrayBills).setVisibility(View.GONE);
+        else
+            view.findViewById(R.id.arrayBills).setVisibility(View.VISIBLE);
+
 
     }
 
@@ -529,10 +598,12 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         mChart.highlightValue(0, 0);
 
         mChart.invalidate();
-        if(yVals1.size()!=0 && xVals.size()!=0)
-            mChart.setCenterText(xVals.get(0) + "\n" + Common.CURRENCY+" " + ((Entry) yVals1.get(0)).getVal());
+        if(yVals1.size()!=0 && xVals.size()!=0) {
+            mChart.setCenterText(xVals.get(0) + "\n" + Common.CURRENCY + " " + ((Entry) yVals1.get(0)).getVal());
+            view.findViewById(R.id.chart_holder).setVisibility(View.VISIBLE);
+        }
         else {
-            mChart.setVisibility(View.GONE);
+            view.findViewById(R.id.chart_holder).setVisibility(View.GONE);
         }
 
     }

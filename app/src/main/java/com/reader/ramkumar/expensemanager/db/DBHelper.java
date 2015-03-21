@@ -221,8 +221,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int getCashExpense(){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select sum(amount) from MASTER where trans_source='"+TYPES.TRANSACTION_SOURCE.CASH+"' and trans_type = '"+TYPES.TRANSACTION_TYPE.EXPENSE+"' and status = '"+TYPES.TRANSACTION_STATUS.APPROVED+"' " +
-                " and strftime('%m', `trans_time`) = '"+month+"' and strftime('%Y', `trans_time`) = '"+year+"'", null );
+        Cursor res =  db.rawQuery("select sum(amount) from MASTER where trans_source='" + TYPES.TRANSACTION_SOURCE.CASH + "' and trans_type = '" + TYPES.TRANSACTION_TYPE.EXPENSE + "' and status = '" + TYPES.TRANSACTION_STATUS.APPROVED + "' " +
+                " and strftime('%m', `trans_time`) = '" + month + "' and strftime('%Y', `trans_time`) = '" + year + "'", null);
         if(res.moveToNext()){
             if(res.getString(0) == null) return 0;
 
@@ -289,7 +289,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("status", status);
-        int count = db.update("MASTER", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
+        int count = db.update("MASTER", contentValues, "id = ? ", new String[]{Integer.toString(id)});
         return count;
     }
 
@@ -387,6 +387,17 @@ public class DBHelper extends SQLiteOpenHelper {
                 " and   strftime('%Y', `trans_time`) = '"+year+"' and strftime('%m', `trans_time`) = '"+month+"' group by strftime('%d', `trans_time`)", null );
         return res;
     }
+
+    public Cursor getMyExpenseByDay(int day){
+        SQLiteDatabase db = this.getReadableDatabase();
+        //Bug: should not use the year
+        Cursor res =  db.rawQuery( "select  category , amount from MASTER where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"'" +
+                " and   strftime('%Y', `trans_time`) = '"+year+"' and strftime('%m', `trans_time`) = '"+month+"' and strftime('%d', `trans_time`) = '"+day+"'", null );
+        return res;
+    }
+
+
+
     public Cursor getMyExpenseByCategory(){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select category,sum(amount) from MASTER  where status = '"+ TYPES.TRANSACTION_STATUS.APPROVED+"' and trans_type='"+TYPES.TRANSACTION_TYPE.EXPENSE+"' " +

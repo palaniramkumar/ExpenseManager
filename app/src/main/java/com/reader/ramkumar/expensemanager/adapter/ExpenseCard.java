@@ -64,11 +64,15 @@ public class ExpenseCard extends CardWithList {
         @Override
         public void setupInnerViewElements(ViewGroup parent, View view) {
 
-            float remainingAmount =  db.getMyTotalExpense();
+            float amount =  db.getMyTotalExpense();
             if (view != null) {
                 TextView t1 = (TextView) view.findViewById(R.id.text_exmple_card1);
-                if (t1 != null)
-                    t1.setText("The Expense for this month  "+Common.CURRENCY+" "+remainingAmount);
+                if (t1 != null) {
+                    if(amount!=0)
+                        t1.setText("The Expense for this month  " + Common.CURRENCY + " " + amount);
+                    else
+                        t1.setText("No Transactions for this month");
+                }
 
             }
         }

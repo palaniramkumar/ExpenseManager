@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,6 +24,8 @@ import com.reader.ramkumar.SMSparser.HDFC;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
 import com.reader.ramkumar.expensemanager.util.Common;
 import com.reader.ramkumar.expensemanager.util.TYPES;
+
+import java.util.Calendar;
 
 /**
  * Created by Ram on 08/01/2015.
@@ -71,9 +74,6 @@ public class SMSListener extends BroadcastReceiver{
 
                 final NotificationManager mgr =
                         (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                Notification note = new Notification(R.drawable.ic_shopping_basket_grey600_24dp,
-                        "MyWallet",
-                        System.currentTimeMillis());
 
                 // This pending intent will open after notification click
                 PendingIntent i = PendingIntent.getActivity(context, 0,
@@ -81,16 +81,31 @@ public class SMSListener extends BroadcastReceiver{
                         0);
 
                 DBHelper db= new DBHelper(context);
-                note.setLatestEventInfo(context, Common.CURRENCY + s.amount + " at " + s.where,
-                        "This month expense " + Common.CURRENCY + db.getMyTotalExpense(), i);
+
                 if(location!=null)
                     SMS.syncSMS(context,latitude+","+longitude);
                 else
                     SMS.syncSMS(context);
 
-                //After uncomment this line you will see number of notification arrived
-                //note.number=2;
-                mgr.notify(678, note);//need to cleanup this hard coded value
+                if (BuildConfig.DEBUG) {
+                    Log.e(Constants.TAG, "Called SYNS SMS ");
+                }
+
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+
+                mBuilder.setContentTitle(Common.CURRENCY + s.amount + " at " + s.where)
+                        .setSmallIcon(R.drawable.ic_shopping_basket_grey600_24dp)
+                        .addAction(R.drawable.ic_action_share, "Share", i)
+                        .setContentIntent(i)
+                        .setAutoCancel(true)
+                        .setContentText("This month expense " + Common.CURRENCY + db.getMyTotalExpense());
+
+                final boolean isBudget = prefs.getBoolean("budget", false);
+                if(isBudget)
+                    mBuilder.setProgress(db.getBudget(),(int) db.getMyTotalExpense(), false);
+
+                mgr.notify(0, mBuilder.build());
+
             }
         else{
                 if (BuildConfig.DEBUG) {

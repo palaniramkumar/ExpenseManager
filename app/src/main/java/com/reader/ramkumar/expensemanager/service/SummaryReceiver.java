@@ -10,6 +10,10 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.reader.ramkumar.expensemanager.Expense_add_window;
@@ -27,15 +31,41 @@ public class SummaryReceiver extends BroadcastReceiver
     @Override
     public void onReceive(Context context, Intent intent)
     {
-        final NotificationManager mgr =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification(R.drawable.ic_action_send,"Daily Spent Summary", System.currentTimeMillis());
         PendingIntent i = PendingIntent.getActivity(context, 0,
                 new Intent(context, MainActivity.class),
                 0);
-        DBHelper db=new DBHelper(context);
-        notification.setLatestEventInfo(context, "MyWallet Daily Summary", "Total Spent "+ Common.CURRENCY+" "+db.getExpensebyDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+"","%"), i);
-        mgr.notify(0, notification);
 
+        final NotificationManager mgr =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+
+        DBHelper db=new DBHelper(context);
+        int todayExpense = Integer.parseInt(db.getExpensebyDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "", "%"));
+
+        mBuilder.setContentTitle("MyWallet Summary")
+                .setSmallIcon(R.drawable.ic_action_send)
+                .setAutoCancel(true)
+                .setContentIntent(i)
+                .setContentText("Total spends today " + Common.CURRENCY + " " + todayExpense);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final boolean isBudget = prefs.getBoolean("budget", false);
+        if(isBudget)
+            mBuilder.setProgress(db.getBudget(), (int)db.getMyTotalExpense(), false);
+
+
+        NotificationCompat.InboxStyle inboxStyle =
+                new NotificationCompat.InboxStyle();
+
+        Cursor cur = db.getMyExpenseByDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        while(cur.moveToNext()) {
+            inboxStyle.addLine(cur.getString(0) +" "+Common.CURRENCY+" "+cur.getString(1));
+        }
+        mBuilder.setStyle(inboxStyle);
+
+        mBuilder.addAction(R.drawable.ic_action_share, "Share", i);
+
+        mgr.notify(0, mBuilder.build());
     }
 }

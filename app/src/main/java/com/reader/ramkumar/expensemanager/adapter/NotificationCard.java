@@ -59,8 +59,13 @@ public class NotificationCard extends CardWithList {
 
             if (view != null) {
                 TextView t1 = (TextView) view.findViewById(R.id.text_exmple_card1);
-                if (t1 != null)
-                    t1.setText("You have "+ db.getCountMaster(db.MASTER_COLUMN_CATEGORY,db.UNCATEGORIZED,true)+" Pending Approvals");
+                if (t1 != null) {
+                    int count =  db.getCountMaster(db.MASTER_COLUMN_CATEGORY,db.UNCATEGORIZED,true);
+                    if(count!=0)
+                        t1.setText("You have " + count+ " Pending Approvals");
+                    else
+                        t1.setText("info");
+                }
 
             }
         }
@@ -144,6 +149,12 @@ public class NotificationCard extends CardWithList {
         //Init the list
         List<ListObject> mObjects = new ArrayList<ListObject>();
 
+        if(cursor.getCount()==0){
+            CostObject c = new CostObject(this);
+            c.message = "No Pending items";
+            c.ts="i";
+            mObjects.add(c);
+        }
         while  (cursor.moveToNext())
         {
              /* this may need to tune further for better accurecy */

@@ -198,6 +198,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.frame_container, newFragment)
+                        .addToBackStack(null)
                         .commit();
                 setTitle("Trend");
                 break;
@@ -206,6 +207,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.frame_container, newFragment)
+                        .addToBackStack(null)
                         .commit();
                 setTitle("Know Your Bill");
                 break;
@@ -214,6 +216,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.frame_container, newFragment)
+                        .addToBackStack(null)
                         .commit();
                 setTitle("History");
                 break;
@@ -222,12 +225,14 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.frame_container, newFragment)
+                        .addToBackStack(null)
                         .commit();
                 setTitle("Category List");
                 break;
             case 5:
                 Intent intent = new Intent(MainActivity.this,
                         PrefsActivity.class);
+
                 startActivity(intent);
                 break;
             case 6:
@@ -266,6 +271,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
         //DrawerLayout.closeDrawer(DrawerList);
     }
+
 
             private static String DB_NAME = "MyExpense.db";
             private static String DB_PATH = "/data/local/tmp/com.reader.ramkumar.expensemanager/databases/";

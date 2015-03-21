@@ -1,70 +1,93 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" 
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:card="http://schemas.android.com/apk/res-auto"
     tools:context="com.reader.ramkumar.expensemanager.ExpenseTrend">
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
-            <TextView
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/chart_trend_holder"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:background="@color/myPrimaryDarkColor"
-                android:textColor="@color/myLightPrimaryColor"
-                android:textAlignment="center"
-                android:padding="8dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:text="Expense Trend"
-                android:id="@+id/dummy_name"
-                android:textSize="@dimen/card_header_native_simple_title_text_size"
-                />
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/chart_trend"
-                android:layout_below="@id/dummy_name"
-                android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:textAlignment="center"
+                        android:padding="8dp"
+                        android:background="@color/myPrimaryDarkColor"
+                        android:text="Expense Trend"
+                        android:textColor="@color/myLightPrimaryColor"
+                        android:textSize="@dimen/card_header_native_simple_title_text_size" />
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/chart_trend"
+                        android:layout_width="match_parent"
+                        android:layout_height="240dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
             <it.gmariotti.cardslib.library.view.CardViewNative
                 android:id="@+id/cardbudget"
-                android:layout_below="@id/chart_trend"
                 style="@style/card_external"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/chart_trend_holder"
                 card:card_layout_resourceID="@layout/card_native_card_layout" />
 
-            <TextView
+            <android.support.v7.widget.CardView
+                android:id="@+id/chart_monthTrend_holder"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:background="@color/myPrimaryDarkColor"
-                android:textColor="@color/myLightPrimaryColor"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/cardbudget"
-                android:textAlignment="center"
-                android:padding="8dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:text="Expense Trend for this month"
-                android:id="@+id/dummy_name2"
-                android:textSize="@dimen/card_header_native_simple_title_text_size"
-                />
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/chart_monthTrend"
-                android:layout_below="@id/dummy_name2"
-                android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"/>
-            </RelativeLayout>
-        
-        </ScrollView>
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:textAlignment="center"
+                        android:padding="8dp"
+                        android:background="@color/myPrimaryDarkColor"
+                        android:text="Expense Trend for this month"
+                        android:textColor="@color/myLightPrimaryColor"
+                        android:textSize="@dimen/card_header_native_simple_title_text_size" />
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/chart_monthTrend"
+                        android:layout_width="match_parent"
+                        android:layout_height="240dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </RelativeLayout>
+
+    </ScrollView>
 
 </FrameLayout>

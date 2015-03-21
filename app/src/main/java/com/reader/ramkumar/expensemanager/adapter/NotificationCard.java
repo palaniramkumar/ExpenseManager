@@ -270,9 +270,9 @@ public class NotificationCard extends CardWithList {
 
                     //new TestDialog(getContext()).show();
 
-                    UndoBar undoBar = new UndoBar.Builder((Activity) getContext())//
-                            .setMessage("Successfully Deleted ")//
-                            .setStyle(UndoBar.Style.LOLLIPOP)//
+                    UndoBar undoBar = new UndoBar.Builder((Activity) getContext())
+                            .setMessage("Successfully Deleted ")
+                            .setStyle(UndoBar.Style.LOLLIPOP)
                             .setUndoColor(getContext().getResources().getColor(R.color.myAccentColor))
                             .setAlignParentBottom(true)
                             .setUndoToken(new Parcelable() {

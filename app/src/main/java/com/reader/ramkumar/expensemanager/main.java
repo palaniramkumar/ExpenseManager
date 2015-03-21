@@ -48,6 +48,7 @@ import com.reader.ramkumar.expensemanager.util.CashVault;
 import com.reader.ramkumar.expensemanager.util.Common;
 import com.reader.ramkumar.expensemanager.util.CurrencyFormatter;
 import com.reader.ramkumar.expensemanager.util.MonthOperations;
+import com.reader.ramkumar.expensemanager.util.UndoBar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -131,6 +132,8 @@ public class main extends Fragment implements OnChartValueSelectedListener{
             if(resultCode == Activity.RESULT_OK){
                 //String result=data.getStringExtra("result");
                 init();
+                UndoBar undobar = new UndoBar(getActivity());
+                undobar.show(data.getStringExtra("result"));
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
@@ -444,7 +447,7 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         }
         
          BarDataSet set1 = new BarDataSet(yVals1, "Paid Bill Amount");
-        set1.setBarSpacePercent(25f);
+        set1.setBarSpacePercent(40f);
 
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         ArrayList<Integer> colors = new ArrayList<Integer>();
@@ -459,6 +462,10 @@ public class main extends Fragment implements OnChartValueSelectedListener{
 
         hChart.setData(data);
         hChart.invalidate();
+
+        // condition for hiding the graph: if data is null pls hide
+        if(yVals1.size() == 0)
+            view.findViewById(R.id.arrayBills).setVisibility(View.GONE);
 
     }
 
@@ -522,8 +529,11 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         mChart.highlightValue(0, 0);
 
         mChart.invalidate();
-
-        mChart.setCenterText(xVals.get(0) + "\n" + Common.CURRENCY+" " + ((Entry) yVals1.get(0)).getVal());
+        if(yVals1.size()!=0 && xVals.size()!=0)
+            mChart.setCenterText(xVals.get(0) + "\n" + Common.CURRENCY+" " + ((Entry) yVals1.get(0)).getVal());
+        else {
+            mChart.setVisibility(View.GONE);
+        }
 
     }
 

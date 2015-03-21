@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -22,19 +21,19 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.reader.ramkumar.expensemanager.adapter.ListAdapterForRadioButton;
 import com.reader.ramkumar.expensemanager.adapter.ListAdapterRadioModel;
 import com.reader.ramkumar.expensemanager.db.DBHelper;
+import com.reader.ramkumar.expensemanager.util.Common;
 import com.reader.ramkumar.expensemanager.util.NumbPad;
 import com.reader.ramkumar.expensemanager.util.TYPES;
+import com.reader.ramkumar.expensemanager.util.UndoBar;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
+
 
 
 public class Expense_add_window extends ListActivity {
@@ -172,6 +171,9 @@ public class Expense_add_window extends ListActivity {
         if(adapter.getViewTypeCount()>0) //safe condition to avoid fc - Issue #30
             setListAdapter(adapter);
 
+        //load on page launch
+        onSelectAmount();
+
     }
 
     public void onAcceptButtonClick() {
@@ -197,6 +199,9 @@ public class Expense_add_window extends ListActivity {
                         date=DBHelper.getDateTime(date);
 
                     DBHelper db =new DBHelper(getApplicationContext());
+
+                    String result="Failed to Add";
+
                     if(ENTRY_TYPE.equalsIgnoreCase("ADD") ) {
                         if(trans_src.contains("Credit")) trans_src=TYPES.TRANSACTION_SOURCE.CREDIT_CARD.toString();
                         if(trans_src.contains("Debit")) trans_src=TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString();
@@ -208,23 +213,24 @@ public class Expense_add_window extends ListActivity {
                         System.out.println("Expense Source: "+trans_src);
                         System.out.println("Category : "+category+" , Index: "+listIndex);
                         db.insertMaster(amount, null, trans_src, trans_type, category, notes, null, entryDesc, date, db.getNow(), null, null, null, null, TYPES.TRANSACTION_STATUS.APPROVED.toString()); //date:datetime() is returning just a text not a value
+                        result = "Added "+ Common.CURRENCY+" "+amount+" to "+ category+" Expense";
                     }
-                    if(ENTRY_TYPE.equalsIgnoreCase("UPDATE"))//this code is for future enhancement
-                        db.updateMaster(Integer.parseInt(recid),amount,bank_name,trans_src,trans_type,category,notes,sms_id,entryDesc,date,"datetime()",place,geo_tag,null,null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
-
-                    Toast.makeText(getApplicationContext(), "Successfully Added",
-                            Toast.LENGTH_LONG).show();
+                    if(ENTRY_TYPE.equalsIgnoreCase("UPDATE")) {//this code is for future enhancement
+                        db.updateMaster(Integer.parseInt(recid), amount, bank_name, trans_src, trans_type, category, notes, sms_id, entryDesc, date, "datetime()", place, geo_tag, null, null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                        result = "Updated "+ Common.CURRENCY+" "+amount+" to "+ category+" Expense";
+                    }
 
                     /*returning results*/
 
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra("result","Success");
+                    returnIntent.putExtra("result",result);
                     setResult(RESULT_OK,returnIntent);
                     finish();
                 }
-                else
-                    Toast.makeText(getApplicationContext(), "Please Select From the List",
-                            Toast.LENGTH_LONG).show();
+                else {
+                    UndoBar undobar = new UndoBar(Expense_add_window.this);
+                    undobar.show("Select at least one Category");
+                }
 
 
             }

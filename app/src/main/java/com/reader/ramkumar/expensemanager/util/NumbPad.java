@@ -54,6 +54,10 @@ public class NumbPad {
         return value;
     }
 
+    public NumbPad(String num){
+        addl_text = num;
+    }
+
     public void setAdditionalText(String inTxt) {
         addl_text = inTxt;
     }
@@ -80,6 +84,7 @@ public class NumbPad {
 
         // Defaults
         value = "";
+        promptValue.setHint(addl_text);
         promptValue.setText("");
 
         btn1 = (Button) iView.findViewById(R.id.button1);

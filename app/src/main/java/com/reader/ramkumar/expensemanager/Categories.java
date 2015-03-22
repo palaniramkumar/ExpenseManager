@@ -206,5 +206,10 @@ public class Categories extends Fragment {
             Log.e(Constants.TAG, "Called Init method()");
         }
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        init();
+    }
 
 }

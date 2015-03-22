@@ -229,14 +229,13 @@
         style="?android:textAppearanceLarge"
         android:text="Click"
         android:id="@+id/empty_msg1"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textSize="40dp"
-        android:textColor="@color/myAccentColor"
-        android:text="+"
-        android:id="@+id/empty_msg2"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_action_edit"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -251,8 +250,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_action_add"
+        android:src="@drawable/ic_action_edit"
         fab:fab_colorNormal="@color/myAccentColor"
-        fab:fab_colorPressed="@color/myPrimaryDarkColor"
+        fab:fab_colorPressed="@android:color/holo_orange_dark"
         fab:fab_colorRipple="@color/myTextSecondaryColor" />
 </FrameLayout>

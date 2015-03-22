@@ -338,7 +338,7 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         // add a selection listener
         mChart.setOnChartValueSelectedListener(this);
          mChart.setTouchEnabled(true);
-
+        mChart.setCenterTextColor(Color.DKGRAY);
 
 
         setData();
@@ -409,6 +409,7 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         // xl.setEnabled(false);
 
         xl.setAdjustXLabels(true);
+        xl.setTextColor(Color.DKGRAY);
         hChart.setScaleXEnabled(true);
 
         YAxis yl = hChart.getAxisLeft();

@@ -11,8 +11,10 @@ import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.reader.ramkumar.expensemanager.BuildConfig;
 import com.reader.ramkumar.expensemanager.R;
+import com.reader.ramkumar.expensemanager.util.Common;
 
 import java.util.List;
 import java.util.Random;
@@ -67,7 +69,7 @@ public class ListAdapterForRadioButton extends ArrayAdapter<ListAdapterRadioMode
         holder.radioButton.setChecked(list.get(position).isSelected());
         Random rnd = new Random();
         int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-        holder.color.setBackgroundColor(color);
+        holder.color.setBackgroundColor(Common.MATERIAL_COLORS[position%ColorTemplate.COLORFUL_COLORS.length]);
         holder.color.setText(list.get(position).getName().charAt(0)+"");
         if (BuildConfig.DEBUG) {
             Log.e(Constants.TAG, "Position:"+position+", name:"+list.get(position).getName()+", legnth: "+list.size());

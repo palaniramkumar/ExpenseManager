@@ -128,6 +128,11 @@ public class ExpenseTrend extends Fragment {
             } else {
                 view.findViewById(R.id.cardbudget).setVisibility(View.GONE);
             }
+            if(db.getMyTotalExpense()==0){
+                view.findViewById(R.id.cardbudget).setVisibility(View.GONE);
+            }
+            else
+                view.findViewById(R.id.cardbudget).setVisibility(View.VISIBLE);
             //month chart creation
             mChart = (BarChart) view.findViewById(R.id.chart_trend);
             // no description text
@@ -205,6 +210,7 @@ public class ExpenseTrend extends Fragment {
             rightAxis.setDrawAxisLine(false);
             rightAxis.setDrawLabels(false);
 
+
             // add data
             dayTrendData();
 
@@ -239,7 +245,7 @@ public class ExpenseTrend extends Fragment {
 
 
         BarDataSet set1 = new BarDataSet(vals1, "Months");
-        set1.setBarSpacePercent(35f);
+        set1.setBarSpacePercent(12f);
 
         set1.setColor(getResources().getColor(R.color.myAccentColor));
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();

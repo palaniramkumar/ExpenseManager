@@ -79,12 +79,14 @@ public class Expense_add_window extends ListActivity {
         edit_notes = ((EditText) findViewById(R.id.edit_notes));
         btn_date = ((Button) findViewById(R.id.btn_date));
         Button btn_delete= ((Button) findViewById(R.id.btn_delete));
-
+        Button btnDecline = (Button) findViewById(R.id.btn_decline);
+        final Button edit_amount = (Button) findViewById(R.id.btn_amount);
+        btn_accept = (Button) findViewById(R.id.btn_accept);
         //business logic
         onAcceptButtonClick();
         onChooseDateClick(getApplicationContext());
 
-        Button edit_amount = (Button) findViewById(R.id.btn_amount);
+
         if(recid!=null) {
             edit_amount.setText(recid);//code has bug
             Cursor sms=db.getFromMasterByID(Integer.parseInt(recid));
@@ -127,6 +129,7 @@ public class Expense_add_window extends ListActivity {
                 place =sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_PLACE) );
                 geo_tag =sms.getString( sms.getColumnIndex(DBHelper.MASTER_COLUMN_GEO_TAG) );
                 //btn_delete
+                btn_accept.setText("Update");
 
             }
         }
@@ -135,7 +138,7 @@ public class Expense_add_window extends ListActivity {
             ENTRY_TYPE="ADD";
         }
 
-        Button btnDecline = (Button) findViewById(R.id.btn_decline);
+
 
         btnDecline.setOnClickListener(new View.OnClickListener() {
 
@@ -164,21 +167,21 @@ public class Expense_add_window extends ListActivity {
 
             @Override
             public void onClick(View v) {
-                onSelectAmount();
+                onSelectAmount(edit_amount.getText().toString());
             }
 
         });
         if(adapter.getViewTypeCount()>0) //safe condition to avoid fc - Issue #30
             setListAdapter(adapter);
 
-        //load on page launch
-        onSelectAmount();
+        onSelectAmount(edit_amount.getText().toString());
+
 
     }
 
     public void onAcceptButtonClick() {
 
-        btn_accept = (Button) findViewById(R.id.btn_accept);
+
 
         btn_accept.setOnClickListener(new View.OnClickListener() {
 
@@ -239,10 +242,10 @@ public class Expense_add_window extends ListActivity {
 
     }
 
-    public void onSelectAmount() {
+    public void onSelectAmount(String amount) {
 
         // create an instance of NumbPad
-        NumbPad np = new NumbPad();
+        NumbPad np = new NumbPad(amount);
         // optionally set additional title
         //np.setAdditionalText("Enter the Amount");
         // show the NumbPad to capture input.

@@ -39,6 +39,9 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="0dp"
                     android:background="@color/myAccentColor"
+                    android:drawablePadding="-50dp"
+                    android:paddingLeft="10dp"
+                    android:drawableLeft="@drawable/abc_ic_clear_mtrl_alpha"
                     android:text="Decline" />
             </com.andexert.library.RippleView>
         </FrameLayout>
@@ -62,6 +65,8 @@
                     android:layout_column="1"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="0dp"
+                    android:drawableLeft="@drawable/ic_menu_check"
+                    android:drawablePadding="-50dp"
                     android:background="@color/accent_material_dark"
                     android:text="Accept" />
             </com.andexert.library.RippleView>
@@ -222,6 +227,7 @@
                 android:layout_gravity="bottom"
                 android:background="@color/accent_material_light"
                 android:textColor="@color/myDrawerBackground"
+                android:drawableLeft="@drawable/abc_ic_commit_search_api_mtrl_alpha"
                 android:layout_margin="0dp"
                 android:text="Today" />
         </FrameLayout>
@@ -247,7 +253,9 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="0dp"
                     android:visibility="invisible"
-                    android:background="@color/material_blue_500"
+                    android:textColor="@color/myAccentColor"
+                    android:background="@color/myDrawerBackground"
+                    android:drawableLeft="@drawable/ic_delete_grey600_24dp"
                     android:text="Delete" />
             </com.andexert.library.RippleView>
         </FrameLayout>

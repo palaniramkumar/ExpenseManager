@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
-    <color name="myPrimaryColor">#607D8B</color>
-    <color name="myPrimaryDarkColor">#455A64</color>
-    <color name="myLightPrimaryColor">#CFD8DC</color>
-    <color name="myAccentColor">#FF4081</color>
-    <color name="myProgressColor">#FF9800</color>
+    <color name="myPrimaryDarkColor">#00796B</color>
+    <color name="myPrimaryColor">#009688</color>
+    <color name="myLightPrimaryColor">#B2DFDB</color>
+    <color name="myAccentColor">#FF5252</color>
+    <color name="myProgressColor">#FFEB3B</color>
 
     <!-- need to verify below color -->
     <color name="myDrawerBackground">#F2F2F2</color>
@@ -15,7 +14,7 @@
     
     <color name="myTextPrimaryColor">#212121</color>
     <color name="myTextSecondaryColor">#727272</color>
-    <color name="myDividerColor">#727272</color>
+    <color name="myDividerColor">#B6B6B6</color>
 
     <!-- need to verify below color -->
     <color name="myNavigationColor">#000000</color>

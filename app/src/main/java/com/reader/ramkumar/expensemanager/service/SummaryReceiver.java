@@ -41,7 +41,7 @@ public class SummaryReceiver extends BroadcastReceiver
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
 
         DBHelper db=new DBHelper(context);
-        int todayExpense = Integer.parseInt(db.getExpensebyDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "", "%"));
+        int todayExpense = (int)Float.parseFloat(db.getExpensebyDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "", "%"));
 
         mBuilder.setContentTitle("MyWallet Summary")
                 .setSmallIcon(R.drawable.ic_action_send)

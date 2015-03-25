@@ -75,9 +75,7 @@
 
     <TableRow
         android:background="@color/secondary_text_default_material_dark"
-        android:paddingTop="10dp"
-
-        >
+        android:paddingTop="10dp">
 
         <FrameLayout
             android:layout_width="0dp"
@@ -147,6 +145,7 @@
         android:padding="20dp">
         <FrameLayout
             android:layout_width="0dp"
+            android:id="@+id/list_holder"
             android:layout_height="wrap_content"
             android:layout_weight="1">
         <ListView

@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -566,7 +567,7 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         // add a lot of colors
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
-        for (int c : ColorTemplate.COLORFUL_COLORS)
+        for (int c :  ColorTemplate.LIBERTY_COLORS)
             colors.add(c);
 
        /* for (int c : ColorTemplate.VORDIPLOM_COLORS)
@@ -623,7 +624,6 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
-
 
 
 }

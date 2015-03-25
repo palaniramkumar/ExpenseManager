@@ -86,6 +86,29 @@ public class Expense_add_window extends ListActivity {
         onAcceptButtonClick();
         onChooseDateClick(getApplicationContext());
 
+        trans_type.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+
+
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                if (BuildConfig.DEBUG) {
+                    Log.e(Constants.TAG, "Clicked ATM Radio" +  ((RadioButton) findViewById(checkedId)).getText().toString());
+                }
+                String selected_String =  ((RadioButton) findViewById(checkedId)).getText().toString();
+                if(selected_String.equals("ATM")) {
+                    findViewById(R.id.rdo_cash).setVisibility(View.GONE);
+                    findViewById(R.id.list_holder).setVisibility(View.GONE);
+                    ((RadioButton) findViewById(R.id.rdo_debit_card)).setChecked(true);
+                }
+                else{
+                    findViewById(R.id.rdo_cash).setVisibility(View.VISIBLE);
+                    findViewById(R.id.list_holder).setVisibility(View.VISIBLE);
+                    ((RadioButton) findViewById(R.id.rdo_cash)).setChecked(true);
+                }
+            }
+        });
 
         if(recid!=null) {
             edit_amount.setText(recid);//code has bug
@@ -187,53 +210,74 @@ public class Expense_add_window extends ListActivity {
 
             @Override
             public void onClick(View arg0) {
-                if (listIndex != -1) {
-                    String amount = btn_amount.getText().toString();
-                    int selectedId = trans_src.getCheckedRadioButtonId();
-                    String trans_src = ((RadioButton) findViewById(selectedId)).getText().toString();
-                    selectedId = trans_type.getCheckedRadioButtonId();
-                    String trans_type = ((RadioButton) findViewById(selectedId)).getText().toString();
-                    String category = list.get(listIndex).getName();
-                    String notes = edit_notes.getText().toString();
-                    String date = btn_date.getText().toString();
-                    if(date.equalsIgnoreCase("Today"))
-                        date = DBHelper.getDateTime(new Date());
-                    else
-                        date=DBHelper.getDateTime(date);
 
-                    DBHelper db =new DBHelper(getApplicationContext());
+                String amount = btn_amount.getText().toString();
+                int selectedId = trans_src.getCheckedRadioButtonId();
+                String trans_src = ((RadioButton) findViewById(selectedId)).getText().toString();
+                selectedId = trans_type.getCheckedRadioButtonId();
+                String trans_type = ((RadioButton) findViewById(selectedId)).getText().toString();
+                String category ;
+                String notes = edit_notes.getText().toString();
+                String date = btn_date.getText().toString();
+                if(date.equalsIgnoreCase("Today"))
+                    date = DBHelper.getDateTime(new Date());
+                else
+                    date=DBHelper.getDateTime(date);
 
-                    String result="Failed to Add";
+                if(trans_src.contains("Credit")) trans_src=TYPES.TRANSACTION_SOURCE.CREDIT_CARD.toString();
+                if(trans_src.contains("Debit")) trans_src=TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString();
+                if(trans_src.contains("Cash")) trans_src=TYPES.TRANSACTION_SOURCE.CASH.toString();
 
-                    if(ENTRY_TYPE.equalsIgnoreCase("ADD") ) {
-                        if(trans_src.contains("Credit")) trans_src=TYPES.TRANSACTION_SOURCE.CREDIT_CARD.toString();
-                        if(trans_src.contains("Debit")) trans_src=TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString();
-                        if(trans_src.contains("Cash")) trans_src=TYPES.TRANSACTION_SOURCE.CASH.toString();
+                if(trans_type.equalsIgnoreCase("expense")) trans_type=TYPES.TRANSACTION_TYPE.EXPENSE.toString();
+                if(trans_type.equalsIgnoreCase("income")) trans_type=TYPES.TRANSACTION_TYPE.INCOME.toString();
+                if(trans_type.equalsIgnoreCase("atm")) trans_type=TYPES.TRANSACTION_TYPE.CASH_VAULT.toString(); //ATM transactions considered as cash vault
 
-                        if(trans_type.equalsIgnoreCase("expense")) trans_type=TYPES.TRANSACTION_TYPE.EXPENSE.toString();
-                        if(trans_type.equalsIgnoreCase("income")) trans_type=TYPES.TRANSACTION_TYPE.INCOME.toString();
-                        if(trans_type.equalsIgnoreCase("atm")) trans_type=TYPES.TRANSACTION_TYPE.CASH_VAULT.toString(); //ATM transactions considered as cash vault
-                        System.out.println("Expense Source: "+trans_src);
-                        System.out.println("Category : "+category+" , Index: "+listIndex);
-                        db.insertMaster(amount, null, trans_src, trans_type, category, notes, null, entryDesc, date, db.getNow(), null, null, null, null, TYPES.TRANSACTION_STATUS.APPROVED.toString()); //date:datetime() is returning just a text not a value
-                        result = "Added "+ Common.CURRENCY+" "+amount+" to "+ category+" Expense";
-                    }
-                    if(ENTRY_TYPE.equalsIgnoreCase("UPDATE")) {//this code is for future enhancement
-                        db.updateMaster(Integer.parseInt(recid), amount, bank_name, trans_src, trans_type, category, notes, sms_id, entryDesc, date, "datetime()", place, geo_tag, null, null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
-                        result = "Updated "+ Common.CURRENCY+" "+amount+" to "+ category+" Expense";
-                    }
+                DBHelper db =new DBHelper(getApplicationContext());
 
-                    /*returning results*/
 
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("result",result);
-                    setResult(RESULT_OK,returnIntent);
-                    finish();
+                String result="Failed to Add";
+
+                if(amount ==null || amount.trim().equals("") || Float.parseFloat(amount)==0){
+                    UndoBar undobar = new UndoBar(Expense_add_window.this);
+                    undobar.show("Amount should not be empty or zero");
+                    return;
                 }
-                else {
+
+                if (listIndex == -1 &&  !trans_type.equals(TYPES.TRANSACTION_TYPE.CASH_VAULT.toString())) {
                     UndoBar undobar = new UndoBar(Expense_add_window.this);
                     undobar.show("Select at least one Category");
+                    return;
                 }
+                else{
+                    category= trans_type.equals(TYPES.TRANSACTION_TYPE.CASH_VAULT.toString())?db.ATM:list.get(listIndex).getName();
+                    result = trans_type.equals(TYPES.TRANSACTION_TYPE.CASH_VAULT.toString()) ? Common.CURRENCY+" "+amount+" to ATM" : Common.CURRENCY+" "+amount+" to "+ category+ " "+trans_type;
+                }
+
+
+
+
+
+                if(ENTRY_TYPE.equalsIgnoreCase("ADD") ) {
+
+                    System.out.println("Expense Source: "+trans_src);
+                    System.out.println("Category : " + category + " , Index: " + listIndex);
+
+                    db.insertMaster(amount, null, trans_src, trans_type, category, notes, null, entryDesc, date, db.getNow(), null, null, null, null, TYPES.TRANSACTION_STATUS.APPROVED.toString()); //date:datetime() is returning just a text not a value
+                    result = "Added "+ result;
+                }
+                if(ENTRY_TYPE.equalsIgnoreCase("UPDATE")) {//this code is for future enhancement
+                    db.updateMaster(Integer.parseInt(recid), amount, bank_name, trans_src, trans_type, category, notes, sms_id, entryDesc, date, db.getNow(), place, geo_tag, null, null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                    result = "Updated "+result;
+                }
+
+
+                /*returning results*/
+
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("result",result);
+                setResult(RESULT_OK,returnIntent);
+                finish();
+
 
 
             }

@@ -352,7 +352,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public Cursor getFromMasterByID(int id)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select *,strftime('%d/%m/%Y',trans_time) local_time from MASTER where id="+id+"", null );
+        Cursor res =  db.rawQuery( "select *,strftime('%m/%d/%Y',trans_time) local_time from MASTER where id="+id+"", null );
         return res;
     }
 

@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     xmlns:card="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
-    tools:context="com.reader.ramkumar.expensemanager.Categories">
+    tools:context="com.reader.freshmanapp.mywallet.Categories">
 
     <ScrollView
         android:layout_width="match_parent"

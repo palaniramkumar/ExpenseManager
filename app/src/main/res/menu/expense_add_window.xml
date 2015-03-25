@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.reader.ramkumar.expensemanager.Expense_add_window">
+    tools:context="com.reader.freshmanapp.mywallet.Expense_add_window">
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.reader.ramkumar.expensemanager.drawer_history">
+    tools:context="com.reader.freshmanapp.mywallet.drawer_history">
     <item
         android:id="@+id/action_example"
         android:showAsAction="withText|ifRoom"

@@ -28,17 +28,5 @@
             android:summary="Do you want to enable the budget tracker"
             android:title="Budget Tracker" />
 
-
-        <SwitchPreference
-            android:key="recurring"
-            android:summary="Do you want to enable the recurring feature"
-            android:title="Recurring income/expense" />
-
-        <ListPreference
-            android:entries="@array/listOptions"
-            android:entryValues="@array/listValues"
-            android:key="cycle_startday"
-            android:summary="Expense Cycle start date"
-            android:title="Start Date" />
     </PreferenceCategory>
 </PreferenceScreen>

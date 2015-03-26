@@ -37,15 +37,11 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * Use the {@link FragmentHistory#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentHistory extends Fragment implements AdapterView.OnItemClickListener{
+public class FragmentHistory extends Fragment implements AdapterView.OnItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     ViewGroup mContainer;
     Button btn_month;
     Button btn_year;
@@ -54,16 +50,17 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
     //ExpandableListView listView;
     StickyListHeadersListView listView;
     StickyHistoryAdapter adapter;
-    private String category_filter="%";
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+    private String category_filter = "%";
 
     private OnFragmentInteractionListener mListener;
-    public interface Constants {
-        String TAG = "app:FragmentHistory";
-    }
 
     public FragmentHistory() {
         // Required empty public constructor
     }
+
     public FragmentHistory(String filter) {
         category_filter = filter;
     }
@@ -92,10 +89,10 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-            
+
             //added newly
-            category_filter=getArguments().getString("CATEGORY");
-            
+            category_filter = getArguments().getString("CATEGORY");
+
         }
     }
 
@@ -106,7 +103,7 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         mContainer = container;
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = mInflater.inflate(R.layout.fragment_fragment_history, mContainer, false);
-        db=new DBHelper(getActivity());
+        db = new DBHelper(getActivity());
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -121,10 +118,10 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
             public void onClick(View v) {
 
                 String current_month = btn_month.getText().toString();
-                Date date = MonthOperations.previous(current_month,db.year);
+                Date date = MonthOperations.previous(current_month, db.year);
                 int prev_month = date.getMonth();
-                db.month = MonthOperations.getMonthin2Digit(prev_month+1);
-                db.year = date.getYear()+"";
+                db.month = MonthOperations.getMonthin2Digit(prev_month + 1);
+                db.year = date.getYear() + "";
                 init();
             }
         });
@@ -133,10 +130,10 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         btn_next.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String current_month = btn_month.getText().toString();
-                Date date = MonthOperations.next(current_month,db.year);
+                Date date = MonthOperations.next(current_month, db.year);
                 int next_month = date.getMonth();
-                db.month = MonthOperations.getMonthin2Digit(next_month+1);
-                db.year = date.getYear()+"";
+                db.month = MonthOperations.getMonthin2Digit(next_month + 1);
+                db.year = date.getYear() + "";
                 init();
             }
         });
@@ -145,27 +142,24 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         return view;
     }
 
-
-    void init(){
+    void init() {
 
         btn_month = (Button) view.findViewById(R.id.btn_month);
-        btn_month.setText(MonthOperations.getMonthAsString(Integer.parseInt(db.month)-1));
+        btn_month.setText(MonthOperations.getMonthAsString(Integer.parseInt(db.month) - 1));
         btn_year = (Button) view.findViewById(R.id.btn_year);
         btn_year.setText(db.year);
-        adapter = new StickyHistoryAdapter(getActivity(),db,category_filter);
+        adapter = new StickyHistoryAdapter(getActivity(), db, category_filter);
         listView = (StickyListHeadersListView) view.findViewById(R.id.sticky_list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
-        if(adapter.getCount()==0){
+        if (adapter.getCount() == 0) {
             if (BuildConfig.DEBUG) {
                 view.findViewById(R.id.info_layout).setVisibility(View.VISIBLE);
                 Log.e(Constants.TAG, "No record found");
             }
-        }
-        else
-        if (BuildConfig.DEBUG) {
+        } else if (BuildConfig.DEBUG) {
             view.findViewById(R.id.info_layout).setVisibility(View.GONE);
-            Log.e(Constants.TAG, adapter.getCount()+" record found");
+            Log.e(Constants.TAG, adapter.getCount() + " record found");
         }
 
     }
@@ -181,19 +175,18 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String click_id = ((TextView) view.findViewById(R.id.txt_id)).getText().toString();
         final Cursor cursor = db.getFromMasterByID(Integer.parseInt(click_id));
-        String trans_type="",sms_id="";
-        if(cursor.moveToNext()) {
-            trans_type=cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_TRANS_TYPE));
+        String trans_type = "", sms_id = "";
+        if (cursor.moveToNext()) {
+            trans_type = cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_TRANS_TYPE));
             sms_id = cursor.getString(cursor.getColumnIndex(DBHelper.MASTER_COLUMN_SMS_ID));
 
 
         }
 
-        if(trans_type.equalsIgnoreCase(TYPES.TRANSACTION_TYPE.CASH_VAULT.toString())){
-            showDialogConfirm(getActivity(),Integer.parseInt(click_id));
-        }
-        else if(sms_id!=null)
-            showDialogCatogories(getActivity(),Integer.parseInt(click_id));
+        if (trans_type.equalsIgnoreCase(TYPES.TRANSACTION_TYPE.CASH_VAULT.toString())) {
+            showDialogConfirm(getActivity(), Integer.parseInt(click_id));
+        } else if (sms_id != null)
+            showDialogCatogories(getActivity(), Integer.parseInt(click_id));
 
         else {
             Intent i = new Intent(view.getContext(), Expense_add_window.class);
@@ -202,20 +195,18 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         }
         if (BuildConfig.DEBUG) {
             Log.e(Constants.TAG, "Item " + click_id + " clicked!");
-        }        
+        }
 
     }
 
     // this code has no impact
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (BuildConfig.DEBUG) {
             Log.e(Constants.TAG, "Results Invoked");
         }
         init();
     }
-
 
     @Override
     public void onAttach(Activity activity) {
@@ -234,28 +225,12 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         mListener = null;
     }
 
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }
-    
-    void showDialogCatogories(final Context context, final int RECID){
+    void showDialogCatogories(final Context context, final int RECID) {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
 
         //final CharSequence myList[] = db.getDefaultCategory();
-        Cursor myList =db.getMyBudgetByCategory();
-        dialog.setSingleChoiceItems(myList, -1,"category",  new DialogInterface.OnClickListener() {
+        Cursor myList = db.getMyBudgetByCategory();
+        dialog.setSingleChoiceItems(myList, -1, "category", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
@@ -267,13 +242,13 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ListView lw = ((AlertDialog) dialog).getListView();
-                if(lw.getCheckedItemPosition()>=0) {
-                    Cursor checkedItem =(Cursor) lw.getAdapter().getItem(lw.getCheckedItemPosition());
+                if (lw.getCheckedItemPosition() >= 0) {
+                    Cursor checkedItem = (Cursor) lw.getAdapter().getItem(lw.getCheckedItemPosition());
                     String category = checkedItem.getString(checkedItem.getColumnIndex("category"));
                     db.updateMaster(RECID, db.MASTER_COLUMN_CATEGORY, category);
 
                     Cursor cur = db.getFromMasterByID(RECID);
-                    if(cur.moveToNext()) {
+                    if (cur.moveToNext()) {
                         DBCategoryMap dbCatMap = new DBCategoryMap(getActivity());
                         dbCatMap.insertCategoryMap(cur.getString(cur.getColumnIndex(db.DESC)), category, TYPES.TRANSACTION_TYPE.EXPENSE.toString());
                         dbCatMap.close();
@@ -299,8 +274,9 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         dialog.setTitle("Choose the Category");
         dialog.show();
     }
+
     //we may need to remove this code. No options for cash vault for now
-    void showDialogConfirm(final Context context, final int RECID){
+    void showDialogConfirm(final Context context, final int RECID) {
         new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                 .setTitle("Delete entry")
                 .setMessage("Remove from Cash Vault ?")
@@ -318,5 +294,24 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
+    }
+
+    public interface Constants {
+        String TAG = "app:FragmentHistory";
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        public void onFragmentInteraction(Uri uri);
     }
 }

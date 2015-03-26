@@ -39,9 +39,9 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="0dp"
                     android:background="@color/myAccentColor"
+                    android:drawableLeft="@drawable/abc_ic_clear_mtrl_alpha"
                     android:drawablePadding="-50dp"
                     android:paddingLeft="10dp"
-                    android:drawableLeft="@drawable/abc_ic_clear_mtrl_alpha"
                     android:text="Decline" />
             </com.andexert.library.RippleView>
         </FrameLayout>
@@ -65,9 +65,9 @@
                     android:layout_column="1"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="0dp"
+                    android:background="@color/accent_material_dark"
                     android:drawableLeft="@drawable/ic_menu_check"
                     android:drawablePadding="-50dp"
-                    android:background="@color/accent_material_dark"
                     android:text="Accept" />
             </com.andexert.library.RippleView>
         </FrameLayout>
@@ -81,6 +81,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.5">
+
             <RadioGroup
                 android:id="@+id/rdo_trans_type"
                 android:layout_width="wrap_content"
@@ -102,12 +103,13 @@
                     android:layout_height="wrap_content"
                     android:text="INCOME"
                     android:textColor="#000000" />
+
                 <RadioButton
                     android:id="@+id/rdo_ATM_WRL"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="ATM"
-                    android:textColor="#000000"/>
+                    android:textColor="#000000" />
             </RadioGroup>
 
         </FrameLayout>
@@ -143,17 +145,19 @@
     <TableRow
         android:background="@color/secondary_text_default_material_dark"
         android:padding="20dp">
+
         <FrameLayout
-            android:layout_width="0dp"
             android:id="@+id/list_holder"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
-        <ListView
-            android:id="@android:id/list"
-            android:layout_width="fill_parent"
-            android:layout_height="250dp"
-            android:layout_span="0"
-            android:textColor="#000000" />
+
+            <ListView
+                android:id="@android:id/list"
+                android:layout_width="fill_parent"
+                android:layout_height="250dp"
+                android:layout_span="0"
+                android:textColor="#000000" />
         </FrameLayout>
 
     </TableRow>
@@ -161,9 +165,9 @@
     <TableRow>
 
         <View
+            android:id="@+id/list_holder_seperator"
             android:layout_width="fill_parent"
             android:layout_height="2dp"
-            android:id="@+id/list_holder_seperator"
             android:layout_span="2"
             android:background="#cccccccc" />
     </TableRow>
@@ -174,11 +178,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.75">
+
             <RadioGroup
                 android:id="@+id/rdo_trans_src"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <RadioButton
                     android:id="@+id/rdo_cash"
                     android:layout_width="wrap_content"
@@ -202,7 +208,6 @@
                     android:textColor="#000000" />
 
 
-
             </RadioGroup>
 
         </FrameLayout>
@@ -211,32 +216,37 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.25">
-            <LinearLayout android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:orientation="vertical">
-            <EditText
-                android:layout_width="match_parent"
-                android:id="@+id/edit_notes"
-                android:hint="Notes"
-                android:textColor="@color/accent_material_light"
-                android:textColorHint="@color/card_expand_title_color"
-                android:layout_height="wrap_content" />
 
-            <Button
-                android:id="@+id/btn_date"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:background="@color/accent_material_light"
-                android:textColor="@color/myDrawerBackground"
-                android:drawableLeft="@drawable/abc_ic_commit_search_api_mtrl_alpha"
-                android:layout_margin="0dp"
-                android:text="Today" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/edit_notes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Notes"
+                    android:textColor="@color/accent_material_light"
+                    android:textColorHint="@color/card_expand_title_color" />
+
+                <Button
+                    android:id="@+id/btn_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_margin="0dp"
+                    android:background="@color/accent_material_light"
+                    android:drawableLeft="@drawable/abc_ic_commit_search_api_mtrl_alpha"
+                    android:text="Today"
+                    android:textColor="@color/myDrawerBackground" />
             </LinearLayout>
         </FrameLayout>
 
     </TableRow>
+
     <TableRow>
+
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -255,11 +265,11 @@
                     android:layout_column="0"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="0dp"
-                    android:visibility="invisible"
-                    android:textColor="@color/myAccentColor"
                     android:background="@color/myDrawerBackground"
                     android:drawableLeft="@drawable/ic_delete_grey600_24dp"
-                    android:text="Delete" />
+                    android:text="Delete"
+                    android:textColor="@color/myAccentColor"
+                    android:visibility="invisible" />
             </com.andexert.library.RippleView>
         </FrameLayout>
 

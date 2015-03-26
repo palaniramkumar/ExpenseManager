@@ -10,8 +10,8 @@
     <!-- need to verify below color -->
     <color name="myDrawerBackground">#F2F2F2</color>
     <color name="myWindowBackground">#DEDEDE</color>
-    
-    
+
+
     <color name="myTextPrimaryColor">#212121</color>
     <color name="myTextSecondaryColor">#727272</color>
     <color name="myDividerColor">#B6B6B6</color>

@@ -64,27 +64,28 @@ import it.gmariotti.cardslib.library.view.CardViewNative;
  * Use the {@link main#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class main extends Fragment implements OnChartValueSelectedListener{
+public class main extends Fragment implements OnChartValueSelectedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    public ProgressBar mProgress;
     ViewGroup mContainer;
+    CardViewNative cardView;
+    Button btn_month;
+    Button btn_year;
+    ArrayList<String> xVals;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private PieChart mChart;
-    private HorizontalBarChart hChart;
+    private HorizontalBarChart hChart,incChart;
     private OnFragmentInteractionListener mListener;
     private Handler mHandler = new Handler();
-    public ProgressBar mProgress;
-    CardViewNative cardView;
     private DBHelper db;
     private View view;
     private ExpenseCard card;
-    Button btn_month;
-    Button btn_year;
-    ArrayList<String> xVals;
+
     public main() {
         // Required empty public constructor
     }
@@ -106,9 +107,7 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         fragment.setArguments(args);
         return fragment;
     }
-    public interface Constants {
-        String TAG = "app:main";
-    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,14 +115,14 @@ public class main extends Fragment implements OnChartValueSelectedListener{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        db=new DBHelper(getActivity());
+        db = new DBHelper(getActivity());
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == 201) {
-            if(resultCode == Activity.RESULT_OK){
+            if (resultCode == Activity.RESULT_OK) {
                 //String result=data.getStringExtra("result");
                 init();
                 UndoBar undobar = new UndoBar(getActivity());
@@ -134,6 +133,7 @@ public class main extends Fragment implements OnChartValueSelectedListener{
             }
         }
     }//onActivityResult
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -143,7 +143,7 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = mInflater.inflate(R.layout.fragment_main, mContainer, false);
 
-        mProgress= (ProgressBar)view.findViewById(R.id.loading_spinner) ;
+        mProgress = (ProgressBar) view.findViewById(R.id.loading_spinner);
         mProgress.setVisibility(View.INVISIBLE);
         //Set card in the cardView
         cardView = (CardViewNative) view.findViewById(R.id.carddemo); //if you want list, pls change the xml to "CardListView"
@@ -161,7 +161,7 @@ public class main extends Fragment implements OnChartValueSelectedListener{
             public void onClick(View v) {
                 //Toast.makeText(mContainer.getContext(), "New Clicked", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(mContainer.getContext(), Expense_add_window.class);
-                startActivityForResult(i,201); //201 -Create: assume HTTP 201 for create request :). It can be any value
+                startActivityForResult(i, 201); //201 -Create: assume HTTP 201 for create request :). It can be any value
             }
         });
 
@@ -170,10 +170,10 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         btn_prev.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String current_month = btn_month.getText().toString();
-                Date date = MonthOperations.previous(current_month,db.year);
+                Date date = MonthOperations.previous(current_month, db.year);
                 int prev_month = date.getMonth();
-                db.month = MonthOperations.getMonthin2Digit(prev_month+1);
-                db.year = date.getYear()+"";
+                db.month = MonthOperations.getMonthin2Digit(prev_month + 1);
+                db.year = date.getYear() + "";
                 //db=new DBHelper(getActivity(),MonthOperations.getMonthin2Digit(prev_month+1));
                 init();
             }
@@ -183,16 +183,16 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         btn_next.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String current_month = btn_month.getText().toString();
-                Date date = MonthOperations.next(current_month,db.year);
+                Date date = MonthOperations.next(current_month, db.year);
                 int next_month = date.getMonth();
-                db.month = MonthOperations.getMonthin2Digit(next_month+1);
-                db.year = date.getYear()+"";
+                db.month = MonthOperations.getMonthin2Digit(next_month + 1);
+                db.year = date.getYear() + "";
                 //db=new DBHelper(getActivity(),MonthOperations.getMonthin2Digit(next_month+1));
                 init();
             }
         });
 
-        TextView t = (TextView)view.findViewById(R.id.txt_progress);
+        TextView t = (TextView) view.findViewById(R.id.txt_progress);
 
         t.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,11 +204,10 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         return view;
     }
 
-
-    public void view_atm_trans(View v){
+    public void view_atm_trans(View v) {
         FragmentHistory secFrag = new FragmentHistory(DBHelper.ATM);
         FragmentTransaction fragTransaction = (getActivity()).getFragmentManager().beginTransaction();
-        fragTransaction.replace(R.id.frame_container,secFrag );
+        fragTransaction.replace(R.id.frame_container, secFrag);
         fragTransaction.addToBackStack(null);
         fragTransaction.commit();
 
@@ -218,21 +217,21 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         }
     }
 
-    void init(){
+    void init() {
 
         SMS.syncSMS(getActivity());
 
-        card = new ExpenseCard(getActivity(),db);
+        card = new ExpenseCard(getActivity(), db);
 
         TextView amountHdr = (TextView) view.findViewById(R.id.txt_tot_amount);
-        amountHdr.setText(Common.CURRENCY+" "+db.getMyTotalExpense());
+        amountHdr.setText(Common.CURRENCY + " " + db.getMyTotalExpense(db.month));
 
         TextView amt_today = (TextView) view.findViewById(R.id.txt_today_amount);
-        amt_today.setText("( Today's Expense "+Common.CURRENCY+" "+db.getExpensebyDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+"","%")+" )");
+        amt_today.setText("( Today's Expense " + Common.CURRENCY + " " + db.getExpensebyDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "", "%") + " )");
 
         btn_month = (Button) view.findViewById(R.id.btn_month);
         btn_year = (Button) view.findViewById(R.id.btn_year);
-        btn_month.setText(MonthOperations.getMonthAsString(Integer.parseInt(db.month)-1));
+        btn_month.setText(MonthOperations.getMonthAsString(Integer.parseInt(db.month) - 1));
         btn_year.setText(db.year);
 
         ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
@@ -240,12 +239,12 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         card.init();
 
         /*code to update the card value without overlaping the previous text Defect #11*/
-        if(cardView.getCard()==null)
+        if (cardView.getCard() == null)
             cardView.setCard(card);
         else
             cardView.replaceCard(card);
 
-        if(db.getMyTotalExpense()==0){ //check whether the child is exist or not. if no child inside the card pls hide it.
+        if (db.getMyTotalExpense(db.month) == 0) { //check whether the child is exist or not. if no child inside the card pls hide it.
             cardView.setVisibility(View.GONE);
             view.findViewById(R.id.info_layout).setVisibility(View.VISIBLE);
             if (BuildConfig.DEBUG) {
@@ -286,7 +285,7 @@ public class main extends Fragment implements OnChartValueSelectedListener{
 
         // add a selection listener
         mChart.setOnChartValueSelectedListener(this);
-         mChart.setTouchEnabled(true);
+        mChart.setTouchEnabled(true);
         mChart.setCenterTextColor(Color.DKGRAY);
 
 
@@ -296,7 +295,7 @@ public class main extends Fragment implements OnChartValueSelectedListener{
 
         mChart.getLegend().setTextColor(Color.DKGRAY);
 
-        if(mChart.getChildAt(0)!=null)
+        if (mChart.getChildAt(0) != null)
             mChart.getChildAt(0).callOnClick();
 
         // mChart.spin(2000, 0, 360);
@@ -304,8 +303,8 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         //setting up remaining amount in cash vault
         //https://github.com/akexorcist/Android-RoundCornerProgressBar
 
-       final float[] roundedCorners = new float[] { 5, 5, 5, 5, 5, 5, 5, 5 };
-        ShapeDrawable pgDrawable = new ShapeDrawable(new RoundRectShape(roundedCorners,     null, null));
+        final float[] roundedCorners = new float[]{5, 5, 5, 5, 5, 5, 5, 5};
+        ShapeDrawable pgDrawable = new ShapeDrawable(new RoundRectShape(roundedCorners, null, null));
 
         // Sets the progressBar color
         pgDrawable.getPaint().setColor(getActivity().getResources()
@@ -317,16 +316,15 @@ public class main extends Fragment implements OnChartValueSelectedListener{
                 .getColor(R.color.myLightPrimaryColor));
 
         CashVault vault = new CashVault(db);
-        if(vault.spent_amount == 0){
+        if (vault.vault_amount== 0) {
             view.findViewById(R.id.cash_holder).setVisibility(View.GONE);
             //cash_holder
-        }
-        else
+        } else
             view.findViewById(R.id.cash_holder).setVisibility(View.VISIBLE);
-        
+
         progress_bar.setMax(vault.vault_amount);
         progress_bar.setProgress(vault.amount_left);
-        TextView progress_caption =  (TextView)view.findViewById(R.id.txt_progress);
+        TextView progress_caption = (TextView) view.findViewById(R.id.txt_progress);
         progress_caption.setText(vault.msg);
 
 
@@ -381,6 +379,58 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         hChart.getLegend().setTextColor(Color.DKGRAY);
 
 
+
+        incChart = (HorizontalBarChart) view.findViewById(R.id.chart_incomevsexpense);
+
+        incChart.setDrawBarShadow(false);
+
+        incChart.setDrawValueAboveBar(true);
+
+        incChart.setDescription("");
+
+        // if more than 60 entries are displayed in the chart, no values will be
+        // drawn
+        incChart.setMaxVisibleValueCount(60);
+
+        // scaling can now only be done on x- and y-axis separately
+        incChart.setPinchZoom(false);
+
+        // draw shadows for each bar that show the maximum value
+        // mChart.setDrawBarShadow(true);
+
+        // mChart.setDrawXLabels(false);
+
+        incChart.setDrawGridBackground(false);
+
+        xl = incChart.getXAxis();
+        xl.setPosition(XAxis.XAxisPosition.TOP);
+        xl.setDrawAxisLine(false);
+        xl.setDrawGridLines(false);
+        //xl.setGridLineWidth(0.3f);
+        // xl.setEnabled(false);
+
+        xl.setAdjustXLabels(true);
+        xl.setTextColor(Color.DKGRAY);
+        incChart.setScaleXEnabled(true);
+
+        yl = incChart.getAxisLeft();
+        yl.setDrawAxisLine(false);
+        yl.setDrawGridLines(false);
+        //yl.setGridLineWidth(0.3f);
+        yl.setDrawLabels(false);
+        yl.setLabelCount(0);
+
+        yr = incChart.getAxisRight();
+        yr.setDrawAxisLine(false);
+        yr.setDrawGridLines(false);
+        yr.setDrawLabels(false);
+        yr.setLabelCount(0);
+
+        incomevsexpense_data();
+        incChart.animateY(2500);
+        incChart.getLegend().setTextColor(Color.DKGRAY);
+
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -427,45 +477,43 @@ public class main extends Fragment implements OnChartValueSelectedListener{
             Log.e(Constants.TAG, "data: " + xVals.get(e.getXIndex()));
 
         }
-        mChart.setCenterText(xVals.get(e.getXIndex())+"\n"+Common.CURRENCY+" "+e.getVal());
+        mChart.setCenterText(xVals.get(e.getXIndex()) + "\n" + Common.CURRENCY + " " + e.getVal());
     }
 
     @Override
     public void onNothingSelected() {
     }
 
-
     private void bill_expense_data() {
-        
-        Cursor cur = db.getFromMaster(db.MASTER_COLUMN_CATEGORY,db.BILL_PAYMENT,false);
+
+        Cursor cur = db.getFromMaster(db.MASTER_COLUMN_CATEGORY, db.BILL_PAYMENT, false);
 
         ArrayList<String> xVals = new ArrayList<String>();
         ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
-        int i=0;
-        while(cur.moveToNext()){
+        int i = 0;
+        while (cur.moveToNext()) {
             String bill_name = cur.getString(cur.getColumnIndex(db.MASTER_COLUMN_NOTES));
-           
-            if(bill_name == null || bill_name.trim().equals(""))
+
+            if (bill_name == null || bill_name.trim().equals(""))
                 bill_name = "<Not Specified>";
             else
-                bill_name = bill_name.toUpperCase().replace("PAYMENT","");
-            
+                bill_name = bill_name.toUpperCase().replace("PAYMENT", "");
+
             if (BuildConfig.DEBUG) {
-                Log.e(Constants.TAG, "Retrived Val: "+bill_name+" ,"+cur.getFloat(cur.getColumnIndex(db.MASTER_COLUMN_AMOUNT)));
+                Log.e(Constants.TAG, "Retrived Val: " + bill_name + " ," + cur.getFloat(cur.getColumnIndex(db.MASTER_COLUMN_AMOUNT)));
             }
-         
+
             xVals.add(bill_name);
             yVals1.add(new BarEntry(cur.getFloat(cur.getColumnIndex(db.MASTER_COLUMN_AMOUNT)), i));
             i++;
             try {
                 Thread.sleep(1);
-            }
-            catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        
-         BarDataSet set1 = new BarDataSet(yVals1, "Paid Bill Amount");
+
+        BarDataSet set1 = new BarDataSet(yVals1, "Paid Bill Amount");
         set1.setBarSpacePercent(40f);
 
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
@@ -483,13 +531,55 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         hChart.invalidate();
 
         // condition for hiding the graph: if data is null pls hide
-        if(yVals1.size() == 0)
+        if (yVals1.size() == 0)
             view.findViewById(R.id.arrayBills).setVisibility(View.GONE);
         else
             view.findViewById(R.id.arrayBills).setVisibility(View.VISIBLE);
 
 
     }
+
+    private void incomevsexpense_data() {
+
+        Cursor cur = db.getFromMaster(db.MASTER_COLUMN_CATEGORY, db.BILL_PAYMENT, false);
+
+        ArrayList<String> xVals = new ArrayList<String>();
+        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+        float income = db.getMyTotalIncome(db.month);
+        float expense = db.getMyTotalExpense(db.month);
+
+
+        xVals.add("INCOME");
+        yVals1.add(new BarEntry(income, 0));
+        xVals.add("EXPENSE");
+        yVals1.add(new BarEntry(expense, 1));
+
+        BarDataSet set1 = new BarDataSet(yVals1, "Amount");
+       // set1.setBarSpacePercent(40f);
+
+        ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
+        ArrayList<Integer> colors = new ArrayList<Integer>();
+        for (int c : ColorTemplate.COLORFUL_COLORS)
+            colors.add(c);
+        set1.setColors(colors);
+        dataSets.add(set1);
+
+        BarData data = new BarData(xVals, dataSets);
+        data.setValueTextSize(10f);
+        data.setValueFormatter(new CurrencyFormatter());
+
+        incChart.setData(data);
+        incChart.invalidate();
+
+        // condition for hiding the graph: if data is null pls hide
+        if (income + expense == 0)
+            view.findViewById(R.id.incomevsexpense_holder).setVisibility(View.GONE);
+        else
+            view.findViewById(R.id.incomevsexpense_holder).setVisibility(View.VISIBLE);
+
+
+    }
+
 
     private void setData() {
         Cursor cursor = db.getMyExpenseByCategory();
@@ -499,14 +589,13 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         // IMPORTANT: In a PieChart, no values (Entry) should have the same
         // xIndex (even if from different DataSets), since no values can be
         // drawn above each other.
-        int i=0;
-        while(cursor.moveToNext()){
+        int i = 0;
+        while (cursor.moveToNext()) {
             yVals1.add(new Entry(cursor.getInt(1), i++));
             xVals.add(cursor.getString(0).toUpperCase());
             try {
                 Thread.sleep(1);
-            }
-            catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -518,7 +607,7 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         // add a lot of colors
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
-        for (int c :  ColorTemplate.LIBERTY_COLORS)
+        for (int c : ColorTemplate.LIBERTY_COLORS)
             colors.add(c);
 
        /* for (int c : ColorTemplate.VORDIPLOM_COLORS)
@@ -551,14 +640,17 @@ public class main extends Fragment implements OnChartValueSelectedListener{
         mChart.highlightValue(0, 0);
 
         mChart.invalidate();
-        if(yVals1.size()!=0 && xVals.size()!=0) {
+        if (yVals1.size() != 0 && xVals.size() != 0) {
             mChart.setCenterText(xVals.get(0) + "\n" + Common.CURRENCY + " " + ((Entry) yVals1.get(0)).getVal());
             view.findViewById(R.id.chart_holder).setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             view.findViewById(R.id.chart_holder).setVisibility(View.GONE);
         }
 
+    }
+
+    public interface Constants {
+        String TAG = "app:main";
     }
 
     /**

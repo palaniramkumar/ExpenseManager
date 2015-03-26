@@ -36,13 +36,11 @@ import it.gmariotti.cardslib.library.prototypes.LinearListView;
 public class ExpenseCard extends CardWithList {
     DBHelper db;
     Context mContext;
-    public interface Constants {
-        String TAG = "app:ExpenseCard";
-    }
-    public ExpenseCard(Context context,DBHelper db) {
+
+    public ExpenseCard(Context context, DBHelper db) {
         super(context);
-        mContext=context;
-        this.db=db;
+        mContext = context;
+        this.db = db;
     }
 
     @Override
@@ -50,34 +48,12 @@ public class ExpenseCard extends CardWithList {
 
         return new CustomHeader(getContext());
     }
-    public class CustomHeader extends CardHeader {
 
-        public CustomHeader(Context context) {
-            super(context, R.layout.card_header_inner);
-        }
-
-        @Override
-        public void setupInnerViewElements(ViewGroup parent, View view) {
-
-            float amount =  db.getMyTotalExpense();
-            if (view != null) {
-                TextView t1 = (TextView) view.findViewById(R.id.text_exmple_card1);
-                if (t1 != null) {
-                    if(amount!=0)
-                        t1.setText("The Expense for this month  " + Common.CURRENCY + " " + amount);
-                    else
-                        t1.setText("No Transactions for this month");
-                }
-
-            }
-        }
-    }
     @Override
     protected void initCard() {
         //Set the whole card as swipeable
         setSwipeable(false);
     }
-
 
     @Override
     protected List<ListObject> initChildren() {
@@ -88,7 +64,7 @@ public class ExpenseCard extends CardWithList {
         Cursor cursor = db.getMyExpenseByCategory();
         //Add an object to the list
 
-        while(cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             CostObject c = new CostObject(this);
             c.type = cursor.getString(0);
             c.amount = cursor.getFloat(1);
@@ -109,13 +85,12 @@ public class ExpenseCard extends CardWithList {
             //System.out.println(dateFormat.format(date)); //2013/10/15 16:16:39
             cal.get(Calendar.DATE);
             int prev_month_amt = db.getMyExpenseByCategory(c.type, dateFormat.format(cal1.getTime()), dateFormat.format(cal.getTime()));
-            c.progress = prev_month_amt-c.amount>0 ? "▲" :"▼" ;
-           // c.progress+=Math.abs(prev_month_amt-c.amount);
+            c.progress = prev_month_amt - c.amount > 0 ? "▲" : "▼";
+            // c.progress+=Math.abs(prev_month_amt-c.amount);
             mObjects.add(c);
             try {
                 Thread.sleep(1);
-            }
-            catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -141,7 +116,7 @@ public class ExpenseCard extends CardWithList {
 
         currency.setText(costObject.progress);
 
-        if(costObject.progress .contains("▼"))
+        if (costObject.progress.contains("▼"))
             currency.setTextColor(Color.RED);
         else
             currency.setTextColor(getContext().getResources().getColor(R.color.material_deep_teal_500));
@@ -154,6 +129,33 @@ public class ExpenseCard extends CardWithList {
     @Override
     public int getChildLayoutId() {
         return R.layout.card_table_summary;
+    }
+
+    public interface Constants {
+        String TAG = "app:ExpenseCard";
+    }
+
+    public class CustomHeader extends CardHeader {
+
+        public CustomHeader(Context context) {
+            super(context, R.layout.card_header_inner);
+        }
+
+        @Override
+        public void setupInnerViewElements(ViewGroup parent, View view) {
+
+            float amount = db.getMyTotalExpense(db.month);
+            if (view != null) {
+                TextView t1 = (TextView) view.findViewById(R.id.text_exmple_card1);
+                if (t1 != null) {
+                    if (amount != 0)
+                        t1.setText("The Expense for this month  " + Common.CURRENCY + " " + amount);
+                    else
+                        t1.setText("No Transactions for this month");
+                }
+
+            }
+        }
     }
 
     // -------------------------------------------------------------
@@ -182,11 +184,11 @@ public class ExpenseCard extends CardWithList {
                     i.putExtra("CATEGORY", getObjectId());
                     ((Activity)mContext).startActivity(i);*/
                     FragmentHistory secFrag = new FragmentHistory(getObjectId());
-                    FragmentTransaction fragTransaction = ((Activity)mContext).getFragmentManager().beginTransaction();
-                    fragTransaction.replace(R.id.frame_container,secFrag );
+                    FragmentTransaction fragTransaction = ((Activity) mContext).getFragmentManager().beginTransaction();
+                    fragTransaction.replace(R.id.frame_container, secFrag);
                     fragTransaction.addToBackStack(null);
                     fragTransaction.commit();
-                    
+
                     if (BuildConfig.DEBUG) {
                         Log.e(Constants.TAG, "Clicked on " + getObjectId());
                     }

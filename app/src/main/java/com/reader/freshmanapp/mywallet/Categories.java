@@ -2,11 +2,11 @@ package com.reader.freshmanapp.mywallet;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,16 +38,19 @@ public class Categories extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
     ViewGroup mContainer;
     NotificationCard card;
     DBHelper db;
     View view;
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+    private OnFragmentInteractionListener mListener;
+
+    public Categories() {
+        // Required empty public constructor
+
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -57,7 +60,7 @@ public class Categories extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment Categories.
      */
-    
+
     // TODO: Rename and change types and number of parameters
     public static Categories newInstance(String param1, String param2) {
         Categories fragment = new Categories();
@@ -66,14 +69,6 @@ public class Categories extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-    public interface Constants {
-        String TAG = "app:Categories";
-    }
-
-    public Categories() {
-        // Required empty public constructor
-
     }
 
     @Override
@@ -91,7 +86,7 @@ public class Categories extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        db=new DBHelper(getActivity());
+        db = new DBHelper(getActivity());
         mContainer = container;
         LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = mInflater.inflate(R.layout.fragment_categories, mContainer, false);
@@ -130,9 +125,9 @@ public class Categories extends Fragment {
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //get the two inputs
-                        String category  =txt_category.getText().toString();
+                        String category = txt_category.getText().toString();
                         String budget = txt_amount.getText().toString();
-                        db.insertCategory(category,budget, TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                        db.insertCategory(category, budget, TYPES.TRANSACTION_STATUS.APPROVED.toString());
                         init();
 
                     }
@@ -174,6 +169,35 @@ public class Categories extends Fragment {
         mListener = null;
     }
 
+    void init() {
+        CategoryCard card = new CategoryCard(getActivity());
+
+        ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
+        card.setViewToClickToExpand(viewToClickToExpand);
+        card.init();
+
+        CardViewNative cardView = (CardViewNative) view.findViewById(R.id.card_category); //if you want list, pls change the xml to "CardListView"
+        //cardView.setCard(card);
+         /*code to update the card value without overlaping the previous text Defect #11*/
+        if (cardView.getCard() == null)
+            cardView.setCard(card);
+        else
+            cardView.replaceCard(card);
+        if (BuildConfig.DEBUG) {
+            Log.e(Constants.TAG, "Called Init method()");
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        init();
+    }
+
+    public interface Constants {
+        String TAG = "app:Categories";
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -187,29 +211,6 @@ public class Categories extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
-    }
-    void init(){
-        CategoryCard card = new CategoryCard(getActivity());
-
-        ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
-        card.setViewToClickToExpand(viewToClickToExpand);
-        card.init();
-
-        CardViewNative cardView = (CardViewNative) view.findViewById(R.id.card_category); //if you want list, pls change the xml to "CardListView"
-        //cardView.setCard(card);
-         /*code to update the card value without overlaping the previous text Defect #11*/
-        if(cardView.getCard()==null)
-            cardView.setCard(card);
-        else
-            cardView.replaceCard(card);
-        if (BuildConfig.DEBUG) {
-            Log.e(Constants.TAG, "Called Init method()");
-        }
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        init();
     }
 
 }

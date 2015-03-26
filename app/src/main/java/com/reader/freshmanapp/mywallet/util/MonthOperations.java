@@ -9,14 +9,17 @@ import java.util.Date;
  * Created by Ramkumar on 11/02/15.
  */
 public class MonthOperations {
-    public static  final String  [] months= {"JANUARY","FEB","MARCH","APRIL","MAY","JUN","JULY","AUG","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"};
-   public static int getMonthAsInt(String name){
+    public static final String[] months = {"JANUARY", "FEB", "MARCH", "APRIL", "MAY", "JUN", "JULY", "AUG", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"};
+
+    public static int getMonthAsInt(String name) {
         return Collections.indexOfSubList(Arrays.asList(months), Arrays.asList(name));
     }
-    public static String getMonthAsString(int index){
+
+    public static String getMonthAsString(int index) {
         return months[index];
     }
-    public static Date next(String name,String y){
+
+    public static Date next(String name, String y) {
 
         Date date = new Date();
         date.setMonth(getMonthAsInt(name));
@@ -28,7 +31,8 @@ public class MonthOperations {
 
         return c.getTime();
     }
-    public static Date previous(String name,String y){
+
+    public static Date previous(String name, String y) {
         Date date = new Date();
         date.setMonth(getMonthAsInt(name));
         date.setYear(Integer.parseInt(y));
@@ -39,11 +43,12 @@ public class MonthOperations {
 
         return c.getTime();
     }
-    public static String getMonthin2Digit(int month){
-        if(month < 10)
-            return "0"+month;
+
+    public static String getMonthin2Digit(int month) {
+        if (month < 10)
+            return "0" + month;
         else
-            return month+"";
+            return month + "";
     }
 
 }

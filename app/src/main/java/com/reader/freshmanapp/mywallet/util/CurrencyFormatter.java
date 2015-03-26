@@ -24,6 +24,6 @@ public class CurrencyFormatter implements ValueFormatter {
 
     @Override
     public String getFormattedValue(float value) {
-        return Common.CURRENCY + " " + mFormat.format(value) ;
+        return Common.CURRENCY + " " + mFormat.format(value);
     }
 }

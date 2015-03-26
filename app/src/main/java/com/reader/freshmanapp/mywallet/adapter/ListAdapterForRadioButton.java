@@ -25,9 +25,7 @@ import java.util.Random;
 public class ListAdapterForRadioButton extends ArrayAdapter<ListAdapterRadioModel> {
     private final List<ListAdapterRadioModel> list;
     private final Activity context;
-    public interface Constants {
-        String TAG = "app:AdapterRadioButton";
-    }
+
     public ListAdapterForRadioButton(Activity context, List<ListAdapterRadioModel> list) {
         super(context, R.layout.list_radio_items, list);
         this.context = context;
@@ -69,10 +67,10 @@ public class ListAdapterForRadioButton extends ArrayAdapter<ListAdapterRadioMode
         holder.radioButton.setChecked(list.get(position).isSelected());
         Random rnd = new Random();
         int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-        holder.color.setBackgroundColor(Common.MATERIAL_COLORS[position%ColorTemplate.COLORFUL_COLORS.length]);
-        holder.color.setText(list.get(position).getName().charAt(0)+"");
+        holder.color.setBackgroundColor(Common.MATERIAL_COLORS[position % ColorTemplate.COLORFUL_COLORS.length]);
+        holder.color.setText(list.get(position).getName().charAt(0) + "");
         if (BuildConfig.DEBUG) {
-            Log.e(Constants.TAG, "Position:"+position+", name:"+list.get(position).getName()+", legnth: "+list.size());
+            Log.e(Constants.TAG, "Position:" + position + ", name:" + list.get(position).getName() + ", legnth: " + list.size());
         }
         return view;
     }
@@ -85,6 +83,10 @@ public class ListAdapterForRadioButton extends ArrayAdapter<ListAdapterRadioMode
     @Override
     public int getViewTypeCount() {
         return getCount();
+    }
+
+    public interface Constants {
+        String TAG = "app:AdapterRadioButton";
     }
 
     static class ViewHolder {

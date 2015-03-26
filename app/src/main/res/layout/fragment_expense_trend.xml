@@ -18,8 +18,8 @@
                 android:id="@+id/chart_trend_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:layout_marginBottom="4dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp">
 
                 <LinearLayout
@@ -30,10 +30,10 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
-                        android:textAlignment="center"
-                        android:padding="8dp"
                         android:background="@color/myPrimaryDarkColor"
+                        android:padding="8dp"
                         android:text="Expense Trend"
+                        android:textAlignment="center"
                         android:textColor="@color/myLightPrimaryColor"
                         android:textSize="@dimen/card_header_native_simple_title_text_size" />
 
@@ -60,9 +60,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/cardbudget"
+                android:layout_marginBottom="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
                 android:layout_marginTop="4dp">
 
                 <LinearLayout
@@ -73,10 +73,10 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
-                        android:textAlignment="center"
-                        android:padding="8dp"
                         android:background="@color/myPrimaryDarkColor"
+                        android:padding="8dp"
                         android:text="Expense Trend for this month"
+                        android:textAlignment="center"
                         android:textColor="@color/myLightPrimaryColor"
                         android:textSize="@dimen/card_header_native_simple_title_text_size" />
 
@@ -89,6 +89,42 @@
                         android:layout_marginRight="10dp" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/chart_incomeTrend_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/chart_monthTrend_holder"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="4dp">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:background="@color/myPrimaryDarkColor"
+                        android:padding="8dp"
+                        android:text="Income vs Expense"
+                        android:textAlignment="center"
+                        android:textColor="@color/myLightPrimaryColor"
+                        android:textSize="@dimen/card_header_native_simple_title_text_size" />
+
+                    <com.github.mikephil.charting.charts.CombinedChart
+                        android:id="@+id/chart_incomeTrend"
+                        android:layout_width="match_parent"
+                        android:layout_height="240dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
         </RelativeLayout>
 
     </ScrollView>

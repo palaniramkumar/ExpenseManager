@@ -30,9 +30,9 @@
 
     <TableLayout
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:layout_height="match_parent"
         android:minHeight="40dp">
 
         <TableRow
@@ -58,19 +58,19 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.05">
+
                 <ImageView
                     android:id="@+id/status_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="12dp"
-                    android:gravity="left"
                     android:layout_marginRight="2dp"
-                    />
-                </FrameLayout>
+                    android:gravity="left" />
+            </FrameLayout>
+
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.10">
-
 
 
                 <TextView
@@ -92,9 +92,9 @@
                 <TextView
                     android:id="@+id/table_txt_amount"
                     android:layout_width="wrap_content"
-                    android:gravity="left"
                     android:layout_height="wrap_content"
-                     android:textColor="@color/myPrimaryColor"
+                    android:gravity="left"
+                    android:textColor="@color/myPrimaryColor"
                     android:textSize="20sp"
                     tools:text="0" />
             </FrameLayout>

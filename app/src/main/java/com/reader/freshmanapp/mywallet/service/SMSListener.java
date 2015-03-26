@@ -15,26 +15,28 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 
 import com.reader.freshmanapp.SMSparser.SMS;
-import com.reader.freshmanapp.mywallet.*;
+import com.reader.freshmanapp.mywallet.BuildConfig;
+import com.reader.freshmanapp.mywallet.MainActivity;
+import com.reader.freshmanapp.mywallet.R;
 import com.reader.freshmanapp.mywallet.db.DBHelper;
 import com.reader.freshmanapp.mywallet.util.Common;
 
 /**
  * Created by Ram on 08/01/2015.
  */
-public class SMSListener extends BroadcastReceiver{
+public class SMSListener extends BroadcastReceiver {
     /**
      * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-        String latitude="",longitude="";
+        String latitude = "", longitude = "";
 
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(context);
-        final boolean isGPS=prefs.getBoolean("gps", false);
-        Location location=null;
-        if(isGPS) {
+        final boolean isGPS = prefs.getBoolean("gps", false);
+        Location location = null;
+        if (isGPS) {
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
             location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -58,54 +60,54 @@ public class SMSListener extends BroadcastReceiver{
             smsMessage[n] = SmsMessage.createFromPdu((byte[]) messages[n]);
         }
 
-        SMS s= new SMS();
+        SMS s = new SMS();
         s.text = smsMessage[0].getMessageBody();
         s.findSMS(context);
 
-            if(s.findSMS(context) &&  s.amount !=null) {
+        if (s.findSMS(context) && s.amount != null) {
 
-                final NotificationManager mgr =
-                        (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            final NotificationManager mgr =
+                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-                // This pending intent will open after notification click
-                PendingIntent i = PendingIntent.getActivity(context, 0,
-                        new Intent(context, MainActivity.class),
-                        0);
+            // This pending intent will open after notification click
+            PendingIntent i = PendingIntent.getActivity(context, 0,
+                    new Intent(context, MainActivity.class),
+                    0);
 
-                DBHelper db= new DBHelper(context);
+            DBHelper db = new DBHelper(context);
 
-                if(location!=null)
-                    SMS.syncSMS(context,latitude+","+longitude);
-                else
-                    SMS.syncSMS(context);
+            if (location != null)
+                SMS.syncSMS(context, latitude + "," + longitude);
+            else
+                SMS.syncSMS(context);
 
-                if (BuildConfig.DEBUG) {
-                    Log.e(Constants.TAG, "Called SYNS SMS ");
-                }
-
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
-
-                mBuilder.setContentTitle(Common.CURRENCY + s.amount + " at " + s.where)
-                        .setSmallIcon(R.drawable.ic_shopping_basket_grey600_24dp)
-                        .addAction(R.drawable.ic_action_share, "Share", i)
-                        .setContentIntent(i)
-                        .setAutoCancel(true)
-                        .setContentText("This month expense " + Common.CURRENCY + db.getMyTotalExpense());
-
-                final boolean isBudget = prefs.getBoolean("budget", false);
-                if(isBudget)
-                    mBuilder.setProgress(db.getBudget(),(int) db.getMyTotalExpense(), false);
-
-                mgr.notify(0, mBuilder.build());
-
+            if (BuildConfig.DEBUG) {
+                Log.e(Constants.TAG, "Called SYNS SMS ");
             }
-        else{
-                if (BuildConfig.DEBUG) {
-                    Log.e(Constants.TAG, "Invalid SMS: "+s.text);
-                }
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+
+            mBuilder.setContentTitle(Common.CURRENCY + s.amount + " at " + s.where)
+                    .setSmallIcon(R.drawable.ic_shopping_basket_grey600_24dp)
+                    .addAction(R.drawable.ic_action_share, "Share", i)
+                    .setContentIntent(i)
+                    .setAutoCancel(true)
+                    .setContentText("This month expense " + Common.CURRENCY + db.getMyTotalExpense());
+
+            final boolean isBudget = prefs.getBoolean("budget", false);
+            if (isBudget)
+                mBuilder.setProgress(db.getBudget(), (int) db.getMyTotalExpense(db.month), false);
+
+            mgr.notify(0, mBuilder.build());
+
+        } else {
+            if (BuildConfig.DEBUG) {
+                Log.e(Constants.TAG, "Invalid SMS: " + s.text);
             }
+        }
 
     }
+
     public interface Constants {
         String TAG = "app:SMSListener";
     }

@@ -43,40 +43,41 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
+            android:layout_gravity="start|left"
             android:width="50dp"
-            android:textAlignment="center"
-            android:gravity="center_vertical|center_horizontal"
             android:height="50dp"
             android:background="@color/accent_material_light"
-            android:layout_gravity="start|left"
+            android:gravity="center_vertical|center_horizontal"
+            android:textAlignment="center"
             android:textColor="@color/abc_primary_text_disable_only_material_dark"
             android:textSize="10sp"
             tools:text="Feb, 20" />
+
         <LinearLayout
             android:layout_width="wrap_content"
-            android:orientation="vertical"
+            android:layout_height="wrap_content"
 
             android:layout_toRightOf="@+id/card_notification_time"
-            android:layout_height="wrap_content">
+            android:orientation="vertical">
+
             <TextView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/card_notification_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Credit Card"
-                android:paddingLeft="10dp"
-                android:paddingBottom="10dp"
-                android:paddingTop="5dp"
-                android:textColor="@color/myPrimaryDarkColor"
                 android:layout_toRightOf="@+id/txt_desc"
-                />
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:text="Credit Card"
+                android:textColor="@color/myPrimaryDarkColor" />
+
             <TextView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/card_notification_tran_src"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Online Transaction for food"
-                android:textColor="@color/myAccentColor"
                 android:paddingLeft="10dp"
-                />
+                android:text="Online Transaction for food"
+                android:textColor="@color/myAccentColor" />
 
 
         </LinearLayout>
@@ -90,7 +91,6 @@
             android:textColor="@color/card_undobar_material_text_color"
             android:textSize="13sp"
             tools:text="Rs. 2100" />
-
 
 
     </RelativeLayout>

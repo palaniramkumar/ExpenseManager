@@ -1,15 +1,14 @@
 package com.reader.freshmanapp.mywallet;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.ProgressBar;
 
 import com.reader.freshmanapp.mywallet.adapter.NotificationCard;
@@ -31,15 +30,17 @@ public class PendingApproval extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    ViewGroup mContainer;
+    NotificationCard card;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    ViewGroup mContainer;
     private ProgressBar mProgress;
-    NotificationCard card;
-
     private OnFragmentInteractionListener mListener;
+
+    public PendingApproval() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -57,9 +58,6 @@ public class PendingApproval extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-    public PendingApproval() {
-        // Required empty public constructor
     }
 
     @Override
@@ -92,7 +90,7 @@ public class PendingApproval extends Fragment {
             @Override
             protected void onPostExecute(NotificationCard result) {
                 mProgress.setVisibility(View.GONE);
-                card=result;
+                card = result;
                 //Set card in the cardView
                 CardViewNative cardView = (CardViewNative) view.findViewById(R.id.cardnotification); //if you want list, pls change the xml to "CardListView"
                 cardView.setCard(card);

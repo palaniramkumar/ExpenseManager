@@ -15,7 +15,8 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.reader.freshmanapp.mywallet.*;
+import com.reader.freshmanapp.mywallet.BuildConfig;
+import com.reader.freshmanapp.mywallet.R;
 import com.reader.freshmanapp.mywallet.db.DBHelper;
 import com.reader.freshmanapp.mywallet.util.Common;
 import com.reader.freshmanapp.mywallet.util.TYPES;
@@ -30,6 +31,8 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  */
 public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
+    DBHelper db;
+    Context mContext;
     private String[] entry_day;
     private String[] category;
     private String[] amount;
@@ -39,14 +42,10 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
     private String month;
     private String category_filter;
     private LayoutInflater inflater;
-    DBHelper db;
-    Context mContext;
-    public interface Constants {
-        String TAG = "app:StickyAdapter";
-    }
-    public StickyHistoryAdapter(Context context,DBHelper db,String filter) {
+
+    public StickyHistoryAdapter(Context context, DBHelper db, String filter) {
         inflater = LayoutInflater.from(context);
-        this.db =db;
+        this.db = db;
         Cursor cur = db.getTransactionHistory(filter);
         entry_day = new String[cur.getCount()];
         category = new String[cur.getCount()];
@@ -54,9 +53,9 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
         place = new String[cur.getCount()];
         id = new String[cur.getCount()];
         gps = new String[cur.getCount()];
-        category_filter=filter;
-        int i=0;
-        while(cur.moveToNext()){
+        category_filter = filter;
+        int i = 0;
+        while (cur.moveToNext()) {
 
             entry_day[i] = cur.getString(1);
             month = cur.getString(0);
@@ -68,13 +67,12 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
             i++;
             try {
                 Thread.sleep(1);
-            }
-            catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
         if (BuildConfig.DEBUG) {
-            Log.e(Constants.TAG,"Total Entry: "+i);
+            Log.e(Constants.TAG, "Total Entry: " + i);
         }
         mContext = context;
     }
@@ -105,7 +103,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
             holder.txt_desc = (TextView) convertView.findViewById(R.id.txt_desc);
             holder.txt_id = (TextView) convertView.findViewById(R.id.txt_id);
             holder.txt_category = (TextView) convertView.findViewById(R.id.txt_category);
-            holder.popupMenu = (ImageView)convertView.findViewById(R.id.more);
+            holder.popupMenu = (ImageView) convertView.findViewById(R.id.more);
 
             convertView.setTag(holder);
         } else {
@@ -113,7 +111,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
         }
 
         holder.text.setText(entry_day[position]);
-        holder.txt_amount.setText(Common.CURRENCY+" "+ amount[position]);
+        holder.txt_amount.setText(Common.CURRENCY + " " + amount[position]);
         holder.txt_desc.setText(place[position]);
         holder.txt_category.setText(category[position]);
         holder.txt_id.setText(id[position]);
@@ -129,19 +127,18 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
 
                 /** Adding menu items to the popumenu */
                 popup.getMenuInflater().inflate(R.menu.history_popup, popup.getMenu());
-                if(holder.gps!=null)
+                if (holder.gps != null)
                     popup.getMenu().add("Locate");
 
                 /** Defining menu item click listener for the popup menu */
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        if(item.getTitle().toString().equalsIgnoreCase("Delete")){
-                            db.updateMaster(Integer.parseInt(holder.txt_id.getText().toString()),db.MASTER_COLUMN_STATUS, TYPES.TRANSACTION_STATUS.DELETED+"");
+                        if (item.getTitle().toString().equalsIgnoreCase("Delete")) {
+                            db.updateMaster(Integer.parseInt(holder.txt_id.getText().toString()), db.MASTER_COLUMN_STATUS, TYPES.TRANSACTION_STATUS.DELETED + "");
                             view.findViewById(R.id.itm_layout).setVisibility(View.GONE);
 
-                        }
-                        else if(item.getTitle().toString().equalsIgnoreCase("Locate")){
+                        } else if (item.getTitle().toString().equalsIgnoreCase("Locate")) {
                             String gps_loc = holder.gps;
                             String latitude = gps_loc.split(",")[0];
                             String longitude = gps_loc.split(",")[1];
@@ -176,11 +173,11 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
             holder = (HeaderViewHolder) convertView.getTag();
         }
         //set header text as first char in name
-        String headerText = month +", " + entry_day[position]; //code for showing header
-        String headerAmount = Common.CURRENCY+" "+db.getExpensebyDay(entry_day[position],category_filter);
+        String headerText = month + ", " + entry_day[position]; //code for showing header
+        String headerAmount = Common.CURRENCY + " " + db.getExpensebyDay(entry_day[position], category_filter);
         holder.text.setText(headerText);
         holder.amount.setText(headerAmount);
-        
+
         return convertView;
     }
 
@@ -188,6 +185,10 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
     public long getHeaderId(int position) {
         //return the first character of the country as ID because this is what headers are based upon
         return Integer.parseInt(entry_day[position]); //code for grouping values
+    }
+
+    public interface Constants {
+        String TAG = "app:StickyAdapter";
     }
 
     class HeaderViewHolder {

@@ -4,15 +4,17 @@ package com.reader.freshmanapp.mywallet.util;
  * Created by Ramkumar on 16/01/15.
  * number pad for add expense (manual)
  */
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
-import com.reader.freshmanapp.mywallet.*;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.reader.freshmanapp.mywallet.R;
 
 public class NumbPad {
     // flag values
@@ -45,17 +47,12 @@ public class NumbPad {
     private int flag_hideInput = 0;
     private int flag_hidePrompt = 0;
 
-    public interface numbPadInterface {
-        public String numPadInputValue(String value);
-        public String numPadCanceled();
+    public NumbPad(String num) {
+        addl_text = num;
     }
 
     public String getValue() {
         return value;
-    }
-
-    public NumbPad(String num){
-        addl_text = num;
     }
 
     public void setAdditionalText(String inTxt) {
@@ -99,7 +96,7 @@ public class NumbPad {
         btn0 = (Button) iView.findViewById(R.id.button0);
         btnC = (Button) iView.findViewById(R.id.buttonC);
         btnDot = (Button) iView.findViewById(R.id.buttonDot);
-        
+
         TextView cur_txt = (TextView) iView.findViewById(R.id.txt_currency_sbl);
         cur_txt.setText(Common.CURRENCY);
 
@@ -190,6 +187,12 @@ public class NumbPad {
         } else {
             promptValue.setText(promptValue.getText() + inNumb);
         }*/
+    }
+
+    public interface numbPadInterface {
+        public String numPadInputValue(String value);
+
+        public String numPadCanceled();
     }
 
 }

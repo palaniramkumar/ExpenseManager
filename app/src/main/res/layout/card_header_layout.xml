@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-    <!--
+<?xml version="1.0" encoding="utf-8"?><!--
       ~ *******************************************************************************
       ~   Copyright (c) 2013-2014 Gabriele Mariotti.
       ~
@@ -17,23 +16,22 @@
       ~  *****************************************************************************
       -->
 
-    <!-- This is the Header Layout -->
+<!-- This is the Header Layout -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/card.header_compound_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentTop="true"
     android:layout_alignParentLeft="true"
-    style="@style/card.header_compound_view">
+    android:layout_alignParentTop="true">
 
     <!-- This is the Inner Content Header which you can populate runtime
          with setupInnerViewElements(android.view.ViewGroup, android.view.View) method in CardHeader class. -->
     <FrameLayout
         android:id="@+id/card_header_inner_frame"
-        android:background="@color/myPrimaryDarkColor"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        />
+        android:background="@color/myPrimaryDarkColor" />
 
 
 </RelativeLayout>

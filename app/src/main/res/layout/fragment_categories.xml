@@ -1,13 +1,15 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:card="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="com.reader.freshmanapp.mywallet.Categories">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -22,15 +24,16 @@
                 card:card_layout_resourceID="@layout/card_native_card_layout" />
         </RelativeLayout>
     </ScrollView>
+
     <com.melnykov.fab.FloatingActionButton
-    android:id="@+id/fab"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom|right"
-    android:layout_margin="16dp"
-    android:src="@drawable/ic_action_edit"
-    fab:fab_colorNormal="@color/myAccentColor"
-    fab:fab_colorPressed="@color/myPrimaryDarkColor"
-    fab:fab_colorRipple="@color/myDividerColor" />
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_action_edit"
+        fab:fab_colorNormal="@color/myAccentColor"
+        fab:fab_colorPressed="@color/myPrimaryDarkColor"
+        fab:fab_colorRipple="@color/myDividerColor" />
 
 </FrameLayout>

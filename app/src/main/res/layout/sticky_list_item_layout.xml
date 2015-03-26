@@ -1,93 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:layout_height="wrap_content"
-    android:layout_width="fill_parent"
-    android:orientation="horizontal"
-    android:id="@+id/itm_layout"
-    android:background="@color/card_background"
-    android:padding="10dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    >
-
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/text"
-    android:layout_width="wrap_content"
-    android:text="28"
-    android:width="50dp"
-    android:textAlignment="center"
-    android:gravity="center_vertical|center_horizontal"
-    android:height="50dp"
-    android:background="@drawable/rounded_corner"
+    android:id="@+id/itm_layout"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="start|left"
-    android:textColor="@color/abc_primary_text_disable_only_material_dark"
-/>
+    android:background="@color/card_background"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|left"
+        android:width="50dp"
+        android:height="50dp"
+        android:background="@drawable/rounded_corner"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="28"
+        android:textAlignment="center"
+        android:textColor="@color/abc_primary_text_disable_only_material_dark" />
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
 
         android:layout_toRightOf="@+id/text"
-            android:layout_height="wrap_content">
+        android:orientation="vertical">
+
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/txt_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="food"
-            android:paddingLeft="10dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="5dp"
             android:layout_toRightOf="@+id/txt_desc"
-            android:textColor="@color/myAccentColor"
-            />
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:text="food"
+            android:textColor="@color/myAccentColor" />
+
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/txt_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Online Transaction for food"
             android:paddingLeft="10dp"
-            android:textColor="@color/card_undobar_material_text_color"
-            />
+            android:text="Online Transaction for food"
+            android:textColor="@color/card_undobar_material_text_color" />
 
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_gravity="end|right"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_height="wrap_content">
+        android:layout_gravity="end|right">
+
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/txt_amount"
             android:layout_width="wrap_content"
-            android:textSize="12dp"
             android:layout_height="wrap_content"
             android:paddingBottom="20dp"
+            android:paddingTop="20dp"
             android:text="Rs. 2500"
             android:textColor="@color/background_material_dark"
-            android:paddingTop="20dp"/>
+            android:textSize="12dp" />
+
         <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_menu_overflow_card_dark_normal"
             android:background="@android:color/transparent"
             android:descendantFocusability="blocksDescendants"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:text=":"/>
+            android:src="@drawable/ic_menu_overflow_card_dark_normal"
+            android:text=":" />
+
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/txt_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="20dp"
-            android:text="6"
-            android:layout_gravity="end|right"
-            android:textColor="@color/background_material_dark"
             android:layout_alignParentRight="true"
-            android:visibility="gone"
-            android:paddingTop="20dp"/>
+            android:layout_gravity="end|right"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:text="6"
+            android:textColor="@color/background_material_dark"
+            android:visibility="gone" />
 
 
     </LinearLayout>
-    
+
 </RelativeLayout>

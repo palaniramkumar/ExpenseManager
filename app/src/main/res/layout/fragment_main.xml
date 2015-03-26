@@ -1,5 +1,4 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,8 +10,8 @@
 
     <!-- TODO: Update blank fragment layout -->
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
         android:id="@+id/scrollView"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
@@ -92,102 +91,102 @@
                     android:textColor="@color/myLightPrimaryColor" />
 
             </LinearLayout>
+
             <android.support.v7.widget.CardView
                 android:id="@+id/chart_holder"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
-                android:padding="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/monthnav">
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/chart"
-                android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:layout_gravity="bottom"
-                />
+                android:layout_below="@id/monthnav"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:padding="8dp">
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:layout_gravity="bottom" />
             </android.support.v7.widget.CardView>
 
 
             <android.support.v7.widget.CardView
                 android:id="@+id/cash_holder"
-                android:layout_below="@id/chart_holder"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/chart_holder"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_height="wrap_content">
+                android:layout_marginRight="8dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
                     android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/txt_progress_head"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@color/myPrimaryDarkColor"
-                    android:clickable="true"
-                    android:padding="8dp"
-                    android:text="Cash Vault"
-                    android:textAlignment="center"
-                    android:textColor="@color/myLightPrimaryColor"
-                    android:textSize="@dimen/card_header_native_simple_title_text_size"
-                    />
-                <TextView
-                    android:id="@+id/txt_progress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:padding="16dp"
-                    android:text="You have Rs 2,600 left in your Cash Vault"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/myTextSecondaryColor" />
+                    <TextView
+                        android:id="@+id/txt_progress_head"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@color/myPrimaryDarkColor"
+                        android:clickable="true"
+                        android:padding="8dp"
+                        android:text="Cash Vault"
+                        android:textAlignment="center"
+                        android:textColor="@color/myLightPrimaryColor"
+                        android:textSize="@dimen/card_header_native_simple_title_text_size" />
+
+                    <TextView
+                        android:id="@+id/txt_progress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:padding="16dp"
+                        android:text="You have Rs 2,600 left in your Cash Vault"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/myTextSecondaryColor" />
 
 
-                <ProgressBar
-                    android:id="@+id/progress_1"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:layout_below="@id/txt_progress"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                   />
+                    <ProgressBar
+                        android:id="@+id/progress_1"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_below="@id/txt_progress"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:id="@+id/arrayBills"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/cash_holder"
-                android:layout_margin="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_margin="8dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:background="@color/myPrimaryDarkColor"
-                            android:padding="8dp"
-                            android:text="Bill Payment"
-                            android:textAlignment="center"
-                            android:textColor="@color/myLightPrimaryColor"
-                            android:textSize="@dimen/card_header_native_simple_title_text_size"
-                            />
-                        <com.github.mikephil.charting.charts.HorizontalBarChart
-                            android:id="@+id/chart_horz"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:minHeight="150dp"
-                           />
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@color/myPrimaryDarkColor"
+                        android:padding="8dp"
+                        android:text="Bill Payment"
+                        android:textAlignment="center"
+                        android:textColor="@color/myLightPrimaryColor"
+                        android:textSize="@dimen/card_header_native_simple_title_text_size" />
+
+                    <com.github.mikephil.charting.charts.HorizontalBarChart
+                        android:id="@+id/chart_horz"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:minHeight="150dp" />
+                </LinearLayout>
             </android.support.v7.widget.CardView>
 
 
@@ -200,6 +199,37 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 card:card_layout_resourceID="@layout/card_native_card_layout" />
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/incomevsexpense_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/carddemo"
+                android:layout_margin="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@color/myPrimaryDarkColor"
+                        android:padding="8dp"
+                        android:text="Income vs Expense"
+                        android:textAlignment="center"
+                        android:textColor="@color/myLightPrimaryColor"
+                        android:textSize="@dimen/card_header_native_simple_title_text_size" />
+
+                    <com.github.mikephil.charting.charts.HorizontalBarChart
+                        android:id="@+id/chart_incomevsexpense"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:minHeight="80dp" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
         </RelativeLayout>
     </ScrollView>
 
@@ -215,35 +245,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
+
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone"
         android:id="@+id/info_layout"
-        android:layout_height="wrap_content">
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        style="?android:textAppearanceLarge"
-        android:text="Click"
-        android:id="@+id/empty_msg1"/>
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/empty_msg1"
+            style="?android:textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Click" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/ic_action_edit"/>
+            android:src="@drawable/ic_action_edit" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        style="?android:textAppearanceLarge"
-        android:text="to start your transaction"
-        android:id="@+id/empty_msg3"/>
-</LinearLayout>
+        <TextView
+            android:id="@+id/empty_msg3"
+            style="?android:textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="to start your transaction" />
+    </LinearLayout>
+
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"

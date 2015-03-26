@@ -41,18 +41,17 @@ import java.util.Calendar;
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks,
         FragmentHistory.OnFragmentInteractionListener, main.OnFragmentInteractionListener,
-        PendingApproval.OnFragmentInteractionListener,Categories.OnFragmentInteractionListener,
-        ExpenseTrend.OnFragmentInteractionListener
-        {
+        PendingApproval.OnFragmentInteractionListener, Categories.OnFragmentInteractionListener,
+        ExpenseTrend.OnFragmentInteractionListener {
 
-    private Toolbar mToolbar;
-    private NavigationDrawerFragment mNavigationDrawerFragment;
+    private static String DB_NAME = "MyExpense.db";
+    private static String DB_PATH = "/data/local/tmp/com.reader.ramkumar.mywallet/databases/";
     Fragment newFragment = null;
     ViewGroup mContainer;
     FragmentManager fragmentManager;
-    public interface Constants {
-        String TAG = "app:MainActivity";
-    }
+    private Toolbar mToolbar;
+    private NavigationDrawerFragment mNavigationDrawerFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -61,8 +60,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         SMSListener smsReceiver = new SMSListener();
         try {
             registerReceiver(smsReceiver, new IntentFilter(SMS_RECEIVED));
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -73,7 +71,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         mToolbar.setLayoutParams(params);
-        mToolbar.setPadding(0,5,0,0); //modify the text and other object position
+        mToolbar.setPadding(0, 5, 0, 0); //modify the text and other object position
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         //getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -86,18 +84,19 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 30    );
-        calendar.set(Calendar.AM_PM,Calendar.PM);
+        calendar.set(Calendar.MINUTE, 30);
+        calendar.set(Calendar.AM_PM, Calendar.PM);
 
         Intent myIntent = new Intent(getBaseContext(), SummaryReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);;
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(), 24*60*60*1000, pendingIntent);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
+        ;
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, pendingIntent);
         //currently 24 hours
 
     }
 
-      @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return super.onCreateOptionsMenu(menu);
@@ -122,13 +121,13 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
     }
 
-
-    public void aboutApp(MenuItem item){
+    public void aboutApp(MenuItem item) {
         //Toast.makeText(this, "Hello World", Toast.LENGTH_LONG).show();
         AboutBox.Show(MainActivity.this);
 
     }
-    public void refreshSMS(final MenuItem item){
+
+    public void refreshSMS(final MenuItem item) {
 
         class MyAsyncTask extends AsyncTask<Void, Void, Integer> {
 
@@ -136,7 +135,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             protected void onPreExecute() {
 
                 Fragment frag = getFragmentManager().findFragmentById(R.id.frame_container);
-                if(frag!=null && (frag.getView()!=null)) {
+                if (frag != null && (frag.getView() != null)) {
                     ProgressBar progressBar = ((ProgressBar) frag.getView().findViewById(R.id.loading_spinner));
                     if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
                 }
@@ -151,16 +150,16 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                         .replace(R.id.frame_container, newFragment)
                         .commit();
                 setTitle("Summary");
-                
+
                 //invalidate all UI object
-                TextView header = (TextView)findViewById(R.id.banner_header);
+                TextView header = (TextView) findViewById(R.id.banner_header);
                 header.setText("");
-                TextView progress_txt = (TextView)findViewById(R.id.txt_progress);
+                TextView progress_txt = (TextView) findViewById(R.id.txt_progress);
                 progress_txt.setText("");
-                ProgressBar master_progressBar = (ProgressBar)findViewById(R.id.loading_spinner) ;
+                ProgressBar master_progressBar = (ProgressBar) findViewById(R.id.loading_spinner);
                 master_progressBar.setVisibility(View.INVISIBLE);
                 Fragment frag = getFragmentManager().findFragmentById(R.id.frame_container);
-                if(frag!=null  && (frag.getView()!=null)) {
+                if (frag != null && (frag.getView() != null)) {
                     ProgressBar progressBar = ((ProgressBar) frag.getView().findViewById(R.id.loading_spinner));
                     if (progressBar != null) progressBar.setVisibility(View.INVISIBLE);
                 }
@@ -169,16 +168,16 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             @Override
             protected Integer doInBackground(Void... params) {
                 DBHelper db = new DBHelper(getApplicationContext());
-                if(item!=null || db.getLastSMSID()==0) {
-                    SMS.syncSMS(getApplicationContext(), true,null);
+                if (item != null || db.getLastSMSID() == 0) {
+                    SMS.syncSMS(getApplicationContext(), true, null);
                 }
                 db.close();
                 return 0;
             }
-            
+
         }
         new MyAsyncTask().execute();
-        
+
     }
 
     private void selectItem(int position) {
@@ -238,29 +237,28 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(this, "Backup failed" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Backup failed", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case 7:
                 try {
 
                     new DBHelper(getApplicationContext()).deleteDB(getApplicationContext());
-                    Toast.makeText(this, "Delete Completed" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Delete Completed", Toast.LENGTH_SHORT).show();
 
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(this, "Backup failed" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Backup failed", Toast.LENGTH_SHORT).show();
                 }
                 break;
-
 
 
         }
 
 
         if (BuildConfig.DEBUG) {
-            Log.e(Constants.TAG, "Clicked "+position);
+            Log.e(Constants.TAG, "Clicked " + position);
         }
 
         //DrawerList.setItemChecked(position, true);
@@ -268,50 +266,49 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         //DrawerLayout.closeDrawer(DrawerList);
     }
 
+    public boolean checkDataBase() {
+        File dbFile = new File(getApplicationContext().getDatabasePath("MyExpense.db").getPath());
+        return dbFile.exists();
+    }
 
-            private static String DB_NAME = "MyExpense.db";
-            private static String DB_PATH = "/data/local/tmp/com.reader.ramkumar.mywallet/databases/";
+    public String copyfile() throws IOException {
 
-            public boolean checkDataBase() {
-                File dbFile = new File(getApplicationContext().getDatabasePath("MyExpense.db").getPath());
-                return dbFile.exists();
+        if (checkDataBase()) {
+            InputStream myInput = new FileInputStream(getApplicationContext().getDatabasePath("MyExpense.db").getPath());
+
+            // Path to the just created empty db
+            String outFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + DB_NAME;
+
+            //Open the empty db as the output stream
+            OutputStream myOutput;
+            try {
+                myOutput = new FileOutputStream(outFileName);
+                //transfer bytes from the inputfile to the outputfile
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = myInput.read(buffer)) > 0) {
+                    myOutput.write(buffer, 0, length);
+                }
+                //Close the streams
+                myOutput.flush();
+                myOutput.close();
+                myInput.close();
+                return outFileName;
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
 
-            public String copyfile() throws IOException{
+        } else {
+            System.out.print("Failed to identify db");
+        }
+        return "No files Created";
+    }
 
-                if(checkDataBase()){
-                    InputStream myInput = new FileInputStream(getApplicationContext().getDatabasePath("MyExpense.db").getPath());
-
-                    // Path to the just created empty db
-                    String outFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + DB_NAME;
-
-                    //Open the empty db as the output stream
-                    OutputStream myOutput;
-                    try {
-                        myOutput = new FileOutputStream(outFileName);
-                        //transfer bytes from the inputfile to the outputfile
-                        byte[] buffer = new byte[1024];
-                        int length;
-                        while ((length = myInput.read(buffer))>0){
-                            myOutput.write(buffer, 0, length);
-                        }
-                        //Close the streams
-                        myOutput.flush();
-                        myOutput.close();
-                        myInput.close();
-                        return outFileName;
-                    } catch (FileNotFoundException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-
-                }
-                else{
-                    System.out.print("Failed to identify db");
-                }
-                return "No files Created";
-            }
+    public interface Constants {
+        String TAG = "app:MainActivity";
+    }
 }

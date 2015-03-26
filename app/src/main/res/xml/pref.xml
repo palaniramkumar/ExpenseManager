@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:summary="Username and password information"
-        android:title="User information" >
+        android:title="User information">
         <EditTextPreference
             android:key="username"
             android:summary="Please enter your username"
@@ -17,18 +17,20 @@
 
     <PreferenceCategory
         android:summary="Privacy"
-        android:title="Settings" >
+        android:title="Settings">
         <CheckBoxPreference
             android:key="gps"
             android:summary="Application will use your current location"
             android:title="Use GPS" />
 
-        <SwitchPreference android:key="budget"
+        <SwitchPreference
+            android:key="budget"
             android:summary="Do you want to enable the budget tracker"
             android:title="Budget Tracker" />
 
 
-        <SwitchPreference android:key="recurring"
+        <SwitchPreference
+            android:key="recurring"
             android:summary="Do you want to enable the recurring feature"
             android:title="Recurring income/expense" />
 

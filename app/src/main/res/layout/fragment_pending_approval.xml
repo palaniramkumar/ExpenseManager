@@ -1,26 +1,30 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:card="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="com.reader.freshmanapp.mywallet.PendingApproval">
 
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-    <it.gmariotti.cardslib.library.view.CardViewNative
-        android:id="@+id/cardnotification"
-        style="@style/card_external"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        card:card_layout_resourceID="@layout/card_native_card_layout" />
-    </RelativeLayout>
-</ScrollView>
-    <ProgressBar android:id="@+id/loading_spinner"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <it.gmariotti.cardslib.library.view.CardViewNative
+                android:id="@+id/cardnotification"
+                style="@style/card_external"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card:card_layout_resourceID="@layout/card_native_card_layout" />
+        </RelativeLayout>
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/loading_spinner"
         style="?android:progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

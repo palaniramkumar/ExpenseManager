@@ -12,7 +12,7 @@ import android.preference.PreferenceManager;
  * Created by Ramkumar on 19/03/15.
  */
 public class PrefsActivity extends PreferenceActivity implements
-        SharedPreferences.OnSharedPreferenceChangeListener{
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +35,20 @@ public class PrefsActivity extends PreferenceActivity implements
             updatePreferences(p);
         }
     }
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
         updatePreferences(findPreference(key));
     }
+
     private void updatePreferences(Preference p) {
         if (p instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) p;
             p.setSummary(editTextPref.getText());
         }
     }
+
     private void displaySharedPreferences() {
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(getApplicationContext());

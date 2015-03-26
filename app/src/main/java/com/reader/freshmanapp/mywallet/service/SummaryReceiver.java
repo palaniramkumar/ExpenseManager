@@ -21,12 +21,10 @@ import com.reader.freshmanapp.mywallet.util.Common;
 
 import java.util.Calendar;
 
-public class SummaryReceiver extends BroadcastReceiver
-{
+public class SummaryReceiver extends BroadcastReceiver {
 
     @Override
-    public void onReceive(Context context, Intent intent)
-    {
+    public void onReceive(Context context, Intent intent) {
         PendingIntent i = PendingIntent.getActivity(context, 0,
                 new Intent(context, MainActivity.class),
                 0);
@@ -36,8 +34,8 @@ public class SummaryReceiver extends BroadcastReceiver
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
 
-        DBHelper db=new DBHelper(context);
-        int todayExpense = (int)Float.parseFloat(db.getExpensebyDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "", "%"));
+        DBHelper db = new DBHelper(context);
+        int todayExpense = (int) Float.parseFloat(db.getExpensebyDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "", "%"));
 
         mBuilder.setContentTitle("MyWallet Summary")
                 .setSmallIcon(R.drawable.ic_action_send)
@@ -47,16 +45,16 @@ public class SummaryReceiver extends BroadcastReceiver
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         final boolean isBudget = prefs.getBoolean("budget", false);
-        if(isBudget)
-            mBuilder.setProgress(db.getBudget(), (int)db.getMyTotalExpense(), false);
+        if (isBudget)
+            mBuilder.setProgress(db.getBudget(), (int) db.getMyTotalExpense(db.month), false);
 
 
         NotificationCompat.InboxStyle inboxStyle =
                 new NotificationCompat.InboxStyle();
 
         Cursor cur = db.getMyExpenseByDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-        while(cur.moveToNext()) {
-            inboxStyle.addLine(cur.getString(0) +" "+Common.CURRENCY+" "+cur.getString(1));
+        while (cur.moveToNext()) {
+            inboxStyle.addLine(cur.getString(0) + " " + Common.CURRENCY + " " + cur.getString(1));
         }
         mBuilder.setStyle(inboxStyle);
 

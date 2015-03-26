@@ -1,13 +1,13 @@
 package com.reader.freshmanapp.mywallet;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,21 +15,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.CombinedData;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.reader.freshmanapp.mywallet.adapter.BudgetCard;
 import com.reader.freshmanapp.mywallet.db.DBHelper;
+import com.reader.freshmanapp.mywallet.util.CurrencyFormatter;
+import com.reader.freshmanapp.mywallet.util.MonthOperations;
 
 import java.util.ArrayList;
 
 import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
 import it.gmariotti.cardslib.library.view.CardViewNative;
-
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.reader.freshmanapp.mywallet.util.CurrencyFormatter;
-import com.reader.freshmanapp.mywallet.util.MonthOperations;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,15 +48,19 @@ public class ExpenseTrend extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     ViewGroup mContainer;
     DBHelper db;
     View view;
     BarChart mChart, dChart;
+    CombinedChart cChart;
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
     private OnFragmentInteractionListener mListener;
+
+    public ExpenseTrend() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -70,14 +78,6 @@ public class ExpenseTrend extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public interface Constants {
-        String TAG = "app:ExpenseTrend";
-    }
-
-    public ExpenseTrend() {
-        // Required empty public constructor
     }
 
     @Override
@@ -126,7 +126,7 @@ public class ExpenseTrend extends Fragment {
             } else {
                 view.findViewById(R.id.cardbudget).setVisibility(View.GONE);
             }
-            if (db.getMyTotalExpense() == 0 || db.getBudget() ==0) {
+            if (db.getMyTotalExpense(db.month) == 0 || db.getBudget() == 0) {
                 view.findViewById(R.id.cardbudget).setVisibility(View.GONE);
             } else
                 view.findViewById(R.id.cardbudget).setVisibility(View.VISIBLE);
@@ -218,6 +218,48 @@ public class ExpenseTrend extends Fragment {
             // dont forget to refresh the drawing
             dChart.invalidate();
 
+            //compined chart for expense vs income
+
+            cChart = (CombinedChart) view.findViewById(R.id.chart_incomeTrend);
+            cChart.setDescription("");
+            cChart.setDrawGridBackground(false);
+            cChart.setDrawBarShadow(false);
+
+            YAxis rightAxis1= cChart.getAxisRight();
+            rightAxis1.setDrawGridLines(false);
+            rightAxis1.setDrawLabels(false);
+            rightAxis1.setDrawAxisLine(false);
+
+            YAxis leftAxis1 = cChart.getAxisLeft();
+            leftAxis1.setDrawGridLines(false);
+            leftAxis1.setDrawLabels(false);
+            leftAxis1.setDrawAxisLine(false);
+
+            XAxis xAxis = cChart.getXAxis();
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setDrawAxisLine(false);
+            xAxis.setDrawGridLines(false);
+
+
+            // draw bars behind lines
+            cChart.setDrawOrder(new CombinedChart.DrawOrder[]{
+                    CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.LINE
+            });
+
+
+            String[] mMonths = new String[] {
+                    "Jan", "Feb", "Mar", "Apr" //need to update this code dynamically
+            };
+            CombinedData data1 = new CombinedData(mMonths);
+
+            data1.setData(generateLineData());
+            data1.setData(generateBarData());
+
+
+            cChart.setData(data1);
+            Log.e("Debug","chart Cpount" + cChart.getData().getBarData().getXValCount());
+            cChart.invalidate();
+
             if (BuildConfig.DEBUG) {
                 Log.e(Constants.TAG, "init() completed");
             }
@@ -229,7 +271,7 @@ public class ExpenseTrend extends Fragment {
 
     private void monthTrendData() {
 
-        Cursor cur = db.getMyExpenseByMonth();
+        Cursor cur = db.getMyTotalExpense();
 
         ArrayList<String> xVals = new ArrayList<String>();
         ArrayList<BarEntry> vals1 = new ArrayList<BarEntry>();
@@ -254,6 +296,8 @@ public class ExpenseTrend extends Fragment {
         if (i != 0)
             mChart.setData(data);
     }
+
+
 
     private void dayTrendData() {
 
@@ -283,6 +327,62 @@ public class ExpenseTrend extends Fragment {
     }
 
 
+    private LineData generateLineData() {
+
+        LineData d = new LineData();
+
+        ArrayList<Entry> entries = new ArrayList<Entry>();
+
+        Cursor cur = db.getMyTotalExpense();
+        int i=0;
+        while(cur.moveToNext()){
+            entries.add(new Entry(cur.getFloat(1), i));
+            i++;
+        }
+
+        LineDataSet set = new LineDataSet(entries, "Expense");
+        set.setColor(Color.rgb(240, 238, 70));
+        set.setLineWidth(2.5f);
+        set.setCircleColor(Color.rgb(240, 238, 70));
+        set.setCircleSize(5f);
+        set.setFillColor(Color.rgb(240, 238, 70));
+        set.setDrawCubic(true);
+        set.setDrawValues(true);
+        set.setValueTextSize(10f);
+        set.setValueTextColor(Color.rgb(240, 238, 70));
+
+        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+        d.addDataSet(set);
+
+        return d;
+    }
+
+
+
+    private BarData generateBarData() {
+
+        BarData d = new BarData();
+
+        ArrayList<BarEntry> entries = new ArrayList<BarEntry>();
+        Cursor cur = db.getMyTotalIncome();
+        int i=0;
+        while(cur.moveToNext()){
+            entries.add(new BarEntry(cur.getFloat(1), i));
+            i++;
+        }
+
+        BarDataSet set = new BarDataSet(entries, "Income");
+        set.setColor(getResources().getColor(R.color.myAccentColor));
+        set.setValueTextColor(getResources().getColor(R.color.myAccentColor));
+        set.setValueTextSize(10f);
+        d.addDataSet(set);
+
+        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+        return d;
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -311,6 +411,10 @@ public class ExpenseTrend extends Fragment {
     public void onResume() {
         super.onResume();
         init();
+    }
+
+    public interface Constants {
+        String TAG = "app:ExpenseTrend";
     }
 
     /**

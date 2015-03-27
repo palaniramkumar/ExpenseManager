@@ -18,6 +18,8 @@
         android:background="@drawable/rounded_corner"
         android:gravity="center_vertical|center_horizontal"
         android:text="28"
+        android:textAllCaps="true"
+        android:textStyle="bold"
         android:textAlignment="center"
         android:textColor="@color/abc_primary_text_disable_only_material_dark" />
 

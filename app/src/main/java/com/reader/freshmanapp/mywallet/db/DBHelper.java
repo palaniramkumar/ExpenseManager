@@ -54,6 +54,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TRAVEL = "Travel";
     public static final String ATM = "ATM Withdrawal";
 
+
     public String month = "";
     public String year = "";
 
@@ -263,7 +264,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Cursor getTransactionHistory(String category_filter) {
         String sql = "select case strftime('%m', trans_time) when '01' then 'January' when '02' then 'Febuary' when '03' then 'March' when '04' then 'April' when '05' then 'May' when '06' then 'June' when '07' then 'July' when '08' then 'August' when '09' then 'September' when '10' then 'October' when '11' then 'November' when '12' then 'December' else '' end\n" +
-                "as month,strftime('%d',trans_time) day, category, amount,id,UPPER(notes),geo_tag from MASTER " +
+                "as month,strftime('%d',trans_time) day, category, amount,id,UPPER(notes),geo_tag,trans_type from MASTER " +
                 "where status ='" + TYPES.TRANSACTION_STATUS.APPROVED + "' and  strftime('%m', `trans_time`) = '" + month + "' " +
                 "and  strftime('%Y', `trans_time`) = '" + year + "' and category like '" + category_filter + "' order by day desc";
         SQLiteDatabase db = this.getReadableDatabase();
@@ -491,7 +492,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
 
-
+    public Cursor getMyTotalTransction() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        //Bug: should not use the year
+        Cursor res = db.rawQuery("select strftime('%m', `trans_time`), sum(amount) from MASTER where status = '" + TYPES.TRANSACTION_STATUS.APPROVED + "'" +
+                " and   strftime('%Y', `trans_time`) = '" + year + "' group by strftime('%m', `trans_time`)", null);
+        return res;
+    }
 
     public Cursor getMyExpenseByDay() {
         SQLiteDatabase db = this.getReadableDatabase();

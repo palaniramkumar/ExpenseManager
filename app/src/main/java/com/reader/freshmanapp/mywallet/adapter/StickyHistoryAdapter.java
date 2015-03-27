@@ -39,6 +39,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
     private String[] place;
     private String[] id;
     private String[] gps;
+    private String[] trans_type;
     private String month;
     private String category_filter;
     private LayoutInflater inflater;
@@ -53,6 +54,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
         place = new String[cur.getCount()];
         id = new String[cur.getCount()];
         gps = new String[cur.getCount()];
+        trans_type = new String[cur.getCount()];
         category_filter = filter;
         int i = 0;
         while (cur.moveToNext()) {
@@ -64,6 +66,7 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
             place[i] = cur.getString(5);
             id[i] = cur.getString(4);
             gps[i] = cur.getString(cur.getColumnIndex(db.MASTER_COLUMN_GEO_TAG));
+            trans_type[i] = cur.getString(cur.getColumnIndex(db.MASTER_COLUMN_TRANS_TYPE));
             i++;
             try {
                 Thread.sleep(1);
@@ -110,12 +113,13 @@ public class StickyHistoryAdapter extends BaseAdapter implements StickyListHeade
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.text.setText(entry_day[position]);
+        holder.text.setText(trans_type[position].charAt(0)+""); // Removing entry_day[position]
         holder.txt_amount.setText(Common.CURRENCY + " " + amount[position]);
         holder.txt_desc.setText(place[position]);
         holder.txt_category.setText(category[position]);
         holder.txt_id.setText(id[position]);
         holder.gps = gps[position];
+
 
         final View view = convertView;
         holder.popupMenu.setOnClickListener(new View.OnClickListener() {

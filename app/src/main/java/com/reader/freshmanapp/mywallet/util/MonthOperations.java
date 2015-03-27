@@ -9,7 +9,7 @@ import java.util.Date;
  * Created by Ramkumar on 11/02/15.
  */
 public class MonthOperations {
-    public static final String[] months = {"JANUARY", "FEB", "MARCH", "APRIL", "MAY", "JUN", "JULY", "AUG", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"};
+    public static final String[] months = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEPT", "OCT", "NOV", "DEC"};
 
     public static int getMonthAsInt(String name) {
         return Collections.indexOfSubList(Arrays.asList(months), Arrays.asList(name));

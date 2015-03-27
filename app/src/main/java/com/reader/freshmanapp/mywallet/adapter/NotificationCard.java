@@ -96,6 +96,24 @@ public class NotificationCard extends CardWithList {
         dialog.show();
     }
 
+    void showDialogIncomeConfirm(final int RECID, final int position) {
+        new AlertDialog.Builder(getContext(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+                .setTitle("Confirmation")
+                .setMessage("Can I remember this as your Income ?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        db.updateMaster(RECID, db.MASTER_COLUMN_CATEGORY, TYPES.TRANSACTION_TYPE.INCOME.toString());
+                        mLinearListAdapter.remove(mLinearListAdapter.getItem(position));
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
     void showDialogConfirm(final int RECID, final int position) {
         new AlertDialog.Builder(getContext(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                 .setTitle("Delete entry")
@@ -157,9 +175,12 @@ public class NotificationCard extends CardWithList {
                 public void onItemClick(LinearListView parent, View view, final int position, ListObject object) {
                     if (trans_type.equalsIgnoreCase(TYPES.TRANSACTION_TYPE.CASH_VAULT.toString())) {
                         showDialogConfirm(RECID, position);
-                    } else
+                    }
+                    if (trans_type.equalsIgnoreCase(TYPES.TRANSACTION_TYPE.INCOME.toString())) {
+                        showDialogIncomeConfirm(RECID, position);
+                    }
+                    else
                         showDialogCatogories(RECID, position);
-
 
                 }
             });

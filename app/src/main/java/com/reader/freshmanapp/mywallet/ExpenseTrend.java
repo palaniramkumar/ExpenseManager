@@ -247,9 +247,14 @@ public class ExpenseTrend extends Fragment {
             });
 
 
-            String[] mMonths = new String[] {
-                    "Jan", "Feb", "Mar", "Apr" //need to update this code dynamically
-            };
+            Cursor cur = db.getMyTotalTransction();
+            String[] mMonths = new String[cur.getCount()];
+            int counter = 0;
+            while(cur.moveToNext()){
+                mMonths[counter] = MonthOperations.getMonthAsString(cur.getInt(0)-1);
+                counter++;
+            }
+
             CombinedData data1 = new CombinedData(mMonths);
 
             data1.setData(generateLineData());
@@ -327,7 +332,7 @@ public class ExpenseTrend extends Fragment {
     }
 
 
-    private LineData generateLineData() {
+    private LineData generateLineData() { //under the assumption that user has Expense on every month
 
         LineData d = new LineData();
 
@@ -360,7 +365,7 @@ public class ExpenseTrend extends Fragment {
 
 
 
-    private BarData generateBarData() {
+    private BarData generateBarData() {//under the assumption that user has Income on every month
 
         BarData d = new BarData();
 
@@ -371,7 +376,7 @@ public class ExpenseTrend extends Fragment {
             entries.add(new BarEntry(cur.getFloat(1), i));
             i++;
         }
-
+        Log.e("Income","Income Count in months - "+ i);
         BarDataSet set = new BarDataSet(entries, "Income");
         set.setColor(getResources().getColor(R.color.myAccentColor));
         set.setValueTextColor(getResources().getColor(R.color.myAccentColor));

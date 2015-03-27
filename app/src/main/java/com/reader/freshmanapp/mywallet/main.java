@@ -35,6 +35,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Highlight;
+import com.github.mikephil.charting.utils.LargeValueFormatter;
 import com.github.mikephil.charting.utils.PercentFormatter;
 import com.melnykov.fab.FloatingActionButton;
 import com.reader.freshmanapp.SMSparser.SMS;
@@ -351,15 +352,15 @@ public class main extends Fragment implements OnChartValueSelectedListener {
         hChart.setDrawGridBackground(false);
 
         XAxis xl = hChart.getXAxis();
-        xl.setPosition(XAxis.XAxisPosition.TOP);
+        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
         xl.setDrawAxisLine(false);
         xl.setDrawGridLines(false);
         //xl.setGridLineWidth(0.3f);
         // xl.setEnabled(false);
 
-        xl.setAdjustXLabels(true);
+        //xl.setAdjustXLabels(true);
         xl.setTextColor(Color.DKGRAY);
-        hChart.setScaleXEnabled(true);
+        //hChart.setScaleXEnabled(true);
 
         YAxis yl = hChart.getAxisLeft();
         yl.setDrawAxisLine(false);
@@ -403,7 +404,7 @@ public class main extends Fragment implements OnChartValueSelectedListener {
         incChart.setDrawGridBackground(false);
 
         xl = incChart.getXAxis();
-        xl.setPosition(XAxis.XAxisPosition.TOP);
+        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
         xl.setDrawAxisLine(false);
         xl.setDrawGridLines(false);
         //xl.setGridLineWidth(0.3f);
@@ -429,6 +430,8 @@ public class main extends Fragment implements OnChartValueSelectedListener {
         incomevsexpense_data();
         incChart.animateY(2500);
         incChart.getLegend().setTextColor(Color.DKGRAY);
+
+
 
 
     }
@@ -514,7 +517,7 @@ public class main extends Fragment implements OnChartValueSelectedListener {
         }
 
         BarDataSet set1 = new BarDataSet(yVals1, "Paid Bill Amount");
-        set1.setBarSpacePercent(40f);
+        set1.setBarSpacePercent(35f);
 
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         ArrayList<Integer> colors = new ArrayList<Integer>();
@@ -525,10 +528,11 @@ public class main extends Fragment implements OnChartValueSelectedListener {
 
         BarData data = new BarData(xVals, dataSets);
         data.setValueTextSize(10f);
-        data.setValueFormatter(new CurrencyFormatter());
+
+        data.setValueFormatter(new LargeValueFormatter());
 
         hChart.setData(data);
-        hChart.invalidate();
+        //hChart.invalidate();
 
         // condition for hiding the graph: if data is null pls hide
         if (yVals1.size() == 0)
@@ -566,10 +570,11 @@ public class main extends Fragment implements OnChartValueSelectedListener {
 
         BarData data = new BarData(xVals, dataSets);
         data.setValueTextSize(10f);
-        data.setValueFormatter(new CurrencyFormatter());
+
+        data.setValueFormatter(new LargeValueFormatter());
 
         incChart.setData(data);
-        incChart.invalidate();
+        //incChart.invalidate();
 
         // condition for hiding the graph: if data is null pls hide
         if (income + expense == 0)

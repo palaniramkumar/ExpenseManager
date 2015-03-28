@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
@@ -37,15 +39,16 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.LargeValueFormatter;
 import com.github.mikephil.charting.utils.PercentFormatter;
-import com.melnykov.fab.FloatingActionButton;
+
 import com.reader.freshmanapp.SMSparser.SMS;
 import com.reader.freshmanapp.mywallet.adapter.ExpenseCard;
 import com.reader.freshmanapp.mywallet.db.DBHelper;
 import com.reader.freshmanapp.mywallet.util.CashVault;
 import com.reader.freshmanapp.mywallet.util.Common;
-import com.reader.freshmanapp.mywallet.util.CurrencyFormatter;
 import com.reader.freshmanapp.mywallet.util.MonthOperations;
 import com.reader.freshmanapp.mywallet.util.UndoBar;
+import com.shamanland.fab.FloatingActionButton;
+import com.shamanland.fab.ShowHideOnScroll;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -158,6 +161,9 @@ public class main extends Fragment implements OnChartValueSelectedListener {
 
         //fab
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        ScrollView scrollView  = (ScrollView)view.findViewById(R.id.scrollView);
+        scrollView.setOnTouchListener(new ShowHideOnScroll(fab));
+
         fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //Toast.makeText(mContainer.getContext(), "New Clicked", Toast.LENGTH_SHORT).show();
@@ -192,6 +198,11 @@ public class main extends Fragment implements OnChartValueSelectedListener {
                 init();
             }
         });
+
+
+
+
+
 
         TextView t = (TextView) view.findViewById(R.id.txt_progress);
 

@@ -464,9 +464,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public String getExpensebyDay(String day, String category_filter) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "select sum(amount) from master where status = '" + TYPES.TRANSACTION_STATUS.APPROVED + "' " +
+        String sql = "select sum(amount) from master where status = '" + TYPES.TRANSACTION_STATUS.APPROVED + "' and trans_type ='"+TYPES.TRANSACTION_TYPE.EXPENSE   +"'" +
                 "and strftime('%m', `trans_time`) = '" + month + "' and strftime('%d', `trans_time`) = '" + day + "' and  " +
                 "strftime('%Y', `trans_time`) = '" + year + "' and  category like '" + category_filter + "' group by strftime('%d', `trans_time`)";
+        //Log.e("Sql",sql);
         Cursor res = db.rawQuery(sql, null);
         if (res.moveToNext()) {
             if (res.getString(0) == null) return "0";

@@ -514,11 +514,11 @@ public class main extends Fragment implements OnChartValueSelectedListener {
                 bill_name = bill_name.toUpperCase().replace("PAYMENT", "");
 
             if (BuildConfig.DEBUG) {
-                Log.e(Constants.TAG, "Retrived Val: " + bill_name + " ," + cur.getFloat(cur.getColumnIndex(db.MASTER_COLUMN_AMOUNT)));
+                Log.e(Constants.TAG, "Retrived Val: " + bill_name + " ," + cur.getInt(cur.getColumnIndex(db.MASTER_COLUMN_AMOUNT)));
             }
 
             xVals.add(bill_name);
-            yVals1.add(new BarEntry(cur.getFloat(cur.getColumnIndex(db.MASTER_COLUMN_AMOUNT)), i));
+            yVals1.add(new BarEntry(cur.getInt(cur.getColumnIndex(db.MASTER_COLUMN_AMOUNT)), i));
             i++;
             try {
                 Thread.sleep(1);
@@ -607,7 +607,7 @@ public class main extends Fragment implements OnChartValueSelectedListener {
         // drawn above each other.
         int i = 0;
         while (cursor.moveToNext()) {
-            yVals1.add(new Entry(cursor.getInt(1), i++));
+            yVals1.add(new Entry(cursor.getFloat(1), i++));
             xVals.add(cursor.getString(0).toUpperCase());
             try {
                 Thread.sleep(1);

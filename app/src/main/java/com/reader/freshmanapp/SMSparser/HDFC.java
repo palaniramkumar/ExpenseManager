@@ -31,12 +31,14 @@ public class HDFC {
             {"Rs.(.*?) was spent on ur HDFCBank CREDIT Card ending (.*?) on (.*?) at (.*?).Avl", TYPES.TRANSACTION_TYPE.EXPENSE.toString(), TYPES.TRANSACTION_SOURCE.CREDIT_CARD.toString()},
             {"An amount of Rs.(.*?) has been debited from your account number (.*?) for (.*?) done using HDFC Bank NetBanking", TYPES.TRANSACTION_TYPE.EXPENSE.toString(), TYPES.TRANSACTION_SOURCE.NET_BANKING.toString()},
             {"An amount of Rs.(.*?) has been debited from your account  number (.*?) for (.*?) done using HDFC Bank NetBanking", TYPES.TRANSACTION_TYPE.EXPENSE.toString(), TYPES.TRANSACTION_SOURCE.NET_BANKING.toString()},
-            {"INR (.*?) deposited to A/c No (.*?) towards NEFT (.*?) Val ", TYPES.TRANSACTION_TYPE.INCOME.toString(), TYPES.TRANSACTION_SOURCE.NET_BANKING.toString()},
+            {"INR (.*?) deposited to A/c No (.*?) towards (.*?) Val ", TYPES.TRANSACTION_TYPE.INCOME.toString(), TYPES.TRANSACTION_SOURCE.NET_BANKING.toString()},
             {"Thank you for using your HDFC Bank DEBIT/ATM Card ending (.*?) for Rs. (.*?) towards ATM WDL in (.*?) at (.*?) on (.*?)", TYPES.TRANSACTION_TYPE.CASH_VAULT.toString(), TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString()},
             {"Rs.(.*?) was withdrawn using your HDFC Bank Card ending (.*?) on (.*?) at (.*?). Avl bal: (.*?)", TYPES.TRANSACTION_TYPE.CASH_VAULT.toString(), TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString()},
-            {"Your BANK a/c xxxx (.*?) will be debited for Rs (.*?) towards (.*?) on (.*?)", TYPES.TRANSACTION_TYPE.EXPENSE.toString(), TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString()}
+            {"Your BANK a/c xxxx (.*?) will be debited for Rs (.*?) towards (.*?) on (.*?)", TYPES.TRANSACTION_TYPE.EXPENSE.toString(), TYPES.TRANSACTION_SOURCE.DEBIT_CARD.toString()},
+            {"INR (.*?) Dr to A/c No (.*?) towards (.*?) Val ", TYPES.TRANSACTION_TYPE.EXPENSE.toString(), TYPES.TRANSACTION_SOURCE.NET_BANKING.toString()},
+            {"Your payment for (.*?) - (.*?) for Rs (.*?) has been processed successfully.", TYPES.TRANSACTION_TYPE.EXPENSE.toString(), TYPES.TRANSACTION_SOURCE.NET_BANKING.toString()}
     };
-    /*0-Amount,1-Account,2-Time,3-Where,4-Place/city,5-remaining cash in card*/
+    /*0-Amount,1-Account,2-Time,3-Where,4-Place/city,5-remaining cash in card,9-Ignore*/
     final int[][] templateMap = { //the numbers are the curresponding values in the template*/
             {0, 1, 2, 3},
             {0, 1, 3},
@@ -44,7 +46,9 @@ public class HDFC {
             {0, 1, 3},
             {1, 0, 4, 3, 2},
             {0, 1, 2, 3, 5},
-            {1, 0, 3, 2}
+            {1, 0, 3, 2},
+            {0, 1, 3},
+            {3, 1, 0}
     };
     /*this class variables and name needs to be same for all other banks*/
     public SMSParserData parserValue;
@@ -64,7 +68,7 @@ public class HDFC {
         for (int i = 0; i < template.length; i++) {
             Pattern pattern = Pattern.compile(template[i][0]); //fetch the only sms
             Matcher matcher = pattern.matcher(sms);
-            parserValue.valueSet = new String[6];
+            parserValue.valueSet = new String[6]; // six is the len of template item count
             if (matcher.find()) {
                 for (int j = 0; j < templateMap[i].length; j++) {
                     System.out.println(matcher.group(j + 1));

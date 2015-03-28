@@ -185,7 +185,11 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
 
         if (trans_type.equalsIgnoreCase(TYPES.TRANSACTION_TYPE.CASH_VAULT.toString())) {
             showDialogConfirm(getActivity(), Integer.parseInt(click_id));
-        } else if (sms_id != null)
+        }
+        else if (trans_type.equalsIgnoreCase(TYPES.TRANSACTION_TYPE.INCOME.toString())) {
+            showDialogIncomeConfirm(getActivity(), Integer.parseInt(click_id));
+        }
+        else if (sms_id != null)
             showDialogCatogories(getActivity(), Integer.parseInt(click_id));
 
         else {
@@ -224,6 +228,10 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         super.onDetach();
         mListener = null;
     }
+
+
+    //Dialog methods
+
 
     void showDialogCatogories(final Context context, final int RECID) {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
@@ -274,6 +282,24 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         dialog.setTitle("Choose the Category");
         dialog.show();
     }
+    void showDialogIncomeConfirm(final Context context,final int RECID) {
+        new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
+                .setTitle("Confirmation")
+                .setMessage("Can I remember this as your Income ?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        db.updateMaster(RECID, db.MASTER_COLUMN_CATEGORY, TYPES.TRANSACTION_TYPE.INCOME.toString());
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
 
     //we may need to remove this code. No options for cash vault for now
     void showDialogConfirm(final Context context, final int RECID) {

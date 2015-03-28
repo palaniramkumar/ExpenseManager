@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.reader.freshmanapp.mywallet">
+    package="com.reader.freshmanapp.mywallet" >
 
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
@@ -14,42 +14,41 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
-            android:name="com.reader.freshmanapp.mywallet.Expense_add_window"
+            android:name=".Expense_add_window"
             android:label="@string/title_activity_expense_add_window" />
         <activity
-            android:name="com.reader.freshmanapp.mywallet.MainActivity"
-            android:label="@string/app_name"></activity>
-        <activity
-            android:name="com.reader.freshmanapp.mywallet.demo"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:theme="@style/FullscreenTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
         </activity>
         <activity
-            android:name="com.reader.freshmanapp.mywallet.PrefsActivity"
+            android:name=".PrefsActivity"
             android:label="Preferences"
-            android:theme="@android:style/Theme.DeviceDefault.Light"></activity>
+            android:theme="@android:style/Theme.DeviceDefault.Light" />
 
         <receiver
-            android:name="com.reader.freshmanapp.mywallet.service.SMSListener"
-            android:label="@string/app_name">
+            android:name=".service.SMSListener"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.reader.freshmanapp.mywallet.service.SummaryReceiver">
+        <receiver android:name=".service.SummaryReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-
+        <activity
+            android:name=".Help"
+            android:label="@string/title_activity_help" >
+        </activity>
     </application>
 
 </manifest>

@@ -103,6 +103,7 @@
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="cardslib-core-2.0.1" level="project" />
+    <orderEntry type="library" exported="" name="circleindicator-1.1.2" level="project" />
     <orderEntry type="library" exported="" name="library-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="cardslib-recyclerview-2.0.1" level="project" />
   </component>

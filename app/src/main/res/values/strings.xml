@@ -26,5 +26,6 @@
 
     <string name="undo">UNDO</string>
     <string name="undo_english">OK</string>
+    <string name="title_activity_help">Help</string>
 
 </resources>

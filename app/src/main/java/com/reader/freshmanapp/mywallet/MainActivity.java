@@ -4,8 +4,10 @@ import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.reader.freshmanapp.SMSparser.SMS;
+import com.reader.freshmanapp.mywallet.db.DBCategoryMap;
 import com.reader.freshmanapp.mywallet.db.DBHelper;
 import com.reader.freshmanapp.mywallet.service.SMSListener;
 import com.reader.freshmanapp.mywallet.service.SummaryReceiver;
@@ -37,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Calendar;
+import java.util.UUID;
 
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks,
@@ -126,6 +130,13 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         AboutBox.Show(MainActivity.this);
 
     }
+    public void onclickHelp(MenuItem item) {
+
+        Intent intent = new Intent(MainActivity.this,
+                Help.class);
+        startActivity(intent);
+
+    }
 
     public void refreshSMS(final MenuItem item) {
 
@@ -168,6 +179,34 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             @Override
             protected Integer doInBackground(Void... params) {
                 DBHelper db = new DBHelper(getApplicationContext());
+
+                /** New User -  display demo page **/
+                /* first user check */
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                String endpoint = sharedPref.getString("Endpoint", "0");
+                if (endpoint.equalsIgnoreCase("0")) {
+                    DBCategoryMap dbCatMap = new DBCategoryMap(MainActivity.this);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("Endpoint", UUID.randomUUID().toString());
+                    editor.commit();
+                    if (BuildConfig.DEBUG) {
+                        Log.e(Constants.TAG, "New User");
+                    }
+                    db.firstUser();
+                    dbCatMap.firstTime();
+                    db.close();
+                    dbCatMap.close();
+                    Intent i = new Intent(MainActivity.this,Help.class);
+                    startActivity(i);
+                } else {
+                    if (BuildConfig.DEBUG) {
+                        Log.e(Constants.TAG, "Existing user");
+                    }
+
+                    //else code
+                }
+
+
                 if (item != null || db.getLastSMSID() == 0) {
                     SMS.syncSMS(getApplicationContext(), true, null);
                 }

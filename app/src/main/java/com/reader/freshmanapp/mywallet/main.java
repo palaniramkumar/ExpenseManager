@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ClipDrawable;
@@ -42,6 +43,7 @@ import com.github.mikephil.charting.utils.PercentFormatter;
 
 import com.reader.freshmanapp.SMSparser.SMS;
 import com.reader.freshmanapp.mywallet.adapter.ExpenseCard;
+import com.reader.freshmanapp.mywallet.db.DBCategoryMap;
 import com.reader.freshmanapp.mywallet.db.DBHelper;
 import com.reader.freshmanapp.mywallet.util.CashVault;
 import com.reader.freshmanapp.mywallet.util.Common;
@@ -53,6 +55,7 @@ import com.shamanland.fab.ShowHideOnScroll;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
 import it.gmariotti.cardslib.library.view.CardViewNative;
@@ -120,6 +123,10 @@ public class main extends Fragment implements OnChartValueSelectedListener {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         db = new DBHelper(getActivity());
+
+
+
+
     }
 
     @Override

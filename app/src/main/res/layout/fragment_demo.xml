@@ -1,0 +1,26 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/material_blue_grey_950"
+    tools:context="com.reader.freshmanapp.mywallet.DemoFragment">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingTop="25dp">
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="240dp"
+        android:layout_height="320dp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:textSize="16dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/caption"
+        android:text="@string/hello_blank_fragment" />
+
+</LinearLayout>
+
+</FrameLayout>

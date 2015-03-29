@@ -420,10 +420,10 @@ public class DBHelper extends SQLiteOpenHelper {
     /********************* Income and Expense Details *************/
 
 
-    public float getMyTotalIncome(String month){
+    public float getMyTotalIncome(String reqMonth){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select sum(amount) from MASTER where status = '" + TYPES.TRANSACTION_STATUS.APPROVED + "' and trans_type='" + TYPES.TRANSACTION_TYPE.INCOME + "'" +
-                " and  strftime('%m', `trans_time`) = '" + month + "' and  strftime('%Y', `trans_time`) = '" + year + "'", null);
+                " and  strftime('%m', `trans_time`) = '" + reqMonth + "' and  strftime('%Y', `trans_time`) = '" + year + "'", null);
         if (res.moveToNext()) return res.getFloat(0);
         else return 0;
     }
@@ -442,10 +442,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 " and   strftime('%Y', `trans_time`) = '" + year + "' group by strftime('%m', `trans_time`)", null);
         return res;
     }
-    public float getMyTotalExpense(String month) {
+    public float getMyTotalExpense(String reqMonth) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select sum(amount) from MASTER where status = '" + TYPES.TRANSACTION_STATUS.APPROVED + "' and trans_type='" + TYPES.TRANSACTION_TYPE.EXPENSE + "'" +
-                " and  strftime('%m', `trans_time`) = '" + month + "' and  strftime('%Y', `trans_time`) = '" + year + "'", null);
+                " and  strftime('%m', `trans_time`) = '" + reqMonth + "' and  strftime('%Y', `trans_time`) = '" + year + "'", null);
         if (res.moveToNext()) return res.getFloat(0);
         else return 0;
     }

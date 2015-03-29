@@ -24,6 +24,7 @@ import com.reader.freshmanapp.mywallet.db.DBHelper;
 import com.reader.freshmanapp.mywallet.util.MonthOperations;
 import com.reader.freshmanapp.mywallet.util.TYPES;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -117,11 +118,12 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         btn_prev.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
+                Calendar date = Calendar.getInstance();
                 String current_month = btn_month.getText().toString();
-                Date date = MonthOperations.previous(current_month, db.year);
-                int prev_month = date.getMonth();
-                db.month = MonthOperations.getMonthin2Digit(prev_month + 1);
-                db.year = date.getYear() + "";
+                date.setTime(MonthOperations.previous(current_month, db.year));
+                int prev_month = date.get(Calendar.MONTH);
+                db.month = MonthOperations.getMonthin2Digit(prev_month+1);
+                db.year =  date.get(Calendar.YEAR) + "";
                 init();
             }
         });
@@ -129,11 +131,12 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
         Button btn_next = (Button) view.findViewById(R.id.btn_next);
         btn_next.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                Calendar date = Calendar.getInstance();
                 String current_month = btn_month.getText().toString();
-                Date date = MonthOperations.next(current_month, db.year);
-                int next_month = date.getMonth();
-                db.month = MonthOperations.getMonthin2Digit(next_month + 1);
-                db.year = date.getYear() + "";
+                date.setTime(MonthOperations.next(current_month, db.year));
+                int next_month = date.get(Calendar.MONTH);
+                db.month = MonthOperations.getMonthin2Digit(next_month+1);
+                db.year =  date.get(Calendar.YEAR) + "";
                 init();
             }
         });

@@ -137,7 +137,18 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         startActivity(intent);
 
     }
-
+    public void hideUIObject(){
+        //invalidate all UI object
+        TextView header = (TextView) findViewById(R.id.banner_header);
+        if(header!=null)
+            header.setText("");
+        TextView progress_txt = (TextView) findViewById(R.id.txt_progress);
+        if(progress_txt!=null)
+            progress_txt.setText("");
+        ProgressBar master_progressBar = (ProgressBar) findViewById(R.id.loading_spinner);
+        if(master_progressBar!=null)
+            master_progressBar.setVisibility(View.INVISIBLE);
+    }
     public void refreshSMS(final MenuItem item) {
 
         class MyAsyncTask extends AsyncTask<Void, Void, Integer> {
@@ -162,13 +173,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                         .commit();
                 setTitle("Summary");
 
-                //invalidate all UI object
-                TextView header = (TextView) findViewById(R.id.banner_header);
-                header.setText("");
-                TextView progress_txt = (TextView) findViewById(R.id.txt_progress);
-                progress_txt.setText("");
-                ProgressBar master_progressBar = (ProgressBar) findViewById(R.id.loading_spinner);
-                master_progressBar.setVisibility(View.INVISIBLE);
+               hideUIObject();
                 Fragment frag = getFragmentManager().findFragmentById(R.id.frame_container);
                 if (frag != null && (frag.getView() != null)) {
                     ProgressBar progressBar = ((ProgressBar) frag.getView().findViewById(R.id.loading_spinner));
@@ -227,6 +232,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 refreshSMS(null);
                 break;
             case 1:
+
                 newFragment = new ExpenseTrend();
                 // Insert the fragment by replacing any existing fragment
                 fragmentManager = getFragmentManager();
@@ -292,9 +298,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 }
                 break;
 
-
         }
-
+        if(position!=1)
+            hideUIObject();
 
         if (BuildConfig.DEBUG) {
             Log.e(Constants.TAG, "Clicked " + position);

@@ -124,7 +124,7 @@ public class main extends Fragment implements OnChartValueSelectedListener {
         }
         db = new DBHelper(getActivity());
 
-
+        SMS.syncSMS(getActivity());
 
 
     }
@@ -183,12 +183,13 @@ public class main extends Fragment implements OnChartValueSelectedListener {
         Button btn_prev = (Button) view.findViewById(R.id.btn_prev);
         btn_prev.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                Calendar date = Calendar.getInstance();
                 String current_month = btn_month.getText().toString();
-                Date date = MonthOperations.previous(current_month, db.year);
-                int prev_month = date.getMonth();
-                db.month = MonthOperations.getMonthin2Digit(prev_month + 1);
-                db.year = date.getYear() + "";
-                //db=new DBHelper(getActivity(),MonthOperations.getMonthin2Digit(prev_month+1));
+                date.setTime(MonthOperations.previous(current_month, db.year));
+                int prev_month = date.get(Calendar.MONTH);
+                db.month = MonthOperations.getMonthin2Digit(prev_month+1);
+                db.year =  date.get(Calendar.YEAR) + "";
+
                 init();
             }
         });
@@ -196,19 +197,15 @@ public class main extends Fragment implements OnChartValueSelectedListener {
         Button btn_next = (Button) view.findViewById(R.id.btn_next);
         btn_next.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                Calendar date = Calendar.getInstance();
                 String current_month = btn_month.getText().toString();
-                Date date = MonthOperations.next(current_month, db.year);
-                int next_month = date.getMonth();
-                db.month = MonthOperations.getMonthin2Digit(next_month + 1);
-                db.year = date.getYear() + "";
-                //db=new DBHelper(getActivity(),MonthOperations.getMonthin2Digit(next_month+1));
+                date.setTime(MonthOperations.next(current_month, db.year));
+                int next_month = date.get(Calendar.MONTH);
+                db.month = MonthOperations.getMonthin2Digit(next_month+1);
+                db.year =  date.get(Calendar.YEAR) + "";
                 init();
             }
         });
-
-
-
-
 
 
         TextView t = (TextView) view.findViewById(R.id.txt_progress);
@@ -238,7 +235,7 @@ public class main extends Fragment implements OnChartValueSelectedListener {
 
     void init() {
 
-        SMS.syncSMS(getActivity());
+
 
         card = new ExpenseCard(getActivity(), db);
 

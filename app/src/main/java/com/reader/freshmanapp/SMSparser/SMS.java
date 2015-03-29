@@ -95,7 +95,8 @@ public class SMS {
     }
 
     public boolean findSMS(Context context) {
-        if (address.contains("HDFC") ) { // add || text.contains("HDFC") code to test data with custom user SMS
+        if (address!=null && address.contains("HDFC") ) { // add || text.contains("HDFC") code to test data with custom user SMS
+        //if(text.contains("HDFC") ){
             bankName = "HDFC";
             HDFC bank = new HDFC(text);
             HDFC.SMSParserData smsparsedata = bank.parseSMS();

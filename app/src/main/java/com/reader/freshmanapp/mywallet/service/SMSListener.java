@@ -6,13 +6,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsMessage;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.reader.freshmanapp.SMSparser.SMS;
 import com.reader.freshmanapp.mywallet.BuildConfig;
@@ -20,6 +23,7 @@ import com.reader.freshmanapp.mywallet.MainActivity;
 import com.reader.freshmanapp.mywallet.R;
 import com.reader.freshmanapp.mywallet.db.DBHelper;
 import com.reader.freshmanapp.mywallet.util.Common;
+import com.reader.freshmanapp.mywallet.util.TYPES;
 
 /**
  * Created by Ram on 08/01/2015.
@@ -28,9 +32,28 @@ public class SMSListener extends BroadcastReceiver {
     /**
      * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
      */
+    private long getLstSMSIndex(Context context){
+        Uri uriSms = Uri.parse("content://sms/inbox");
+        //understanding that only one SMS can be recieved at the time and maked the last SMS ID as this SMS id
+        final Cursor cursor =context.getContentResolver().query(uriSms, new String[]{"_id", "address", "date", "body"},null,null,"date desc limit 1");
+        if(cursor.moveToNext())
+            return cursor.getLong(0);
+        return -1;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        String latitude = "", longitude = "";
+
+        /*debug : get last sms from sms object
+        Cursor cursor = context.getContentResolver().query(Uri.parse("content://sms/inbox"), new String[] {"body", "address"},
+                null, null, "date desc limit 1");
+
+        while (cursor.moveToNext()) {
+            Toast.makeText(context, cursor.getString(0)+":"+ cursor.getString(1), Toast.LENGTH_SHORT).show();
+
+        }*/
+
+        String latitude = "", longitude = "",gps=null;
 
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(context);
@@ -44,12 +67,14 @@ public class SMSListener extends BroadcastReceiver {
 
                 latitude = location.getLatitude() + "";
                 longitude = location.getLongitude() + "";
+                gps = latitude + "," + longitude;
                 Log.d("gps", "lat :  " + latitude);
                 Log.d("gps", "long :  " + longitude);
 
             }
         }
 
+        //read incoming sms
 
         Bundle bundle = intent.getExtras();
 
@@ -62,6 +87,7 @@ public class SMSListener extends BroadcastReceiver {
 
         SMS s = new SMS();
         s.text = smsMessage[0].getMessageBody();
+        s.address = smsMessage[0].getOriginatingAddress();
         s.findSMS(context);
 
         if (s.findSMS(context) && s.amount != null) {
@@ -76,14 +102,20 @@ public class SMSListener extends BroadcastReceiver {
 
             DBHelper db = new DBHelper(context);
 
-            if (location != null)
-                SMS.syncSMS(context, latitude + "," + longitude);
-            else
-                SMS.syncSMS(context);
+            s.address=smsMessage[0].getOriginatingAddress();
+            s.text=smsMessage[0].getMessageBody();
+            long ts = smsMessage[0].getTimestampMillis();
+            s.id=(getLstSMSIndex(context)+smsMessage.length)+""; //calculate new sms id
+            Log.e("Identifed SMS id",s.id);
+            Log.e("count(sms)",smsMessage.length+"");
+            s.when = db.getDroidDate(ts/1000) ;
+            s.text = smsMessage[0].getMessageBody();
+            s.findSMS(context);
 
-            if (BuildConfig.DEBUG) {
-                Log.e(Constants.TAG, "Called SYNS SMS ");
-            }
+
+            db.insertMaster(s.amount,s.bankName,s.trans_src,s.trans_type,s.expanse_category,s.where,s.id,s.where,s.when,
+                    db.getNow(),s.place,gps,null,null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
+
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
 
@@ -92,7 +124,7 @@ public class SMSListener extends BroadcastReceiver {
                     .addAction(R.drawable.ic_action_share, "Share", i)
                     .setContentIntent(i)
                     .setAutoCancel(true)
-                    .setContentText("This month expense " + Common.CURRENCY + db.getMyTotalExpense());
+                    .setContentText("This month expense " + Common.CURRENCY + db.getMyTotalExpense(db.month));
 
             final boolean isBudget = prefs.getBoolean("budget", false);
             if (isBudget)

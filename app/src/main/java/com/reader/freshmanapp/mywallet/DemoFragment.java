@@ -42,17 +42,15 @@ public class DemoFragment extends Fragment {
             R.drawable.image4,
             R.drawable.image5,
             R.drawable.image6,
-            R.drawable.image7
     };
 
     String[] mResourceContents = {
-            "Piechart -All your expense in one place\nCashvault – All your Atm Withdrawn taken as cash vault. Further cash expense will be deducted from your vault\n+ to start your manual expense/Income",
-            "Bill Payment – Keep tracking your bill Payments through credit/debit card\nIndividual Expense summary with status tracker by comparing your current expense with previous month",
-            "General menu to view your expense trend, expense history and more",
-            "Expense Trend – Compare expense against various month\nCurrent Budget – View current budget against actual expense",
-            "Unknown banking transactions will be added in know your bill.\nClick to choose the expense category\nSwipe to delete it",
-            "Expense History – View your expense history.\nClick to edit the expense",
-            "List of Expense category\nstart your expense by clicking button with +\nSwipe to delete it\nClick to edit it.",
+            "Piechart -All your expense in one place\n\nCashvault – All your Atm Withdrawn taken as cash vault. Further cash expense will be deducted from your vault",
+            "Bill Payment – Keep tracking your bill Payments through credit/debit card and compare your expense with previous month" ,
+            "Expense Trend – Compare expense against various month\n\nCurrent Budget – View current budget against actual expense",
+            "Unknown banking transactions will be added to know your bill.\n\n Can approve by click choose the expense category\n\nSwipe to delete it",
+            "Expense History – View your expense history.\n\nClick to edit the expense",
+            "Flexible List of Expense category\n\nYou can add your own custom category\n\nSwipe to delete the entry",
     };
     public static DemoFragment newInstance(int param1) {
         DemoFragment fragment = new DemoFragment();

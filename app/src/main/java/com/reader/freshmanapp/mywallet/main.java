@@ -126,6 +126,24 @@ public class main extends Fragment implements OnChartValueSelectedListener {
 
         SMS.syncSMS(getActivity());
 
+        /** New User -  display demo page **/
+                /* first user check */
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String endpoint = sharedPref.getString("demo", "0");
+        if (endpoint.equalsIgnoreCase("0")) {
+            DBCategoryMap dbCatMap = new DBCategoryMap(getActivity());
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("demo", UUID.randomUUID().toString());
+            editor.commit();
+            Intent i = new Intent(getActivity(),Help.class);
+            startActivity(i);
+        } else {
+            if (BuildConfig.DEBUG) {
+                Log.e(Constants.TAG, "Existing user");
+            }
+
+            //else code
+        }
 
     }
 

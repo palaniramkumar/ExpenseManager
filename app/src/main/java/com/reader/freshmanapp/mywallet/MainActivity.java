@@ -49,12 +49,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         ExpenseTrend.OnFragmentInteractionListener {
 
     private static String DB_NAME = "MyExpense.db";
-    private static String DB_PATH = "/data/local/tmp/com.reader.ramkumar.mywallet/databases/";
     Fragment newFragment = null;
     ViewGroup mContainer;
     FragmentManager fragmentManager;
     private Toolbar mToolbar;
     private NavigationDrawerFragment mNavigationDrawerFragment;
+    DBHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +97,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, pendingIntent);
         //currently 24 hours
+
 
     }
 
@@ -151,6 +152,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     }
     public void refreshSMS(final MenuItem item) {
 
+        db = new DBHelper(getApplicationContext());
+
         class MyAsyncTask extends AsyncTask<Void, Void, Integer> {
 
             @Override
@@ -165,6 +168,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
             @Override
             protected void onPostExecute(Integer result) {
+
+
+
                 newFragment = new main();
                 // Insert the fragment by replacing any existing fragment
                 fragmentManager = getFragmentManager();
@@ -183,8 +189,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
             @Override
             protected Integer doInBackground(Void... params) {
-                DBHelper db = new DBHelper(getApplicationContext());
-
                 /** New User -  display demo page **/
                 /* first user check */
                 SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
@@ -201,8 +205,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                     dbCatMap.firstTime();
                     db.close();
                     dbCatMap.close();
-                    Intent i = new Intent(MainActivity.this,Help.class);
-                    startActivity(i);
                 } else {
                     if (BuildConfig.DEBUG) {
                         Log.e(Constants.TAG, "Existing user");
@@ -210,7 +212,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
                     //else code
                 }
-
 
                 if (item != null || db.getLastSMSID() == 0) {
                     SMS.syncSMS(getApplicationContext(), true, null);

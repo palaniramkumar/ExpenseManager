@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">MyWallet</string>
-    <string name="about"> please see http://novice-app.com. Email support at support@novice-app.com.</string>
+    <string name="about"> please see http://freshmanapp.com . Email support at support@freshmanapp.com.</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_nav">NavActivity</string>

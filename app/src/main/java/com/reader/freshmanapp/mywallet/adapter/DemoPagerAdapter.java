@@ -11,7 +11,7 @@ import com.reader.freshmanapp.mywallet.DemoFragment;
 
 public class DemoPagerAdapter extends FragmentPagerAdapter {
 
-    public static final int pagerCount = 7;
+    public static final int pagerCount = 6;
 
 
     public DemoPagerAdapter(FragmentManager fm) {

@@ -357,6 +357,7 @@ public class ExpenseTrend extends Fragment {
         set.setValueTextColor(Color.rgb(240, 238, 70));
 
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        set.setValueFormatter(new CurrencyFormatter());
 
         d.addDataSet(set);
 
@@ -376,11 +377,12 @@ public class ExpenseTrend extends Fragment {
             entries.add(new BarEntry(cur.getFloat(1), i));
             i++;
         }
-        Log.e("Income","Income Count in months - "+ i);
+        Log.e("Income", "Income Count in months - " + i);
         BarDataSet set = new BarDataSet(entries, "Income");
         set.setColor(getResources().getColor(R.color.myAccentColor));
         set.setValueTextColor(getResources().getColor(R.color.myAccentColor));
         set.setValueTextSize(10f);
+        set.setValueFormatter(new CurrencyFormatter());
         d.addDataSet(set);
 
         set.setAxisDependency(YAxis.AxisDependency.LEFT);

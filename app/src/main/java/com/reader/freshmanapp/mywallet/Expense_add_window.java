@@ -1,5 +1,7 @@
 package com.reader.freshmanapp.mywallet;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
@@ -12,6 +14,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -52,6 +57,8 @@ public class Expense_add_window extends ListActivity {
     String place;
     String geo_tag;
     ArrayAdapter<ListAdapterRadioModel> adapter;
+    private Animation inAnimation;
+    private Animation outAnimation;
     private RadioButton listRadioButton = null;
     private String entryDesc = "OTHERS";
 
@@ -92,15 +99,30 @@ public class Expense_add_window extends ListActivity {
                 }
                 String selected_String = ((RadioButton) findViewById(checkedId)).getText().toString();
                 if (selected_String.equals("ATM")) {
-                    findViewById(R.id.rdo_cash).setVisibility(View.GONE);
+                    hide(findViewById(R.id.rdo_cash));
+                    hide(findViewById(R.id.list_holder));
+                    hide(findViewById(R.id.list_holder_seperator));
+                    show(findViewById(R.id.trans_src_holder));
+                    /*findViewById(R.id.rdo_cash).setVisibility(View.GONE);
                     findViewById(R.id.list_holder).setVisibility(View.GONE);
-                    findViewById(R.id.list_holder_seperator).setVisibility(View.GONE);
+                    findViewById(R.id.list_holder_seperator).setVisibility(View.GONE);*/
 
                     ((RadioButton) findViewById(R.id.rdo_debit_card)).setChecked(true);
-                } else {
-                    findViewById(R.id.rdo_cash).setVisibility(View.VISIBLE);
+                }
+                else if (selected_String.equals("INCOME")){
+                    hide(findViewById(R.id.rdo_cash));
+                    hide(findViewById(R.id.list_holder));
+                    hide(findViewById(R.id.list_holder_seperator));
+                    hide(findViewById(R.id.trans_src_holder));
+                }
+                else {
+                    show(findViewById(R.id.rdo_cash));
+                    show(findViewById(R.id.list_holder));
+                    show(findViewById(R.id.list_holder_seperator));
+                    show(findViewById(R.id.trans_src_holder));
+                   /* findViewById(R.id.rdo_cash).setVisibility(View.VISIBLE);
                     findViewById(R.id.list_holder).setVisibility(View.VISIBLE);
-                    findViewById(R.id.list_holder_seperator).setVisibility(View.VISIBLE);
+                    findViewById(R.id.list_holder_seperator).setVisibility(View.VISIBLE);*/
                     ((RadioButton) findViewById(R.id.rdo_cash)).setChecked(true);
                 }
             }
@@ -242,13 +264,18 @@ public class Expense_add_window extends ListActivity {
                     return;
                 }
 
-                if (listIndex == -1 && !trans_type.equals(TYPES.TRANSACTION_TYPE.CASH_VAULT.toString())) {
+                if (listIndex == -1 && trans_type.equals(TYPES.TRANSACTION_TYPE.EXPENSE.toString())) {
                     UndoBar undobar = new UndoBar(Expense_add_window.this);
                     undobar.show("Select at least one Category");
                     return;
-                } else {
+                }
+                if(!trans_type.equals(TYPES.TRANSACTION_TYPE.INCOME.toString())){
                     category = trans_type.equals(TYPES.TRANSACTION_TYPE.CASH_VAULT.toString()) ? db.ATM : list.get(listIndex).getName();
                     result = trans_type.equals(TYPES.TRANSACTION_TYPE.CASH_VAULT.toString()) ? Common.CURRENCY + " " + amount + " to ATM" : Common.CURRENCY + " " + amount + " to " + category + " " + trans_type;
+                }
+                else{
+                    category = TYPES.TRANSACTION_TYPE.INCOME.toString();
+                    result = Common.CURRENCY + " " + amount + " added to your "+category;
                 }
 
 
@@ -257,7 +284,7 @@ public class Expense_add_window extends ListActivity {
                     System.out.println("Expense Source: " + trans_src);
                     System.out.println("Category : " + category + " , Index: " + listIndex);
 
-                    db.insertMaster(amount, null, trans_src, trans_type, category, notes, null, entryDesc, date, db.getNow(), null, null, null, null, TYPES.TRANSACTION_STATUS.APPROVED.toString()); //date:datetime() is returning just a text not a value
+                    db.insertMaster(amount, null, trans_src, trans_type, category, notes, null, entryDesc, date, db.getNow(), null, null, null, null,null, TYPES.TRANSACTION_STATUS.APPROVED.toString()); //date:datetime() is returning just a text not a value
                     result = "Added " + result;
                 }
                 if (ENTRY_TYPE.equalsIgnoreCase("UPDATE")) {//this code is for future enhancement
@@ -405,6 +432,40 @@ public class Expense_add_window extends ListActivity {
             }
         }
         return -1;
+    }
+
+    void hide(final View view){
+
+        if (view.getVisibility() == View.VISIBLE) {
+            view.animate()
+                    .translationY(0)
+                    .alpha(0.0f)
+                    .setDuration(500)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            view.setVisibility(View.GONE);
+                        }
+                    });
+        }
+    }
+    void show(final View view){
+
+        if(view.getVisibility() == View.GONE) {
+            view.animate()
+                    .translationY(0)
+                    .alpha(1.0f)
+                    .setDuration(500)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            view.setVisibility(View.VISIBLE);
+                        }
+                    });
+
+        }
     }
 
     public interface Constants {

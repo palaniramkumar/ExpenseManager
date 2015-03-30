@@ -26,14 +26,15 @@
         </RelativeLayout>
     </ScrollView>
 
-    <com.shamanland.fab.FloatingActionButton
+    <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_action_edit"
-        fab:floatingActionButtonColor="@color/myAccentColor"
-        />
+        android:src="@drawable/ic_action_add"
+        fab:fab_colorNormal="@color/myAccentColor"
+        fab:fab_colorPressed="@android:color/holo_orange_dark"
+        fab:fab_colorRipple="@color/myTextSecondaryColor" />
 
 </FrameLayout>

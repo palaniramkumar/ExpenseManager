@@ -169,7 +169,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             @Override
             protected void onPostExecute(Integer result) {
 
-
+               hideUIObject();
+                Fragment frag = getFragmentManager().findFragmentById(R.id.frame_container);
+                if (frag != null && (frag.getView() != null)) {
+                    ProgressBar progressBar = ((ProgressBar) frag.getView().findViewById(R.id.loading_spinner));
+                    if (progressBar != null) progressBar.setVisibility(View.INVISIBLE);
+                }
 
                 newFragment = new main();
                 // Insert the fragment by replacing any existing fragment
@@ -178,13 +183,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                         .replace(R.id.frame_container, newFragment)
                         .commit();
                 setTitle("Summary");
-
-               hideUIObject();
-                Fragment frag = getFragmentManager().findFragmentById(R.id.frame_container);
-                if (frag != null && (frag.getView() != null)) {
-                    ProgressBar progressBar = ((ProgressBar) frag.getView().findViewById(R.id.loading_spinner));
-                    if (progressBar != null) progressBar.setVisibility(View.INVISIBLE);
-                }
             }
 
             @Override
@@ -217,6 +215,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                     SMS.syncSMS(getApplicationContext(), true, null);
                 }
                 db.close();
+
+
+
                 return 0;
             }
 

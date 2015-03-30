@@ -44,6 +44,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String MASTER_COLUMN_GEO_TAG = "geo_tag";
     public static final String MASTER_COLUMN_SHAREDEXPENSE = "SharedExpense";
     public static final String MASTER_COLUMN_SHAREDMEMBERS = "SharedMembers";
+    public static final String MASTER_COLUMN_ACCOUNT = "account";
     public static final String MASTER_COLUMN_STATUS = "status"; //pending,deleted,accepted
     public static final String CATEGORY_TABLE_NAME = "category";
 
@@ -132,9 +133,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(
                 "create table MASTER " +
                         "(id integer primary key, amount text,bank_name text,trans_source text, trans_type text,category text DEFAULT '" + UNCATEGORIZED + "'," +
-                        " notes text,sms_id integer UNIQUE,desc text, place text,trans_time DATETIME DEFAULT CURRENT_TIMESTAMP," +
-                        "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP," +
-                        "geo_tag text,SharedExpense text, SharedMembers text,status text)"
+                        " notes text,sms_id integer UNIQUE,desc text, place text,trans_time DATETIME ," +
+                        "timestamp DATETIME ,geo_tag text,SharedExpense text, SharedMembers text,account text, status text)"
         );
         db.execSQL(
                 "create table CATEGORY " +
@@ -166,7 +166,7 @@ public class DBHelper extends SQLiteOpenHelper {
                                 String sms_id, String desc, String trans_time,
                                 String timestamp, String place,
                                 String geo_tag, String SharedExpense,
-                                String SharedMembers, String status) {
+                                String SharedMembers, String account,String status) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("amount", amount);
@@ -184,6 +184,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("SharedMembers", SharedMembers);
         contentValues.put("status", status);
         contentValues.put("place", place);
+        contentValues.put("account", account);
 
         try {
             db.insert("MASTER", null, contentValues);

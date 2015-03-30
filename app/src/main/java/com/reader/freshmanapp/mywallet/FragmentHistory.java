@@ -288,10 +288,11 @@ public class FragmentHistory extends Fragment implements AdapterView.OnItemClick
     void showDialogIncomeConfirm(final Context context,final int RECID) {
         new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT)
                 .setTitle("Confirmation")
-                .setMessage("Can I remember this as your Income ?")
+                .setMessage("Can I remove this from your Income ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        db.updateMaster(RECID, db.MASTER_COLUMN_CATEGORY, TYPES.TRANSACTION_TYPE.INCOME.toString());
+                        db.updateMaster(RECID, db.MASTER_COLUMN_STATUS, TYPES.TRANSACTION_STATUS.DELETED.toString());
+                        init();
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

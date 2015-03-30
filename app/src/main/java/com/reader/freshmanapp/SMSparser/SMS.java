@@ -73,7 +73,7 @@ public class SMS {
                 //Add an object to the list
 
                 db.insertMaster(s.amount.replace(",", ""), s.bankName, s.trans_src, s.trans_type, s.expanse_category, s.where, s.id, s.where, s.when,
-                        db.getNow(), s.place, gps, null, null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                        db.getNow(), s.place, gps, null, null, s.account,TYPES.TRANSACTION_STATUS.APPROVED.toString());
             }
 
             if (BuildConfig.DEBUG) {
@@ -101,7 +101,7 @@ public class SMS {
             HDFC bank = new HDFC(text);
             HDFC.SMSParserData smsparsedata = bank.parseSMS();
             /*0-Amount,1-Account,2-Time,3-Where,4-Place*/
-            amount = smsparsedata.valueSet[0];
+            amount = smsparsedata.valueSet[0].replace(",","");
             where = smsparsedata.valueSet[3];
             //when = smsparsedata.valueSet[2];
             place = smsparsedata.valueSet[4];

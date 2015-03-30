@@ -16,12 +16,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import com.melnykov.fab.FloatingActionButton;
 import com.reader.freshmanapp.mywallet.adapter.CategoryCard;
 import com.reader.freshmanapp.mywallet.adapter.NotificationCard;
 import com.reader.freshmanapp.mywallet.db.DBHelper;
 import com.reader.freshmanapp.mywallet.util.TYPES;
-import com.shamanland.fab.FloatingActionButton;
-import com.shamanland.fab.ShowHideOnScroll;
+
 
 import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
 import it.gmariotti.cardslib.library.view.CardViewNative;
@@ -102,7 +102,7 @@ public class Categories extends Fragment {
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         ScrollView scrollView  = (ScrollView)view.findViewById(R.id.scrollView);
-        scrollView.setOnTouchListener(new ShowHideOnScroll(fab));
+
         fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);

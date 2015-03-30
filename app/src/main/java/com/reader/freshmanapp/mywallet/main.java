@@ -19,7 +19,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -41,6 +43,7 @@ import com.github.mikephil.charting.utils.Highlight;
 import com.github.mikephil.charting.utils.LargeValueFormatter;
 import com.github.mikephil.charting.utils.PercentFormatter;
 
+import com.melnykov.fab.FloatingActionButton;
 import com.reader.freshmanapp.SMSparser.SMS;
 import com.reader.freshmanapp.mywallet.adapter.ExpenseCard;
 import com.reader.freshmanapp.mywallet.db.DBCategoryMap;
@@ -49,12 +52,11 @@ import com.reader.freshmanapp.mywallet.util.CashVault;
 import com.reader.freshmanapp.mywallet.util.Common;
 import com.reader.freshmanapp.mywallet.util.MonthOperations;
 import com.reader.freshmanapp.mywallet.util.UndoBar;
-import com.shamanland.fab.FloatingActionButton;
-import com.shamanland.fab.ShowHideOnScroll;
+
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+
 import java.util.UUID;
 
 import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
@@ -186,8 +188,7 @@ public class main extends Fragment implements OnChartValueSelectedListener {
 
         //fab
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        ScrollView scrollView  = (ScrollView)view.findViewById(R.id.scrollView);
-        scrollView.setOnTouchListener(new ShowHideOnScroll(fab));
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -418,7 +419,7 @@ public class main extends Fragment implements OnChartValueSelectedListener {
 
         incChart.setDrawBarShadow(false);
 
-        incChart.setDrawValueAboveBar(true);
+        incChart.setDrawValueAboveBar(false);
 
         incChart.setDescription("");
 
@@ -578,8 +579,6 @@ public class main extends Fragment implements OnChartValueSelectedListener {
 
     private void incomevsexpense_data() {
 
-        Cursor cur = db.getFromMaster(db.MASTER_COLUMN_CATEGORY, db.BILL_PAYMENT, false);
-
         ArrayList<String> xVals = new ArrayList<String>();
         ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
         float income = db.getMyTotalIncome(db.month);
@@ -593,6 +592,7 @@ public class main extends Fragment implements OnChartValueSelectedListener {
 
         BarDataSet set1 = new BarDataSet(yVals1, "Amount");
        // set1.setBarSpacePercent(40f);
+
 
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         ArrayList<Integer> colors = new ArrayList<Integer>();

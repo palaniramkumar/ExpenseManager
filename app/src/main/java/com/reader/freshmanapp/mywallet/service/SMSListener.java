@@ -114,7 +114,7 @@ public class SMSListener extends BroadcastReceiver {
 
 
             db.insertMaster(s.amount,s.bankName,s.trans_src,s.trans_type,s.expanse_category,s.where,s.id,s.where,s.when,
-                    db.getNow(),s.place,gps,null,null, TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                    db.getNow(),s.place,gps,null,null,s.account, TYPES.TRANSACTION_STATUS.APPROVED.toString());
 
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);

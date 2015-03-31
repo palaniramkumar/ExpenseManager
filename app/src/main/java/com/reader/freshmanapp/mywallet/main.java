@@ -240,7 +240,7 @@ public class main extends Fragment implements OnChartValueSelectedListener {
     }
 
     public void view_atm_trans(View v) {
-        FragmentHistory secFrag = new FragmentHistory(DBHelper.ATM);
+        FragmentHistory secFrag =  FragmentHistory.newInstance(DBHelper.ATM);
         FragmentTransaction fragTransaction = (getActivity()).getFragmentManager().beginTransaction();
         fragTransaction.replace(R.id.frame_container, secFrag);
         fragTransaction.addToBackStack(null);

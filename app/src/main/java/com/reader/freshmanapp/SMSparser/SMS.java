@@ -101,7 +101,7 @@ public class SMS {
             HDFC bank = new HDFC(text);
             HDFC.SMSParserData smsparsedata = bank.parseSMS();
             /*0-Amount,1-Account,2-Time,3-Where,4-Place*/
-            amount = smsparsedata.valueSet[0].replace(",","");
+            amount = smsparsedata.valueSet[0];
             where = smsparsedata.valueSet[3];
             //when = smsparsedata.valueSet[2];
             place = smsparsedata.valueSet[4];
@@ -110,6 +110,7 @@ public class SMS {
             trans_src = smsparsedata.trans_src;
             expanse_category = DBHelper.UNCATEGORIZED;
             if (amount == null) return false;
+            amount = amount.replace(",","");
 
             DBCategoryMap c = new DBCategoryMap(context);
             if (where !=null) {

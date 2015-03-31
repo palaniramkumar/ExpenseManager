@@ -183,7 +183,7 @@ public class ExpenseCard extends CardWithList {
                     /*Intent i = new Intent(view.getContext(), FragmentHistory.class);
                     i.putExtra("CATEGORY", getObjectId());
                     ((Activity)mContext).startActivity(i);*/
-                    FragmentHistory secFrag = new FragmentHistory(getObjectId());
+                    FragmentHistory secFrag = FragmentHistory.newInstance(getObjectId());
                     FragmentTransaction fragTransaction = ((Activity) mContext).getFragmentManager().beginTransaction();
                     fragTransaction.replace(R.id.frame_container, secFrag);
                     fragTransaction.addToBackStack(null);

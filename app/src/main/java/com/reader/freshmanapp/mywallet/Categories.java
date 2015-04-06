@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
@@ -16,10 +17,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import com.jensdriller.libs.undobar.UndoBar;
 import com.melnykov.fab.FloatingActionButton;
 import com.reader.freshmanapp.mywallet.adapter.CategoryCard;
 import com.reader.freshmanapp.mywallet.adapter.NotificationCard;
 import com.reader.freshmanapp.mywallet.db.DBHelper;
+import com.reader.freshmanapp.mywallet.util.Common;
 import com.reader.freshmanapp.mywallet.util.TYPES;
 
 
@@ -110,11 +113,11 @@ public class Categories extends Fragment {
                 builder.setTitle("Add Category");
 
                 final EditText txt_category = new EditText(getActivity());
-                txt_category.setHint("Category");//optional
-
+                txt_category.setHint("Category Name ");
+                txt_category.setHintTextColor(Color.DKGRAY);
                 final EditText txt_amount = new EditText(getActivity());
-                txt_amount.setHint("Amount");//optional
-
+                txt_amount.setHint("Amount in "+ Common.CURRENCY);
+                txt_amount.setHintTextColor(Color.DKGRAY);
                 //in my example i use TYPE_CLASS_NUMBER for input only numbers
                 txt_category.setInputType(InputType.TYPE_CLASS_TEXT);
                 txt_amount.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -131,7 +134,13 @@ public class Categories extends Fragment {
                         //get the two inputs
                         String category = txt_category.getText().toString();
                         String budget = txt_amount.getText().toString();
-                        db.insertCategory(category, budget, TYPES.TRANSACTION_STATUS.APPROVED.toString());
+                        if (android.text.TextUtils.isDigitsOnly(budget) && !category.trim().equals("")) {
+                            db.insertCategory(category, Integer.parseInt(budget)+"", TYPES.TRANSACTION_STATUS.APPROVED.toString()); //bug #59
+                        } else {
+                            com.reader.freshmanapp.mywallet.util.UndoBar undo = new com.reader.freshmanapp.mywallet.util.UndoBar(getActivity());
+                            undo.show("Doesn't seems like valid input");
+                            return;
+                        }
                         init();
 
                     }

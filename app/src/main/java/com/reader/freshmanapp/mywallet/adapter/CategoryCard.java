@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -98,10 +99,16 @@ public class CategoryCard extends CardWithList {
                         final EditText txt_category = new EditText(getContext());
                         txt_category.setHint("Category");//optional
                         txt_category.setText(c.getString(c.getColumnIndex(DBHelper.MASTER_COLUMN_CATEGORY)));
+                        txt_category.setHintTextColor(Color.DKGRAY);
                         final EditText txt_amount = new EditText(getContext());
-                        txt_amount.setHint("Amount");//optional
-                        txt_amount.setText(c.getString(c.getColumnIndex(DBHelper.MASTER_COLUMN_AMOUNT)));
-                        ;
+                        txt_amount.setHint("Amount in "+Common.CURRENCY);//optional
+                        txt_amount.setHintTextColor(Color.DKGRAY);
+                        int amount =0;
+                        try {
+                            amount = Integer.parseInt(c.getString(c.getColumnIndex(DBHelper.MASTER_COLUMN_AMOUNT)));
+                        }
+                        catch(Exception e){}
+                        txt_amount.setText(amount==0 ? "" : amount+""); //bug #59
 
                         // use TYPE_CLASS_NUMBER for input only numbers
                         txt_category.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -120,14 +127,24 @@ public class CategoryCard extends CardWithList {
                                 //get the two inputs
                                 String category = txt_category.getText().toString();
                                 String budget = txt_amount.getText().toString();
-                                db.updateCategory(Integer.parseInt(object.getObjectId()), "category", category);
-                                db.updateCategory(Integer.parseInt(object.getObjectId()), "amount", budget);
 
-                                //realtime update at table
-                                TextView txt_amount = (TextView) parent.getChildAt(position).findViewById(R.id.table_txt_amount);
-                                txt_amount.setText(budget);
-                                ((CategoryObject) object).amount = Integer.parseInt(budget);// This code is not updating in real time, need a page refresh
-                                parent.refreshDrawableState();
+                                if (android.text.TextUtils.isDigitsOnly(budget) &&  !category.trim().equals("")) {
+                                    db.updateCategory(Integer.parseInt(object.getObjectId()), "category", category);
+                                    db.updateCategory(Integer.parseInt(object.getObjectId()), "amount", Integer.parseInt(budget)+"");
+                                    //realtime update at table
+                                    TextView txt_amount = (TextView) parent.getChildAt(position).findViewById(R.id.table_txt_amount);
+                                    txt_amount.setText(budget);
+                                    ((CategoryObject) object).amount = Integer.parseInt(budget);
+                                    parent.refreshDrawableState();
+                                } else {
+                                    com.reader.freshmanapp.mywallet.util.UndoBar undo = new com.reader.freshmanapp.mywallet.util.UndoBar(getContext());
+                                    undo.show("Doesn't seems like valid input");
+                                    return;
+                                }
+
+
+
+
                             }
                         });
 

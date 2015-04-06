@@ -155,8 +155,8 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         items.add(new NavigationItem("Category Items", getResources().getDrawable(R.drawable.ic_iso_grey600_24dp)));
         items.add(new NavigationItem("Preferences", getResources().getDrawable(R.drawable.ic_settings_grey600_24dp)));
         if (BuildConfig.DEBUG) {
-            items.add(new NavigationItem("DB Backup (Testing)", getResources().getDrawable(R.drawable.ic_file_upload_grey600_24dp)));
-            items.add(new NavigationItem("Delete DB (Testing)", getResources().getDrawable(R.drawable.ic_delete_grey600_24dp)));
+            //items.add(new NavigationItem("DB Backup (Testing)", getResources().getDrawable(R.drawable.ic_file_upload_grey600_24dp)));
+            //items.add(new NavigationItem("Delete DB (Testing)", getResources().getDrawable(R.drawable.ic_delete_grey600_24dp)));
         }
         return items;
     }

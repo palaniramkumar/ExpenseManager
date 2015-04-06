@@ -76,52 +76,6 @@ public class DBHelper extends SQLiteOpenHelper {
         //context.deleteDatabase(DATABASE_NAME); //force close if the db is not created
     }
 
-    public static String getDateTime(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        //Date date = new Date();
-        return dateFormat.format(date);
-    }
-
-    public static String getLocalDate(long timestamp) {
-        try {
-            Calendar calendar = Calendar.getInstance();
-            TimeZone tz = TimeZone.getDefault();
-            calendar.setTimeInMillis(timestamp * 1000);
-            calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
-            Date date = (Date) calendar.getTime();
-            return sdf.format(date);
-        } catch (Exception e) {
-        }
-        return "";
-    }
-
-    public static String getDroidDate(long timestamp) {
-        try {
-            Calendar calendar = Calendar.getInstance();
-            TimeZone tz = TimeZone.getDefault();
-            calendar.setTimeInMillis(timestamp * 1000);
-            calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-            Date date = (Date) calendar.getTime();
-            return sdf.format(date);
-        } catch (Exception e) {
-        }
-        return "";
-    }
-
-    public static String getDateTime(String dateinactivity) {
-        int month = Integer.parseInt(dateinactivity.split("/")[0]) - 1;
-        int day = Integer.parseInt(dateinactivity.split("/")[1]);
-        int year = Integer.parseInt(dateinactivity.split("/")[2]);
-        Calendar calendar = new GregorianCalendar(year, month, day);
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        dateFormat.setCalendar(calendar);
-        return dateFormat.format(calendar.getTime());
-    }
-
     public void deleteDB(Context context) {
         context.deleteDatabase(DATABASE_NAME);
     }
@@ -337,6 +291,12 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor res = db.rawQuery(sql, null);
         return res;
     }
+    public Cursor getFromMaster() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "select * from MASTER  order by trans_time desc";
+        Cursor res = db.rawQuery(sql, null);
+        return res;
+    }
 
     public Cursor getMasterByStatus(String status) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -380,6 +340,53 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     /*Date Conversion Methods */
+
+    public static String getDateTime(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        //Date date = new Date();
+        return dateFormat.format(date);
+    }
+
+    public static String getLocalDate(long timestamp) {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            TimeZone tz = TimeZone.getDefault();
+            calendar.setTimeInMillis(timestamp * 1000);
+            calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+            Date date = (Date) calendar.getTime();
+            return sdf.format(date);
+        } catch (Exception e) {
+        }
+        return "";
+    }
+
+    public static String getDroidDate(long timestamp) {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            TimeZone tz = TimeZone.getDefault();
+            calendar.setTimeInMillis(timestamp * 1000);
+            calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            Date date = (Date) calendar.getTime();
+            return sdf.format(date);
+        } catch (Exception e) {
+        }
+        return "";
+    }
+
+    public static String getDateTime(String dateinactivity) {
+        int month = Integer.parseInt(dateinactivity.split("/")[0]) - 1;
+        int day = Integer.parseInt(dateinactivity.split("/")[1]);
+        int year = Integer.parseInt(dateinactivity.split("/")[2]);
+        Calendar calendar = new GregorianCalendar(year, month, day);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        dateFormat.setCalendar(calendar);
+        return dateFormat.format(calendar.getTime());
+    }
+
 
     public Cursor getMyBudgetByCategory() { //need to have history in order to maintain the prev month budget
         SQLiteDatabase db = this.getReadableDatabase();

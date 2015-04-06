@@ -31,6 +31,8 @@ import com.reader.freshmanapp.mywallet.db.DBHelper;
 import com.reader.freshmanapp.mywallet.service.SMSListener;
 import com.reader.freshmanapp.mywallet.service.SummaryReceiver;
 import com.reader.freshmanapp.mywallet.util.AboutBox;
+import com.reader.freshmanapp.mywallet.util.Common;
+import com.reader.freshmanapp.mywallet.util.DbCSVBackup;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -278,6 +280,13 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 startActivity(intent);
                 break;
             case 6:
+                DbCSVBackup backup = new DbCSVBackup(getApplicationContext());
+                if(backup.export())
+                    Toast.makeText(this, "Export Completed" , Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(this, "Export failed", Toast.LENGTH_SHORT).show();
+                break;
+            case 7:
                 try {
 
                     Toast.makeText(this, "Backup Completed" + copyfile(), Toast.LENGTH_SHORT).show();
@@ -287,7 +296,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                     Toast.makeText(this, "Backup failed", Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case 7:
+            case 8:
                 try {
 
                     new DBHelper(getApplicationContext()).deleteDB(getApplicationContext());

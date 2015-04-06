@@ -33,6 +33,7 @@ import com.reader.freshmanapp.mywallet.service.SummaryReceiver;
 import com.reader.freshmanapp.mywallet.util.AboutBox;
 import com.reader.freshmanapp.mywallet.util.Common;
 import com.reader.freshmanapp.mywallet.util.DbCSVBackup;
+import com.reader.freshmanapp.mywallet.util.UndoBar;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -281,11 +282,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 break;
             case 6:
                 DbCSVBackup backup = new DbCSVBackup(getApplicationContext());
-                if(backup.export())
-                    Toast.makeText(this, "Export Completed" , Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(this, "Export failed", Toast.LENGTH_SHORT).show();
+                String msg =backup.export();
+                //Toast.makeText(this, msg , Toast.LENGTH_SHORT).show();
+                UndoBar undo = new UndoBar(MainActivity.this);
+                undo.show(msg);
                 break;
+
             case 7:
                 try {
 

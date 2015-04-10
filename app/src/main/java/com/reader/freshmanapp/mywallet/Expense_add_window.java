@@ -25,6 +25,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.reader.freshmanapp.mywallet.adapter.ListAdapterForRadioButton;
 import com.reader.freshmanapp.mywallet.adapter.ListAdapterRadioModel;
 import com.reader.freshmanapp.mywallet.db.DBHelper;
@@ -33,6 +34,8 @@ import com.reader.freshmanapp.mywallet.util.NumbPad;
 import com.reader.freshmanapp.mywallet.util.TYPES;
 import com.reader.freshmanapp.mywallet.util.UndoBar;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,7 +45,7 @@ public class Expense_add_window extends ListActivity {
 
     Button btn_accept;
     List<ListAdapterRadioModel> list;
-    CalendarView calendar;
+    MaterialCalendarView calendar;
     int listIndex = -1;
     Button btn_amount;
     RadioGroup trans_src;
@@ -351,12 +354,14 @@ public class Expense_add_window extends ListActivity {
                 LayoutInflater inflater = getLayoutInflater();
                 View iView = inflater.inflate(R.layout.calender, null, false);
                 dialog.setView(iView);
-                calendar = (CalendarView) iView.findViewById(R.id.calendarView1);
+                calendar = (MaterialCalendarView) iView.findViewById(R.id.calendarView1);
                 //dialog.setContentView(R.layout.calender);
                 dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dlg, int sumthin) {
-                        Button edit_amount = (Button) findViewById(R.id.btn_date);
-                        edit_amount.setText(db.getLocalDate(calendar.getDate() / 1000));
+                        Button edit_date = (Button) findViewById(R.id.btn_date);
+                        //edit_date.setText(db.getLocalDate(calendar.getDate() / 1000));
+                        final DateFormat FORMATTER = new SimpleDateFormat("MM/dd/yyyy");
+                        edit_date.setText(FORMATTER.format(calendar.getSelectedDate().getDate()));
                         dlg.dismiss();
 
                     }

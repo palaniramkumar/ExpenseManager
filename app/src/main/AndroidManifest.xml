@@ -18,6 +18,7 @@
         <activity
             android:name=".Expense_add_window"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_expense_add_window" />
         <activity
             android:name=".MainActivity"

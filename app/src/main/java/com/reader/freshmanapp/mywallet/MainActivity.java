@@ -101,8 +101,26 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, pendingIntent);
         //currently 24 hours
 
+        thread.start();
+
 
     }
+    private Thread thread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    refreshSMS(null);
+                }
+            });
+        }
+    });
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

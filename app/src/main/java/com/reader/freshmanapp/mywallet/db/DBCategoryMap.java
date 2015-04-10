@@ -60,7 +60,8 @@ public class DBCategoryMap extends SQLiteOpenHelper {
 
     public Cursor getCategoryInfo(String str) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "select * from KNOWN_CATEGORY_LIST where instr(LOWER('" + str + "'), LOWER(place))";
+        //String sql = "select * from KNOWN_CATEGORY_LIST where instr(LOWER('" + str + "'), LOWER(place))"; //only lollipop is supporting
+        String sql = "select * from KNOWN_CATEGORY_LIST where replace(upper('"+ str +"'), upper(place), '') != upper('"+ str +"')";
         if (BuildConfig.DEBUG) {
             Log.e(Constants.TAG, sql);
         }

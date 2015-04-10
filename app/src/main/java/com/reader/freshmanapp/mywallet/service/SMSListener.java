@@ -105,7 +105,7 @@ public class SMSListener extends BroadcastReceiver {
             s.address=smsMessage[0].getOriginatingAddress();
             s.text=smsMessage[0].getMessageBody();
             long ts = smsMessage[0].getTimestampMillis();
-            s.id=(getLstSMSIndex(context)+smsMessage.length)+""; //calculate new sms id
+            s.id=getLstSMSIndex(context)+"";//+smsMessage.length)+""; //commenting since the value is always showing actual+1
             Log.e("Identifed SMS id",s.id);
             Log.e("count(sms)",smsMessage.length+"");
             s.when = db.getDroidDate(ts/1000) ;

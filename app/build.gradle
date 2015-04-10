@@ -8,8 +8,8 @@ android {
         applicationId "com.reader.freshmanapp.mywallet"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 2
-        versionName "1.0.1.0406"
+        versionCode 3
+        versionName "1.0.1.0411"
     }
     buildTypes {
         release {
@@ -53,5 +53,6 @@ dependencies {
     compile 'com.github.traex.rippleeffect:library:1.2.3'
     compile 'se.emilsjolander:stickylistheaders:2.+'
     compile 'me.relex:circleindicator:1.1.2@aar'
+    compile 'com.prolificinteractive:material-calendarview:0.2.5'
 
 }

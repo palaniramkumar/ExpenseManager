@@ -87,7 +87,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.fragment_drawer);
         mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
 
-        //Set the alarm to 10 seconds from now
+        //disabling daily summary
+        /*
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 23);
@@ -96,12 +97,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
         Intent myIntent = new Intent(getBaseContext(), SummaryReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
-        ;
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, pendingIntent);
         //currently 24 hours
-
-        thread.start();
+*/
+       // thread.start(); //duplicate click
 
 
     }

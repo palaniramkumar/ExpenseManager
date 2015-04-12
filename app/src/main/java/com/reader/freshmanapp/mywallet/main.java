@@ -645,10 +645,13 @@ public class main extends Fragment implements OnChartValueSelectedListener {
         // add a lot of colors
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
-        for (int c : ColorTemplate.LIBERTY_COLORS)
+        for (int c : Common.MATERIAL_COLORS)
             colors.add(c);
 
-       /* for (int c : ColorTemplate.VORDIPLOM_COLORS)
+       /*
+       for (int c : ColorTemplate.LIBERTY_COLORS)
+            colors.add(c);
+       for (int c : ColorTemplate.VORDIPLOM_COLORS)
             colors.add(c);
 
         for (int c : ColorTemplate.JOYFUL_COLORS)

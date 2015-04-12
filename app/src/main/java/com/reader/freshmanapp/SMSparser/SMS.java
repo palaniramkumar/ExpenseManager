@@ -95,11 +95,26 @@ public class SMS {
     }
 
     public boolean findSMS(Context context) {
-        if (address!=null && address.contains("HDFC") ) { // add || text.contains("HDFC") code to test data with custom user SMS
+        if (address!=null ) { // add || text.contains("HDFC") code to test data with custom user SMS
         //if(text.contains("HDFC") ){
-            bankName = "HDFC";
-            HDFC bank = new HDFC(text);
-            HDFC.SMSParserData smsparsedata = bank.parseSMS();
+            Master.SMSParserData smsparsedata = null;
+            if( address.contains("HDFC")) {
+                bankName = "HDFC";
+                HDFC bank = new HDFC(text);
+                smsparsedata = bank.parseSMS(bank.template,bank.templateMap,bank.sms);
+            }
+            else if( address.contains("TMB")) {
+                bankName = "TMB";
+                TMB bank = new TMB(text);
+                smsparsedata = bank.parseSMS(bank.template,bank.templateMap,bank.sms);
+            }
+            else if( address.contains("CITI")) {
+                bankName = "CITI";
+                CITI bank = new CITI(text);
+                smsparsedata = bank.parseSMS(bank.template,bank.templateMap,bank.sms);
+            }
+            else
+                return false;
             /*0-Amount,1-Account,2-Time,3-Where,4-Place*/
             amount = smsparsedata.valueSet[0];
             where = smsparsedata.valueSet[3];
@@ -128,15 +143,6 @@ public class SMS {
             }
             if (trans_type.equals(TYPES.TRANSACTION_TYPE.CASH_VAULT.toString())) // code for ATM transaction
                 expanse_category = DBHelper.ATM;
-
-            /*if(isAvailable(TYPES.NEUTRAL,where))
-                trans_type = TYPES.TRANSACTION_TYPE.NEUTRAL.toString();
-            if(isAvailable(TYPES.KNOWN_BILLS,where))
-                expanse_category = DBHelper.BILL_PAYMENT;
-            if(isAvailable(TYPES.KNOWN_SHOP,where))
-                expanse_category = DBHelper.SHOPPING;
-            if(isAvailable(TYPES.KNOWN_TRAVEL,where))
-                expanse_category = DBHelper.TRAVEL;*/
 
             return true;
         } else

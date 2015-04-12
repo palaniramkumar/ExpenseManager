@@ -25,9 +25,9 @@ import java.util.regex.Pattern;
  * <p/>
  * 01-03-2015: Rs.(.*?) was withdrawn using your HDFC Bank Card ending (.*?) on (.*?) at (.*?). Avl bal: (.*?)
  */
-public class HDFC {
+public class HDFC extends Master{
     /*sms template needs to be parsed */
-    final String[][] template = {
+    public final String[][] template = {
             {"Rs.(.*?) was spent on ur HDFCBank CREDIT Card ending (.*?) on (.*?) at (.*?).Avl", TYPES.TRANSACTION_TYPE.EXPENSE.toString(), TYPES.TRANSACTION_SOURCE.CREDIT_CARD.toString()},
             {"An amount of Rs.(.*?) has been debited from your account number (.*?) for (.*?) done using HDFC Bank NetBanking", TYPES.TRANSACTION_TYPE.EXPENSE.toString(), TYPES.TRANSACTION_SOURCE.NET_BANKING.toString()},
             {"An amount of Rs.(.*?) has been debited from your account  number (.*?) for (.*?) done using HDFC Bank NetBanking", TYPES.TRANSACTION_TYPE.EXPENSE.toString(), TYPES.TRANSACTION_SOURCE.NET_BANKING.toString()},
@@ -39,7 +39,7 @@ public class HDFC {
             {"Your payment for (.*?) - (.*?) for Rs (.*?) has been processed successfully.", TYPES.TRANSACTION_TYPE.EXPENSE.toString(), TYPES.TRANSACTION_SOURCE.NET_BANKING.toString()}
     };
     /*0-Amount,1-Account,2-Time,3-Where,4-Place/city,5-remaining cash in card,9-Ignore*/
-    final int[][] templateMap = { //the numbers are the curresponding values in the template*/
+    public final int[][] templateMap = { //the numbers are the curresponding values in the template*/
             {0, 1, 2, 3},
             {0, 1, 3},
             {0, 1, 3},
@@ -51,7 +51,7 @@ public class HDFC {
             {3, 1, 0}
     };
     /*this class variables and name needs to be same for all other banks*/
-    public SMSParserData parserValue;
+    //public SMSParserData parserValue;
     String sms;
     public HDFC(String text) {
         this.sms = text.replace("/ +/g", " "); // replaces multiple spaces to one space
@@ -62,36 +62,10 @@ public class HDFC {
         }
     }
 
-    /*code for parsing sms. this is generic can be moved to the common class*/
-    public SMSParserData parseSMS() {
-        parserValue = new SMSParserData();
-        for (int i = 0; i < template.length; i++) {
-            Pattern pattern = Pattern.compile(template[i][0]); //fetch the only sms
-            Matcher matcher = pattern.matcher(sms);
-            parserValue.valueSet = new String[6]; // six is the len of template item count
-            if (matcher.find()) {
-                for (int j = 0; j < templateMap[i].length; j++) {
-                    System.out.println(matcher.group(j + 1));
-                    parserValue.valueSet[templateMap[i][j]] = matcher.group(j + 1); //iterate through templateMap.matcher group values always starts with 1.
-                }
-            }
-            if (parserValue.valueSet[0] != null) { //if values parsed, set the trans source and type from the curresponing template
-                parserValue.trans_src = template[i][2];
-                parserValue.trans_type = template[i][1];
-                break;
-            }
-        }
-        return parserValue;
-    }
-
     public interface Constants {
         String TAG = "app:HDFC";
     }
 
-    public class SMSParserData {
-        public String valueSet[];
-        public String trans_type;
-        public String trans_src;
-    }
+
 }
 
